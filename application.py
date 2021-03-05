@@ -120,10 +120,6 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
-#print("Access Keys:")
-#print(app.config['S3_KEY'])
-#print(app.config['MAIL_PASSWORD'])
-
 
 
 
