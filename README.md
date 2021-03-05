@@ -12,7 +12,7 @@ If you wish to fork this and host your own toolshare instance, you will need the
 For the above list
   * [Heroku](https://www.heroku.com/) account (hobby) with PostgreSQL database "Add-on"
   * [AWS S3](https://aws.amazon.com/s3/pricing/) (free tier)
-  * New (Gmail account)[https://accounts.google.com/SignUp?hl=en] for the app, set to "Allow less secure apps"
+  * New [Gmail account](https://accounts.google.com/SignUp?hl=en) for the app, set to "Allow less secure apps"
   * [Freenom](https://www.freenom.com/en/index.html?lang=en) to get a domain name
   * [Cloudflare](https://www.cloudflare.com/) for DNS service and SSL connection to Heroku
 
