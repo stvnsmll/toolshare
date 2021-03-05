@@ -74,7 +74,7 @@ def after_request(response):
 
 # sqlite = 1 (development)
 # postgreSQL = 2 (production on Heroku)
-DATABASE__TYPE = 2
+DATABASE__TYPE = 1
 
 # Configure session to use filesystem (instead of signed cookies)
 if DATABASE__TYPE == 1:
@@ -1131,7 +1131,7 @@ def deleteneighborhood():
             flash('Neighborhood deleted.')
             return redirect(url_for('neighborhoods') + '#mine')
         elif formAction == "cancel":
-            return render_template("dwipepage.html")
+            return render_template("swipepage.html")
             #return redirect("/neighborhood_details?neighborhoodid=" + neighborhoodid)
         else:
             return apology("Misc Error")
@@ -1260,6 +1260,9 @@ def register():
         new_uuid = uuid.uuid4().hex
         # Initiate the user with an unregistered_email "theme":
         db.execute("INSERT INTO users (uuid, firstname, username, email, hash, theme) VALUES (?, ?, ?, ?, ?, ?);", new_uuid, firstname, newUsername, email, generate_password_hash(password1), "unregistered_email")
+        #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+        db.execute("INSERT INTO history (type, action, useruuid, comment, timestamp) VALUES (?, ?, ?, ?, ?);", "other", "signup", new_uuid, "NEW USER!!", datetime.datetime.now())
+
         authcode = generate_new_authcode(email)
 
         session["firstname"] = firstname
@@ -1269,7 +1272,7 @@ def register():
 
 @app.route("/validateemail", methods=["GET", "POST"])
 def validateemail():
-    code_timeout_limit = 200000#minutes
+    code_timeout_limit = 2#minutes
     if session.get("user_uuid") is not None:
         flash("Already logged in...")
         return redirect("/")
@@ -1307,10 +1310,9 @@ def validateemail():
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
                 session["neighborhood_check"] = "0"
-                #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
-                logHistory("other", "signup", "", "", "", "NEW USER!!")
+                logHistory("other", "email_validated", "", "", "", "")
                 # redirect back to the index (root) page
-                flash('Welcome, ' + new_user[0]["firstname"] + ", your new account has been created.")
+                flash(new_user[0]["firstname"] + ", your email has been validated.")
                 return redirect("/")
             else:
                 error = "incorrect"
@@ -1370,10 +1372,9 @@ def validateemail():
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
                 session["neighborhood_check"] = "0"
-                #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
-                logHistory("other", "signup", "", "", "", "NEW USER!!")
+                logHistory("other", "email_validated", "", "", "", "")
                 # redirect back to the index (root) page
-                flash('Welcome, ' + new_user[0]["firstname"] + ", your new account has been created.")
+                flash(new_user[0]["firstname"] + ", your email has been validated.")
                 return redirect("/")
             else:
                 error = "incorrect"
@@ -1513,13 +1514,19 @@ def updateemail():
                 flash("that's the same email address...")
                 return render_template("updateemail.html", openActions=countActions(), firstname=firstname, oldEmail=oldEmail)
 
-            # Update the user's name
+            # Update the user's email
             db.execute("UPDATE users SET email = :newEmail WHERE uuid = :userUUID;", newEmail=newEmail, userUUID=userUUID)
+
+            #require the user validate the new email address:
+            authcode = generate_new_authcode(newEmail)
+
             #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("other", "editemail", "", "", "", "")
             # show confirmation to user
-            flash('Email changed successfully.')
-            return redirect("/manageaccount")
+            session.clear()
+            session["firstname"] = firstname
+            #flash('Email changed successfully.')
+            return redirect(f"/validateemail?email={newEmail}")
         else:
             return apology("Misc Error")
 
@@ -1827,7 +1834,7 @@ def send_email_auth(email, authcode):
     message = f"""\
                 <html style="font-family: arial; background-color: lightgray;">
                   <head>
-                    <title>Tool Share - Welcome</title>
+                    <title>Tool Share - Validate Email</title>
                   </head>
 
                   <body style="margin: 0; background-color: white; border: 7px solid lightgray; position: absolute; top: 0; left: 0;">
@@ -1843,7 +1850,7 @@ def send_email_auth(email, authcode):
                           {authcode}
                         </span>
                         <span style="padding-left: 12px;">
-                          or click this <a href="https://sharetools.tk/validateemail?authcode={authcode}"> direct link</a>.
+                          or click this <a href="https://sharetools.tk/validateemail?email={email}&authcode={authcode}"> direct link</a>.
                         </span>
                       </div>
 
