@@ -45,7 +45,7 @@ from PIL import Image
 from flask_mail import Mail, Message
 
 from helpers import apology, login_required, neighborhood_required
-from config import S3_BUCKET, MAIL_SERVER, MAIL_PORT, MAIL_USERNAME
+from config import S3_BUCKET, S3_REGION, MAIL_SERVER, MAIL_PORT, MAIL_USERNAME
 from SQL import SQL_db
 
 
@@ -74,7 +74,7 @@ def after_request(response):
 
 # sqlite = 1 (development)
 # postgreSQL = 2 (production on Heroku)
-DATABASE__TYPE = 2
+DATABASE__TYPE = 1
 
 # Configure session to use filesystem (instead of signed cookies)
 if DATABASE__TYPE == 1:
@@ -94,14 +94,18 @@ else:
 
 # setup s3 file storage
 app.config['S3_BUCKET'] = S3_BUCKET
+app.config['S3_REGION'] = S3_REGION
 app.config['S3_KEY'] = os.environ.get('AWS_ACCESS_KEY_ID')
 app.config['S3_SECRET'] = os.environ.get('AWS_SECRET_ACCESS_KEY')
+
 app.config['S3_LOCATION'] = 'http://{}.s3.amazonaws.com/'.format(S3_BUCKET)
 
 s3 = boto3.client(
    "s3",
    aws_access_key_id=app.config['S3_KEY'],
-   aws_secret_access_key=app.config['S3_SECRET']
+   aws_secret_access_key=app.config['S3_SECRET'],
+   region_name=app.config['S3_REGION'],
+   config=botocore.client.Config(signature_version='s3v4')
 )
 
 # Used for *local* image upload
@@ -199,7 +203,7 @@ def actions():
 
         myOpenRequests = db.execute("SELECT * FROM actions WHERE originuuid = :userUUID AND state NOT LIKE 'dismissed' AND deleted = 0;", userUUID=userUUID)
         myrequests = {}
-        for item in myOpenRequests:
+        for item in myOpenRequests[::-1]:
             tooldetails = db.execute("SELECT * FROM tools WHERE toolid = :toolid;", toolid=item["toolid"])[0]
             toolowner = db.execute("SELECT * FROM users WHERE uuid = :toolowner;", toolowner=tooldetails['owneruuid'])[0]
             d = datetime.datetime.strptime(item["timestamp_open"], '%Y-%m-%d %H:%M:%S')
@@ -1785,9 +1789,6 @@ def images_to_s3(image_uuid):
         "ACL": "public-read",
         "ContentType": "image/jpeg"
     })
-    #image_loc = "{}{}".format(app.config["S3_LOCATION"], filename)
-    #print(str(image_loc))
-    #print("Image uploaded to s3")
 
     file_name = UPLOAD_FOLDER + image_uuid + "_thumb.png"
     key_name = image_uuid + "_thumb.png"
@@ -1795,23 +1796,23 @@ def images_to_s3(image_uuid):
         "ACL": "public-read",
         "ContentType": "image/png"
     })
-    #thumb_loc = "{}{}".format(app.config["S3_LOCATION"], key_name)
-    #print(str(thumb_loc))
-    #print("Thumbnail uploaded to s3")
 
-def get_image_s3(image_uuid_with_ext):
-    # just send the full asw filepath for now (TODO!!)
-    return "{}{}".format(app.config["S3_LOCATION"], image_uuid_with_ext)
+
+def get_image_s3(image_uuid_with_ext, expire_in=3600):
+    # just send the full asw filepath for now
+    #return "{}{}".format(app.config["S3_LOCATION"], image_uuid_with_ext)  <--- delete this...
     # returns the presigned url for the full-sized image
     try:
         response = s3.generate_presigned_url('get_object',
                                                     Params={'Bucket': app.config["S3_BUCKET"],
                                                             'Key': image_uuid_with_ext},
-                                                    ExpiresIn=3600)#seconds
+                                                    ExpiresIn=expire_in)#seconds
     except ClientError as e:
         logging.error(e)
         print("Something Happened - ImageFetchFail: ", e)
         return None
+
+    print(response)
 
     # The response contains the presigned URL
     return response
@@ -1919,7 +1920,7 @@ def send_email_toolaction(toolid, othername, actionmsg):
     if tooldeetz['photo'] == "none":
         photo = "https://i.imgur.com/oXNuzWq.png"
     else:
-        photo = get_image_s3(str(tooldeetz['toolid']) + ".jpeg")
+        photo = get_image_s3(str(tooldeetz['toolid']) + ".jpeg", 864000)
     toolname = tooldeetz['toolname'].lower()
     toolownername = toolowner['firstname']
     #send the email
