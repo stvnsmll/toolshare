@@ -74,7 +74,7 @@ def after_request(response):
 
 # sqlite = 1 (development)
 # postgreSQL = 2 (production on Heroku)
-DATABASE__TYPE = 1
+DATABASE__TYPE = 2
 
 # Configure session to use filesystem (instead of signed cookies)
 if DATABASE__TYPE == 1:
