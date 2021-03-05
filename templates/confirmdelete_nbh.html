@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Delete Neighborhood
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+
+{% block main %}
+    <div class="scrolling_page">
+    <div class="smalltopspace"></div>
+    <h3>Delete {{ neighborhoodname }}</h3>
+    <p>Are you sure you want to remove this neighborhood? Any  member who is only a part of this group will need to join
+    or create a new one after this group is gone.</p>
+    <br>
+    <p>
+        <div style="color: red; font-weight: bold;">WARNING</div>
+        <i>If you click Delete, the neighborhood will be permanently deleted.</i>
+    </p>
+    <form action="/deleteneighborhood" method="post">
+        <br>
+        <p>Confirm <strong>your</strong> user password to delete this neighborhood.</p>
+        <div class="form-group">
+            <input autofocus class="form-control" id="password" onkeyup="buttonShowCheck()" name="password" placeholder="confirm password" type="password">
+        </div>
+        <button class="btn btn-secondary" id="delete" type="submit" style="width: 190px" disabled>Delete</button><br><br><br>
+        <button class="btn btn-primary" id="cancel" type="submit"style="width: 190px">Cancel</button>
+
+
+        <br><input id="hiddenInfoBox" name="returnedAction" value="" style="display: none;"></input>
+        <br><input id="hiddenInfoBox" name="neighborhoodid" value="{{ neighborhoodid }}" style="display: none;"></input>
+        <div class="deadspace"></div>
+        <div class="deadspace"></div>
+
+    </form>
+    </div>
+
+    <script>
+
+        var hiddenInfoBox = document.getElementById("hiddenInfoBox");
+        var password = document.getElementById("password");
+        var deleteAccount = document.getElementById("delete");
+        var cancelBtn = document.getElementById("cancel");
+
+        deleteAccount.onclick = function(){
+            hiddenInfoBox.value = "deleteNeighborhood";
+        };
+
+        cancelBtn.onclick = function(){
+            hiddenInfoBox.value = "cancel";
+        };
+
+        function buttonShowCheck() {
+            if (password.value != "") {
+                deleteAccount.disabled = false;
+            } else {
+                deleteAccount.disabled = true;
+            }
+        }
+
+    </script>
+{% endblock %}

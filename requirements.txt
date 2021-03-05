@@ -1,0 +1,14 @@
+Flask
+Flask-Session
+requests
+SQL
+Flask-SQLAlchemy
+sqlalchemy
+sqlparse
+termcolor
+pillow
+gunicorn
+psycopg2
+boto3
+botocore
+flask_mail

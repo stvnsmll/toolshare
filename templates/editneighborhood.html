@@ -1,0 +1,169 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Neighborhoods
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+{% block main %}
+
+<!--
+<div class="scrolling_page no-x">
+  <h4 class="smalltopspace">Edit Tool</h4>
+    <p>Update your tool deteils here.</p>
+    <hr>
+    <form action="/edittool" method="post" enctype="multipart/form-data" id="newtoolform" name="newtoolform" target="_blank">
+
+      <div class="row">
+        <div clas
+-->
+
+
+<div class="scrolling_page no-x">
+  <h4 class="smalltopspace">Edit Neighborhood</h4>
+    <p>Update your neighborhood deteils here.</p>
+    <hr>
+
+              <form action="/editneighborhood" method="post">
+                <div class="input-group mb-3 long-input mx-auto">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <span class="redstar">*</span>
+                      Neighborhood
+                    </span>
+                  </div>
+                  <input autofocus type="text" class="form-control" name="neighborhood" placeholder="unique name" value="{{ neighborhood }}">
+                </div>
+                <div class="input-group mb-3 long-input mx-auto">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <span class="redstar">*</span>
+                      Zip Code
+                    </span>
+                  </div>
+                  <input autofocus type="tel" maxlength=5 minlength=5 class="form-control" name="zipcode" placeholder="5-digit zip" value="{{ zipcode }}">
+                </div>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" value="{{ privateCheck }}" id="privatecheck" {% if privateCheck == 1 -%} checked {%- endif %}>Private
+                    <span class="text-muted" data-toggle="modal" data-target="#myModal">
+                        <a href="#"><u>?</u></a>
+                    </span>
+                  </label>
+                  <br><br>
+                  <div class="d-flex justify-content-start">
+                    <label class="text-left" for="description">Description:</label><br>
+                  </div>
+                  <textarea class="form-control" rows="4" id="description" name="description" style="width: 90%" placeholder="city / state / organization / neighborhood / rules / special instructions / etc">{{ description }}</textarea>
+                  <br>
+                </div><br>
+                {% if passwordYN == 'Yes' -%}
+                    <p>Confirm your neighborhood password here.<br>Leave blank to remove password protection.
+                    <span class="text-muted" data-toggle="modal" data-target="#myModal2">
+                      <a href="#"><u>?</u></a>
+                    </span>
+                    </p>
+                    <input class="form-control" id="nbhpassword" name="password" type="password" placeholder="**********"></input><br><br>
+                {% else %}
+                    <p>You can add a password to help control the members.
+                      <span class="text-muted" data-toggle="modal" data-target="#myModal2">
+                        <a href="#"><u>?</u></a>
+                      </span>
+                    </p>
+                    <input class="form-control" id="nbhpassword" name="password" placeholder="(optional password)" type="password">
+                {%- endif %}
+                <br>
+
+
+                <button class="btn btn-success" type="submit" data-toggle="modal" data-target="#spinnerCogModal">Save Changes</button><br><br>
+                <button class="btn btn-secondary" onclick="window.history.go(-1); return false;" style="width: 130px">Cancel</button>
+                <br><input id="hiddenChecbox" name="private" value="{{ privateCheck }}" style="display: none;"></input>
+                <input id="nbhidbox" name="neighborhoodid" style="display: none;" value="{{ neighborhoodid }}"></input>
+
+                <div class="deadspace"></div>
+                <div class="deadspace"></div>
+              </form>
+              <div class="deadspace"></div>
+              <div class="deadspace"></div>
+
+
+
+<!--</div>-->
+
+
+
+      <!-- The Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Private Nieghborhoods</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-left">
+          Marking your neighborhood as private just means that it will not show up in the list that is visible to all users.
+          To find a private neighborhood, you must search for the exact neighborhood name in the "Join" search field.
+          <br>
+          You can use still have your neighborhood be password protected or not.
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+      <!-- The Modal (2) -->
+  <div class="modal fade" id="myModal2">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Nieghborhood Passwords</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-left">
+          If you choose to add a password to your neighborhood, the user must type the password to become a member of the nieghborhood.
+          This can be used to help restrict access to friends/family.
+          <br>
+          You will be the Admin for this neighborhood and can change or remove the password at a later time.
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+
+    var hiddenChecbox = document.getElementById("hiddenChecbox");
+    var privatecheck = document.getElementById("privatecheck");
+
+    privatecheck.onchange = function() {
+      if (privatecheck.checked) {
+        hiddenChecbox.value = "1";
+      } else {
+        hiddenChecbox.value = "0";
+      }
+    };
+
+    </script>
+{% endblock %}

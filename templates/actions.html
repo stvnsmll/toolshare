@@ -1,0 +1,529 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Actions
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+{% block main %}
+<div class="container p-3">
+    <h4 class="smalltopspace">{{ firstname }}'s Actions</h4>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs nav-justified tab_format container bottom_tabnav" role="tablist">
+        <li class="nav-item">
+            <a class="active" data-toggle="tab" href="#approvals">Approvals</a>
+        </li>
+        <li class="nav-item">
+            <a class="" data-toggle="tab" href="#requests">Notifications</a>
+        </li>
+        <!--  Unsure of how i'd use notifications...
+        <li class="nav-item" style="margin-left: 5px;">
+            <a class="nav-link" data-toggle="tab" href="#notifications">Notifications</a>
+        </li>
+        -->
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content actionpage">
+        <div id="approvals" name="approvals" class="container tab-pane active list_div find_tool_list">
+            <form action="/actions" method="post">
+            {% for item in myapprovals %}
+            <!-- When the user has NO image of the tool -->
+            <div class='actioncard collapsecard' style="height: auto;" id="{{ myapprovals[item]['actionid'] }}">
+                <div class='row align-items-center no-gutters'>
+                    <div class="col-sm-9 col-md-10" style="background-color: yellow1;">
+                        <div class="row align-items-center no-gutters">
+                            <div class="col-auto mx-auto">
+                                <!-- If image exists, show thumbnail; else show a tool icon -->
+                                {% if myapprovals[item]['photo'] %}
+                                <img class="approvalimg" src="{{ myapprovals[item]['photo'] }}">
+                                {% else %}
+                                <div class="p-2 toolicon" style="margin-left: 20px;"><i class='fas fa-hammer'></i></div>
+                                {% endif %}
+                            </div>
+                            <div class="col">
+                                <div class="card-block px-2 text-left" style="flex-grow: 2; margin: 3px 3px 8px 10px;">
+                                    <h4 class="card-title">{{ myapprovals[item]['toolname'] }}</h4>
+                                    <p class="card-text">
+                                        Requestor: <a href="#" data-toggle="popover" data-placement="top" title="{{ myapprovals[item]['requestorusername'] }}" data-content="Common Neighborhoods: {{ myapprovals[item]['commonNeighborhoods'] }}">{{ myapprovals[item]['requestorfirstname'] }}</a>
+                                        <br>
+                                        Requested on: {{ myapprovals[item]['requestDate'] }}<br>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-md-2" style="background-color: green1;">
+                        <div class="row mx-auto" style="max-width: 180px; background-color: pink1;">
+                            <div class="p-2 col" style="background-color: orange1; height: auto;">
+                                <button class="btn btn-success badge-pill roundaction" style="margin-right: -5%;" onclick="hidethisdiv1({{ myapprovals[item]['actionid'] }}, 'approve')"><i class="fa fa-check fa-lg sha"></i></button>
+                            </div>
+                            <div class="p-2 col" style="background-color: blue1; height: auto;">
+                                <button class="btn btn-danger badge-pill roundaction" onclick="hidethisdiv1({{ myapprovals[item]['actionid'] }}, 'reject')"><i class="fa fa-times fa-lg sha"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="expanddowncontainer">
+                    <div class="expanddown">
+                        <div id="expandrequestid{{ myapprovals[item]['actionid'] }}" onclick="expandfooter('footerrequestid{{ myapprovals[item]['actionid'] }}', 'expandrequestid{{ myapprovals[item]['actionid'] }}');" class="btn bg-transparent btn-pos spinme">
+                            <i class="fa fa-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer w-100 text-muted expandanimate" id="footerrequestid{{ myapprovals[item]['actionid'] }}" style='max-height: 0px; padding: 0px'>
+                    {{ myapprovals[item]['requestorfirstname'] }}: {{ myapprovals[item]['messages'] }} &nbsp;
+                    <div class="btn btn-warning badge-pill roundaction" onclick="toggleResponse('responseCommentContainerrequestid{{ myapprovals[item]['actionid'] }}')"><i class="fa fa-reply fa-lg"></i></div>
+                    <div id="responseCommentContainerrequestid{{ myapprovals[item]['actionid'] }}" style="max-height: 0px;" class="expandanimate">
+                        <br>
+                        <textarea class="form-control" rows="2" name="responseComment{{ myapprovals[item]['actionid'] }}" id="responseComment{{ myapprovals[item]['actionid'] }}" style="width: 80%;" placeholder="Response..."></textarea>
+                        <br>
+                        <div class="small text-muted">(To respond with a comment, leave this box open when you approve or deny)</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- Don't need to show these templates...
+            <br>
+            <hr>
+            ~~ Templates Below ~~
+            <br>
+
+
+
+
+
+            <!-- When the user has an image of the tool -- >
+            <div class='actioncard' style="height: auto;">
+                <div class='row align-items-center no-gutters'>
+                    <div class="col-sm-9 col-md-10" style="background-color: yellow1;">
+                        <div class="row align-items-center no-gutters">
+                            <div class="col-sm-3">
+                                <!-- If image exists, show thumbnail; else show a tool icon -- >
+                                <img src="//placehold.it/200" alt="" style="max-height: 160px; margin: 5px; border-radius: 3px">
+                            </div>
+                            <div class="col">
+                                <div class="card-block px-2 text-left" style="flex-grow: 2; margin: 3px 3px 8px 10px;">
+                                    <h4 class="card-title">{ Tool Name }</h4>
+                                    <p class="card-text">
+                                        Requestor: <a href="#" data-toggle="popover" data-placement="top" title="{ username }" data-content="From { commonNeighborhoods }">{ firstname }</a>
+                                        <br>
+                                        Requested on: { requestDate }<br>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-md-2" style="background-color: green1;">
+                        <div class="row mx-auto" style="max-width: 180px; background-color: pink1;">
+                            <div class="p-2 col" style="background-color: orange1; height: auto;">
+                                <button class="btn btn-success badge-pill roundaction" style="margin-right: -5%;" href="#"><i class="fa fa-check fa-lg sha"></i></button>
+                            </div>
+                            <div class="p-2 col" style="background-color: blue1; height: auto;">
+                                <button class="btn btn-danger badge-pill roundaction" href="#"><i class="fa fa-times fa-lg sha"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="expanddowncontainer">
+                    <div class="expanddown">
+                        <div id="expandrequestid1" onclick="expandfooter('footerrequestid1', 'expandrequestid1');"class="btn bg-transparent btn-pos spinme">
+                            <i class="fa fa-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer w-100 text-muted expandanimate" id="footerrequestid1" style='max-height: 0px; padding: 0px'>
+                    { Firstname }: "I will be needing it for at least 2 weeks." &nbsp;
+                    <button class="btn btn-warning badge-pill roundaction" onclick="toggleResponse('responseCommentContainerrequestid1')" href="#"><i class="fa fa-reply fa-lg"></i></button>
+                    <div id="responseCommentContainerrequestid1" style="max-height: 0px;" class="expandanimate">
+                        <br>
+                        <textarea class="form-control" rows="2" name="responseComment" id="responseComment1" style="width: 80%" placeholder="Response..."></textarea>
+                        <br>
+                        <div class="small text-muted">(To respond with a comment, leave this box open when you approve or deny)</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- When the user has NO image of the tool -- >
+            <div class='actioncard' style="height: auto;">
+                <div class='row align-items-center no-gutters'>
+                    <div class="col-sm-9 col-md-10" style="background-color: yellow1;">
+                        <div class="row align-items-center no-gutters">
+                            <div class="col-auto">
+                                <!-- If image exists, show thumbnail; else show a tool icon -- >
+                                <div class="p-2 toolicon" style="margin-left: 20px;"><i class='fas fa-hammer'></i></div>
+                            </div>
+                            <div class="col">
+                                <div class="card-block px-2 text-left" style="flex-grow: 2; margin: 3px 3px 8px 10px;">
+                                    <h4 class="card-title">{ Tool Name }</h4>
+                                    <p class="card-text">
+                                        Requestor: <a href="#" data-toggle="popover" data-placement="top" title="{ username }" data-content="From { commonNeighborhoods }">{ firstname }</a>
+                                        <br>
+                                        Requested on: { requestDate }<br>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-md-2" style="background-color: green1;">
+                        <div class="row mx-auto" style="max-width: 180px; background-color: pink1;">
+                            <div class="p-2 col" style="background-color: orange1; height: auto;">
+                                <button class="btn btn-success badge-pill roundaction" style="margin-right: -5%;" href="#"><i class="fa fa-check fa-lg sha"></i></button>
+                            </div>
+                            <div class="p-2 col" style="background-color: blue1; height: auto;">
+                                <button class="btn btn-danger badge-pill roundaction" href="#"><i class="fa fa-times fa-lg sha"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="expanddowncontainer">
+                    <div class="expanddown">
+                        <div id="expandrequestid2" onclick="expandfooter('footerrequestid2', 'expandrequestid2');" class="btn bg-transparent btn-pos spinme">
+                            <i class="fa fa-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer w-100 text-muted expandanimate" id="footerrequestid2" style='max-height: 0px; padding: 0px'>
+                    { firstname }: { messages } &nbsp;
+                    <button class="btn btn-warning badge-pill roundaction" onclick="toggleResponse('responseCommentContainerrequestid2')" href="#"><i class="fa fa-reply fa-lg"></i></button>
+                    <div id="responseCommentContainerrequestid2" style="max-height: 0px;" class="expandanimate">
+                        <br>
+                        <textarea class="form-control" rows="2" name="comment2" id="comment2" style="width: 80%;" placeholder="Response..."></textarea>
+                        <br>
+                        <div class="small text-muted">(To respond with a comment, leave this box open when you approve or deny)</div>
+                    </div>
+                </div>
+            </div>
+            -->
+
+
+            <!-- trials for how other cards would look...
+            <div class="card flex-row flex-wrap actioncard2" style="display: flex; align-items: center;">
+                <div class="d-flex">
+                    <div class="p-2">
+                        <div class="card-header border-0" style="flex-grow: 1;">
+                            <img src="//placehold.it/200" alt="">
+                        </div>
+                    </div>
+                    <div class="p-2 flex-grow-1">
+                        <div class="card-block px-2" style="border: 1px solid red; flex-grow: 2;">
+                            <h4 class="card-title">Tool Name</h4>
+                            <p class="card-text">
+                                Requestor: { Firstname } ({ username} )<br>
+                                Requested on: { requestDate }<br>
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-block px-2" style="border: 1px solid green; flex-grow: 1;">
+                    <div class='actionbuttons'>
+                        <a class="btn btn-success badge-pill roundaction" href="#"><i class="fa fa-check fa-lg sha"></i></a>
+                        <a class="btn btn-danger badge-pill roundaction" href="#"><i class="fa fa-times fa-lg sha"></i></a>
+                        <div class="btn btn-secondary badge-pill roundaction" href="#"><i class="fa fa-info-circle fa-lg"></i></div>
+                        <a href="#" class="btn btn-warning roundaction" style="width: auto;"><i class="fa fa-reply fa-lg" aria-hidden="true"></i> Reply</a>
+                    </div>
+                </div>
+                <div class="card-footer w-100 text-muted">
+                    { Firstname }: "I will be needing it for at least 2 weeks."
+                </div>
+            </div>
+
+            <div class='actioncard' tabindex="0">
+                <div class="d-flex">
+                    <div class="p-2">
+                        <div class='toolimage'><i class="far fa-file-image fa-3x" style="margin-top: 7px; color: gray;"></i></div>
+                    </div>
+                    <div class="p-2 flex-grow-1">
+                        <div class="card-block px-2" style="border: 1px solid red; flex-grow: 2;">
+                            <h4 class="card-title">Tool Name</h4>
+                            <p class="card-text">
+                                Borrow request from: { Firstname } ({ username} )<br>
+                                Requested on: { requestDate }<br>
+                            </p>
+                        </div>
+                    </div>
+                    <div class='p-2 actionbuttons'>
+                        <button class="btn btn-success badge-pill roundaction nospace" href="#"><i class="fa fa-check fa-lg sha"></i></button><br>
+                        <button class="btn btn-danger badge-pill roundaction nospace" href="#"><i class="fa fa-times fa-lg sha"></i></button>
+                    </div>
+                </div>
+
+                <div class='actionbuttons'>
+                    <a class="btn btn-success badge-pill roundaction" href="#"><i class="fa fa-check fa-lg sha"></i></a>
+                    <a class="btn btn-danger badge-pill roundaction" href="#"><i class="fa fa-times fa-lg sha"></i></a>
+                    <div class="btn btn-secondary badge-pill roundaction" href="#"><i class="fa fa-info-circle fa-lg"></i></div>
+                    <button href="#" class="btn btn-warning replybtn"><i class="fa fa-reply fa-lg"></i> Reply</button>
+                </div>
+            </div>
+
+            <div class='actioncard' tabindex="0">
+                <div class='toolimage'></div>
+                <div class='actionbuttons'>
+                    <a class="btn btn-success badge-pill roundaction" href="#"><i class="fa fa-check fa-lg sha"></i></a>
+                    <a class="btn btn-danger badge-pill roundaction" href="#"><i class="fa fa-times fa-lg sha"></i></a>
+                    <div class="btn btn-secondary badge-pill roundaction" href="#"><i class="fa fa-info-circle fa-lg"></i></div>
+                    <a href="#" class="btn btn-warning"><i class="fa fa-reply fa-lg" aria-hidden="true"></i> Reply</a>
+                </div>
+            </div>
+            -->
+
+            <input id="hiddenInfoBox1" name="returnedAction" style="display: none;" value="fromMyApprovals"></input>
+            <input id="returnedActionID1" name="returnedActionID" style="display: none;" value=""></input>
+            <input id="approveOrReject1" name="approveOrReject" style="display: none;" value=""></input>
+            <textarea name="approveReject_comments" id="approveReject_comments" style="display: none;" value=""></textarea>
+            <div class="deadspace"></div>
+            <div class="deadspace"></div>
+            </form>
+        </div>
+
+
+
+        <div id="requests" name="requests" class="container tab-pane fade list_div find_tool_list">
+            <form action="/actions" method="post">
+            {% for item in myrequests %}
+            <!-- When the user has NO image of the tool -->
+            <div class='actioncard collapsecard' style="height: auto;" id="{{ myrequests[item]['actionid'] }}">
+                <div class='row align-items-center no-gutters'>
+                    <div class="col-sm-8 col-md-9" style="background-color: yellow1;">
+                        <div class="row align-items-center no-gutters">
+                            <div class="col-auto mx-auto">
+                                <!-- If image exists, show thumbnail; else show a tool icon -->
+                                {% if myrequests[item]['photo'] %}
+                                <img class="notificationimg" src="{{ myrequests[item]['photo'] }}">
+                                {% else %}
+                                <div class="p-2 toolicon" style="margin-left: 20px;"><i class='fas fa-hammer'></i></div>
+                                {% endif %}
+                            </div>
+                            <div class="col">
+                                <div class="card-block px-2 text-left" style="flex-grow: 2; margin: 3px 3px 8px 10px;">
+                                    <h4 class="card-title">{{ myrequests[item]['toolname'] }}</h4>
+                                    <p class="card-text">
+                                        Tool Owner: <a href="#" data-toggle="popover" data-placement="top" title="{{ myrequests[item]['ownerusername'] }}" data-content="From {{ myrequests[item]['commonNeighborhoods'] }}">{{ myrequests[item]['ownerfirstname'] }}</a>
+                                        <br>
+                                        Requested on: {{ myrequests[item]['requestDate'] }}<br>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-3" style="background-color: green1;">
+                        <div class="row mx-auto" style="max-width: 210px; background-color: pink1;">
+                            <div class="p-2 col" style="background-color: blue1; height: auto;">
+
+                                <!-- this works, but I don't need it... {{ 'Cancel' if 'open' in myrequests[item]['state'] else 'Dismiss' }}-->
+                                {% if 'open' in myrequests[item]['state'] %}
+                                    <!-- state is open if the origin can still cancel it -->
+                                    <button class="btn btn-danger badge-pill" onclick="hidethisdiv2({{ myrequests[item]['actionid'] }}, 'cancel')" type="submit1"><i class="fa fa-trash-alt sha"></i> Cancel</button>
+                                {% else %}
+                                    <!-- state is closed and just needs to be dismissed -->
+                                    <button class="btn btn-info badge-pill" onclick="hidethisdiv2({{ myrequests[item]['actionid'] }}, 'dismiss')" type="submit1"><i class="fa fa-eye-slash sha"></i> Dismiss</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer w-100 text-muted">
+                    {{ myrequests[item]['requestorfirstname'] }}: "{{ myrequests[item]['messages'] }}" &nbsp;
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- Don't need to show these templates...
+            <br>
+            <hr>
+            ~~ Templates Below ~~
+            <br>
+
+            <!-- When the user has an image of the tool -- >
+            <div class='actioncard' style="height: auto;">
+                <div class='row align-items-center no-gutters'>
+                    <div class="col-sm-8 col-md-9" style="background-color: yellow1;">
+                        <div class="row align-items-center no-gutters">
+                            <div class="col-sm-3">
+                                <!-- If image exists, show thumbnail; else show a tool icon -- >
+                                <img src="//placehold.it/200" alt="" style="max-height: 160px; margin: 5px; border-radius: 3px">
+                            </div>
+                            <div class="col">
+                                <div class="card-block px-2 text-left" style="flex-grow: 2; margin: 3px 3px 8px 10px;">
+                                    <h4 class="card-title">{ Tool Name }</h4>
+                                    <p class="card-text">
+                                        Tool Owner: <a href="#" data-toggle="popover" data-placement="top" title="{ username }" data-content="From { commonNeighborhoods }">{ firstname }</a>
+                                        <br>
+                                        Requested on: { requestDate }<br>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-3" style="background-color: green1;">
+                        <div class="row mx-auto" style="max-width: 210px; background-color: pink1;">
+                            <div class="p-2 col" style="background-color: blue1; height: auto;">
+                                <button class="btn btn-danger badge-pill" href="#"><i class="fa fa-trash-alt sha"></i> Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer w-100 text-muted">
+                    { Firstname }: "I will [this is an example of an open request] be needing it for at least 2 weeks." &nbsp;
+                </div>
+            </div>
+
+
+            <!-- When the user has NO image of the tool -- >
+            <div class='actioncard' style="height: auto;">
+                <div class='row align-items-center no-gutters'>
+                    <div class="col-sm-8 col-md-9" style="background-color: yellow1;">
+                        <div class="row align-items-center no-gutters">
+                            <div class="col-auto">
+                                <!-- If image exists, show thumbnail; else show a tool icon -- >
+                                <div class="p-2 toolicon" style="margin-left: 20px;"><i class='fas fa-hammer'></i></div>
+                            </div>
+                            <div class="col">
+                                <div class="card-block px-2 text-left" style="flex-grow: 2; margin: 3px 3px 8px 10px;">
+                                    <h4 class="card-title">{ Tool Name }</h4>
+                                    <p class="card-text">
+                                        Tool Owner: <a href="#" data-toggle="popover" data-placement="top" title="{ username }" data-content="From { commonNeighborhoods }">{ firstname }</a>
+                                        <br>
+                                        Requested on: { requestDate }<br>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-3" style="background-color: green1;">
+                        <div class="row mx-auto" style="max-width: 210px; background-color: pink1;">
+                            <div class="p-2 col" style="background-color: blue1; height: auto;">
+                                <button class="btn btn-info badge-pill" href="#"><i class="fa fa-eye-slash sha"></i> Dismiss</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer w-100 text-muted">
+                    { Firstname }: "I will [this is an example of an approved or rejected request] be needing it for at least 2 weeks." &nbsp;
+                </div>
+            </div>
+            -->
+
+
+            <input id="hiddenInfoBox2" name="returnedAction" style="display: none;" value="fromMyRequests"></input>
+            <input id="returnedActionID2" name="returnedActionID" style="display: none;" value=""></input>
+            <input id="dismissOrCancel2" name="dismissOrCancel" style="display: none;" value=""></input>
+            <div class="deadspace"></div>
+            <div class="deadspace"></div>
+        </form>
+        </div>
+        <!-- No need for notifiactions yet
+        <div id="notifications" class="container2 tab-pane">
+            <div class="tab_header">My Notifications</div>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+        -->
+    </div>
+</div>
+
+    <script>
+    var approveReject_comments = document.getElementById('approveReject_comments');
+
+    // Javascript to enable link to tab
+    var url = document.location.toString();
+    if (url.match('#')) {
+        $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
+    }
+
+    // Change hash for page-reload
+    $('.nav-tabs a').on('shown.bs.tab', function (e) {
+        window.location.hash = e.target.hash;
+    });
+
+        function expandfooter(sectiontoexpand, chevron) {
+            //alert(sectiontoexpand);
+            var togglefooter = document.getElementById(sectiontoexpand);
+            var chevron = document.getElementById(chevron);
+            if (togglefooter.style.maxHeight == '0px') {
+                togglefooter.style.padding = '.75rem 1.25rem';
+                togglefooter.style.maxHeight = '500px';
+                chevron.style.transform = "rotateX(180deg)";
+            } else {
+                togglefooter.style.maxHeight = '0px';
+                chevron.style.transform = "rotateX(0deg)";
+                sleep(160).then(() => { togglefooter.style.padding = '0px'; });
+            }
+        }
+
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover({
+                trigger: 'focus'
+            });
+        });
+
+        function toggleResponse(responseBox) {
+            var responseCommentContainer = document.getElementById(responseBox);
+            if (responseCommentContainer.style.maxHeight == '0px') {
+                responseCommentContainer.style.maxHeight = '500px';
+            } else {
+                responseCommentContainer.style.maxHeight = '0px';
+            }
+        }
+
+        function sleep(ms) {
+          return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function hidethisdiv1(divtohide, approveOrReject) {
+            var hidingdiv = document.getElementById(divtohide);
+            hidingdiv.style.maxHeight = "0px";
+            hidingdiv.style.boxShadow = "";
+            hidingdiv.style.border = "none";
+            hidingdiv.style.margin = "0";
+            document.getElementById("returnedActionID1").value = divtohide;
+            document.getElementById("approveOrReject1").value = approveOrReject;
+            if (document.getElementById("responseCommentContainerrequestid" + divtohide).style.maxHeight == "0px") {
+                approveReject_comments.value = "";
+            } else {
+                approveReject_comments.value = document.getElementById("responseComment" + divtohide).value;
+            }
+            sleep(135).then(() => { document.getElementById(divtohide).style.display = "none"; });
+            decrementActionCount();
+        }
+
+        function hidethisdiv2(divtohide, dismissOrCancel) {
+            var hidingdiv = document.getElementById(divtohide);
+            hidingdiv.style.maxHeight = "0px";
+            hidingdiv.style.boxShadow = "";
+            hidingdiv.style.border = "none";
+            hidingdiv.style.margin = "0";
+            document.getElementById("returnedActionID2").value = divtohide;
+            document.getElementById("dismissOrCancel2").value = dismissOrCancel;
+            sleep(135).then(() => { document.getElementById(divtohide).style.display = "none"; });
+        }
+
+
+
+    </script>
+{% endblock %}
+
+{% block endscript %}
+    <script>
+        function decrementActionCount() {
+            var notificationcount = document.getElementById('notificationcount');
+            var currentcount = notificationcount.innerHTML;
+            var newcount = currentcount - 1;
+            //alert(currentcount + " changed to: " + newcount);
+            if (newcount == 0) {
+                notificationcount.classList.remove('badge-danger');
+                notificationcount.innerHTML = "";
+            } else {
+                notificationcount.innerHTML = newcount;
+            }
+        }
+    </script>
+{% endblock %}

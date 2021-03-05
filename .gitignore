@@ -1,0 +1,6 @@
+*.DS_Store
+/_manual_backups
+/_trash
+/__pycache__
+/venv
+/flask_session/

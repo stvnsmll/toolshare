@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Update Password
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+{% block main %}
+<div class="scrolling_page no-x">
+    <div class="deadspace"></div>
+    <h5>Update your name from {{ firstname }} to:</h5><br>
+    <form action="/changename" method="post">
+        <div class="form-group">
+            <input autofocus autocomplete="off" class="form-control" id="newName" onkeyup="buttonShowCheck()" name="newName" placeholder="new name" type="text">
+        </div>
+
+        <br><br>
+        <button class="btn btn-primary" id="nameChange" type="submit" style="width: 150px" data-toggle="modal" data-target="#spinnerCogModal" disabled>Change Name</button>
+        <br><br>
+        <button class="btn btn-secondary" id="cancel" type="submit" style="width: 150px" data-toggle="modal" data-target="#spinnerModal">Cancel</button>
+
+        <br><input id="hiddenInfoBox" name="returnedAction" value="" style="display: none;"></input>
+    </form>
+    <div class="deadspace"></div>
+    <div class="deadspace"></div>
+</div>
+
+    <script>
+        var newName = document.getElementById("newName");
+        var nameChange = document.getElementById("nameChange");
+        var cancelBtn = document.getElementById("cancel");
+
+        cancelBtn.onclick = function(){
+            hiddenInfoBox.value = "returnHome";
+        };
+
+        nameChange.onclick = function(){
+            hiddenInfoBox.value = "changename";
+        };
+
+        function buttonShowCheck() {
+            if (newName.value != "") {
+                nameChange.disabled = false;
+            } else {
+                nameChange.disabled = true;
+            }
+        }
+
+    </script>
+{% endblock %}

@@ -1,0 +1,466 @@
+{% extends "layout.html" %}
+
+{% block moreHead %}
+    <link href="/static/checkboxes.css" rel="stylesheet">
+{% endblock %}
+
+{% block title %}
+    Edit Tool
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+{% block main %}
+
+<div class="scrolling_page no-x">
+  <h4 class="smalltopspace">Edit Tool</h4>
+    <p>Update your tool deteils here.</p>
+    <hr>
+    <form action="/edittool" method="post" enctype="multipart/form-data" id="newtoolform" name="newtoolform" target="_blank">
+
+      <div class="row">
+        <div class="col-md-6 col-lg-4">
+          <div class="input-group mb-3 long-input mx-auto">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <span class="redstar">*</span>
+                Tool
+              </span>
+            </div>
+            <input id="tool_name" autofocus type="text" class="form-control" name="toolname" placeholder="tool name" value="{{ toolname }}" required>
+          </div>
+          <!--
+          <div class="form-check">
+            <label class="form-check-label">
+              <input type="checkbox" id="publicCheck" class="form-check-input" value="{{ publicCheck }}" {{ 'checked' if publicCheck == 1 }}>Public
+                <span class="text-muted" data-toggle="modal" data-target="#myModal">
+                    <a href="#"><u>?</u></a>
+                </span>
+            </label>
+          </div><br>
+          -->
+          <div class="form-check">
+            <!--
+            <label class="form-check-label">
+              <input type="checkbox" id="publicCheck" class="form-check-input" value="" checked>Public
+            </label>
+            <br>
+            -->
+            <div class="btn-group btn-group-sm">
+              <button type="button" id="privatebtn" onclick=setVisibility('private') class={% if toolVis == 'private' %} 'btn btn-primary' {% else %} 'btn btn-light' {% endif %}>Private</button>
+              <button type="button" id="publicbtn" onclick=setVisibility('public') class={% if toolVis == 'public' %} 'btn btn-primary' {% else %} 'btn btn-light' {% endif %}>Public</button>
+              <button type="button" id="custombtn" onclick=setVisibility('custom') class={% if toolVis == 'custom' %} 'btn btn-primary' {% else %} 'btn btn-light' {% endif %}>
+                Custom&nbsp;&nbsp;<i id="chevron1" class="fa fa-chevron-down spinme" style="color: {% if toolVis == 'custom' %} #f2f2f2 {% else %} gray {% endif %}; font-size: 10px"></i>
+              </button>
+            </div>
+            <span class="text-muted" data-toggle="modal" data-target="#myModal">
+                &nbsp; <a href="#"><u>?</u></a>
+            </span>
+            <div id="neighborhoodselector" class="selector_list expandanimate" style="max-height: 1px">
+              <ul class="list" style="overflow-y: scroll;">
+
+                {% for item in myNeighborhoods %}
+                <li class="list-item">
+                  <input type="checkbox" class="hidden-box" id="{{ myNeighborhoods[item]['neighborhoodID'] }}" {{ 'checked' if myNeighborhoods[item]['isVisible'] }}/>
+                  <label for="{{ myNeighborhoods[item]['neighborhoodID'] }}" class="check--label">
+                    <span class="check--label-box"></span>
+                    <span class="check--label-text">{{ myNeighborhoods[item]['neighborhoodName'] }}</span>
+                  </label>
+                </li>
+                {% endfor %}
+
+                <!-- Demo checkbox items
+                <li class="list-item">
+                  <input type="checkbox" class="hidden-box" id="first"/>
+                  <label for="first" class="check--label">
+                    <span class="check--label-box"></span>
+                    <span class="check--label-text">First Neighborhood</span>
+                  </label>
+                </li>
+                <li class="list-item">
+                  <input type="checkbox" class="hidden-box" id="second"/>
+                  <label for="second" class="check--label">
+                    <span class="check--label-box"></span>
+                    <span class="check--label-text">Second Neighborhood</span>
+                  </label>
+                </li>
+                <li class="list-item">
+                  <input type="checkbox" class="hidden-box" id="third" />
+                  <label for="third" class="check--label">
+                    <span class="check--label-box"></span>
+                    <span class="check--label-text">Third Neighborhood</span>
+                  </label>
+                </li>
+                -->
+
+              </ul>
+            </div>
+          </div><br>
+          <div class="form-group">
+            <label for="sel1">
+              <span class="redstar">*</span>
+              Select a tool category:
+            </label><br>
+            <select class="form-control" id="sel1" name="category">
+              <option value="hand" {{ 'selected' if category == 'hand' }}>Hand</option>
+              <option value="power" {{ 'selected' if category == 'power' }}>Power</option>
+              <option value="garden" {{ 'selected' if category == 'garden' }}>Garden</option>
+              <option value="fastening" {{ 'selected' if category == 'fastening' }}>Fastening</option>
+              <option value="uncategorized" {{ 'selected' if category == 'uncategorized' }}>Uncategorized</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-8">
+            <br>
+              <div id="image_loading" style="display: none; width: 50%; margin: auto;" >
+                <i class="fa fa-hammer fa-spin" style="margin-top: 40px; font-size: 40px; color: gray;"></i>
+              </div>
+
+              <img id="source_image" {% if photo %} src="{{ photo }}" class="makesquareimg" {% endif %} name="toolimage" alt=""><br>
+              <div id="noimagetag" class="small copyright" {% if photo %} style="display: none;" {% endif %}><br>[ no image ]<br><br></div>
+      			  <label for="fileinput" class="custom-file-upload">
+                <i class="fa fa-camera"></i> &nbsp; <span id="uploadtext">{% if photo %} Change Photo {% else %} Add a Photo {% endif %}</span> &nbsp; <i class="fa fa-upload"></i>
+              </label>
+              <input id="fileinput" type="file" accept="image/*">
+              <br>
+              <button type="button" id="deleteimage" onclick="deleteoldimage()" class="custom-file-upload" {% if photo %} style="display: inline;" {% else %} style="display: none;"{% endif %}>
+                <i class="fa fa-trash"></i> &nbsp; <span>Delete Photo</span> &nbsp; <i class="fa fa-trash"></i>
+              </button>
+            <br>
+        </div>
+      </div>
+
+        <br>
+        <hr>
+        <div class="form-group">
+          <label for="health">
+            <span class="redstar">*</span>
+            Tool Condition:
+            <span id="healthbox" style="font-weight: bold; color: #cc5500;" ></span>
+          </label>
+          <div class="d-flex justify-content-between" style="width: 100%;">
+            <span class="text-muted small">broken</span>
+            <span class="text-muted small">brand new</span>
+          </div>
+          <div class="form-control" style="width: 97%; border-style: none;">
+            <input type="range" id="healthbar" name="health" class="form-control-range" min="0" max="10" value="{{ health }}">
+          </div>
+          <br><br>
+          <div class="d-flex justify-content-start">
+            <label class="text-left" for="features">Features:</label><br>
+          </div>
+          <textarea class="form-control" rows="5" id="features" name="features" style="width: 90%" placeholder="rules / fees / size / cordless / value / special instructions / etc">{{ description }}</textarea>
+          <br><br>
+          <div class="d-flex justify-content-start">
+            <label class="text-left" for="notes">Private Notes:</label><br>
+          </div>
+          <textarea class="form-control" rows="6" id="notes" name="notes" style="width: 90%" placeholder="value / who (not?) to trust / other private notes ">{{ notes }}</textarea>
+
+          <br>
+        </div>
+
+        <br>
+        <!--data-toggle="modal" data-target="#spinnerCogModal"-->
+        <a href="javascript: submitform()" class="btn btn-primary"  style="width: 130px">Update Details</a><br><br>
+        <button class="btn btn-secondary" onclick="window.history.go(-1); return false;" style="width: 130px">Cancel</button>
+        <br><input id="hiddenChecbox" name="private" style="display: none;" value="0"></input>
+        <input id="toolidbox" name="toolid" style="display: none;" value="{{ toolid }}"></input>
+        <br>
+        <input id="photostate" name="photostate" style="display: none;" {% if photo %} value="unchanged" {% else %} value="nophoto" {% endif %}></input>
+        <input id="toolvis" name="toolvis" style="display: none;" value="{{ toolVis }}"></input>
+    </form>
+
+    <div id="image_loading" class="text-center">
+      <div class="spinner-grow" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
+    <div class="deadspace"></div>
+    <div class="deadspace"></div>
+    <div class="deadspace"></div>
+    <div class="deadspace"></div>
+
+
+
+</div>
+
+
+
+      <!-- The Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Tool Visibility</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-left">
+          When a tool is marked as <strong>Public</strong>, it will be visible and available for borrowing to anyone in any of your neighborhoods.
+          <br><br>
+          You can use <strong>Private</strong> tools to manage your tools without them being available or visible to others.
+          It can also be used to decommision a tool temporarily for repair or replacement.
+          <br><br>
+          Select the <strong>Custom</strong> option if there are only specific group(s) you wish to share this tool with. When a neighborhood is
+          checked, the tool will be visible and available to anyone with access to that neighborhood.
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+<!-- Image Upload preview and compress script -->
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="static/image-square-resizer.js"></script>
+<script>
+    var showModal;
+    $().ready(function(){
+      //jQuery function
+      showModal = function()
+      {
+        jQuery.noConflict();
+        $('#spinnerCogModal').modal('show');
+      };
+    });
+
+
+  function deleteoldimage() {
+    document.getElementById('source_image').src = "";
+    document.getElementById("source_image").height = "5px";
+    document.getElementById("deleteimage").style.display = "none";
+    document.getElementById('uploadtext').innerHTML = "Add a Photo";
+    document.getElementById("photostate").value = "removed";
+    document.getElementById("noimagetag").style.display = "block";
+  }
+
+  let resizer = new imageSqResizer(
+      'fileinput',   // &lt;input type="file" id="image-input"&gt; ('image-input')
+      300,             // edge of a square in px (300)
+      (dataUrl) => document.getElementById('source_image').src = dataUrl
+  );
+
+  document.getElementById("fileinput").addEventListener("change", imageadded);
+
+  function imageadded() {
+    var source_image = document.getElementById("source_image");
+    document.getElementById("image_loading").style.display = "block";
+    check_if_loaded();
+    source_image.classList.add('makesquareimg');
+    document.getElementById('uploadtext').innerHTML = "Change Photo";
+    document.getElementById("deleteimage").style.display = "inline";
+    document.getElementById("photostate").value = "changed";
+    document.getElementById("noimagetag").style.display = "none";
+  }
+
+  function check_if_loaded() {
+    if (document.getElementById("source_image").height < 50) {
+      // pause for 50 ms
+      // alert("image has not loaded yet");
+      // alert(source_image.height);
+      setTimeout(check_if_loaded, 50);
+    } else {
+      // alert("image has loaded");
+      // alert(source_image.height);
+      document.getElementById("image_loading").style.display = "none";
+
+    }
+  }
+
+
+    var hiddenChecbox = document.getElementById("hiddenChecbox");
+    var publicCheck = document.getElementById("publicCheck");
+    var slider = document.getElementById("healthbar");
+    var output = document.getElementById("healthbox");
+    output.innerHTML = slider.value; // Display the default slider value
+
+    // Update the current slider value (each time you drag the slider handle)
+    slider.oninput = function() {
+      output.innerHTML = this.value;
+    }
+
+    hiddenChecbox.style.display = 'none';
+
+    /*
+    publicCheck.onchange = function() {
+      if (publicCheck.checked) {
+        hiddenChecbox.value = "0";
+      } else {
+        hiddenChecbox.value = "1";
+      }
+    };
+    */
+
+    function submitform()
+    {
+      // Validate that a Tool Name has been provided
+      if (document.getElementById("tool_name").value == "") {
+        window.alert("Sorry, you must enter a tool name.");
+        document.getElementById("tool_name").focus();
+        return;
+      }
+
+      // Get the neighborhood list if set to 'custom'
+      getNeighborhoodList();
+
+      showModal();
+
+      var form = document.getElementById("newtoolform");
+      var fd = new FormData(form);
+      var source_image = document.getElementById("source_image");
+
+      if (document.getElementById("photostate").value == "changed") {
+        if (document.getElementById("source_image").height > 45) {
+          var dataURL = source_image.src;
+          var blob = dataURItoBlob(dataURL);
+          var file = new File( [blob], 'mytoolimage.jpeg', { type: 'image/jpeg' } );
+            console.log("Compressed Image Info-");
+            console.log("Filename:" + file.name);
+            console.log("Filesize:" + (parseInt(file.size) / 1024) + " Kb");
+            console.log("Type:" + file.type);
+          fd.append("imagefile", file, 'testimage.jpeg');
+        }
+      }
+      var request = new XMLHttpRequest();
+      request.onreadystatechange = function() {
+          if (request.readyState == XMLHttpRequest.DONE) {
+              // alert(request.responseText);
+              document.open();
+              document.write(request.responseText);
+              document.close();
+          }
+      }
+      request.open("POST", "/edittool");
+      request.send(fd);
+      request.addEventListener('load', reqListener);
+    }
+
+    function reqListener() {
+      console.log('this.responseText:', this.responseText);
+      console.log('this.status:', this.status);
+      //window.history.go(-1);
+    }
+
+    function dataURItoBlob(dataURI) {
+      // window.alert(dataURI);
+      var binary = atob(dataURI.split(',')[1]);
+      var array = [];
+      for(var i = 0; i < binary.length; i++) {
+          array.push(binary.charCodeAt(i));
+      }
+      return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
+    }
+
+    function setVisibility(newVisibility) {
+      //window.alert(newVisibility);
+
+      var toolvis = document.getElementById("toolvis");
+      var publicbtn = document.getElementById("publicbtn");
+      var privatebtn = document.getElementById("privatebtn");
+      var custombtn = document.getElementById("custombtn");
+      var chevron1 = document.getElementById('chevron1');
+      var neighborhoodselector = document.getElementById("neighborhoodselector");
+      toolvis.value = newVisibility;
+
+      if (newVisibility == "public") {
+        publicbtn.classList.remove("btn-light");
+        publicbtn.classList.add("btn-primary");
+        privatebtn.classList.remove("btn-primary");
+        privatebtn.classList.add("btn-light");
+        custombtn.classList.remove("btn-primary");
+        custombtn.classList.add("btn-light");
+        if (neighborhoodselector.style.maxHeight != '1px') {
+          /*$("#neighborhoodselector").collapse('hide');*/
+          chevron1.style.transform = "rotateX(0deg)";
+          neighborhoodselector.style.maxHeight = '1px';
+        }
+        chevron1.style.color = "gray";
+      } else if (newVisibility == "private") {
+        publicbtn.classList.remove("btn-primary");
+        publicbtn.classList.add("btn-light");
+        privatebtn.classList.remove("btn-light");
+        privatebtn.classList.add("btn-primary");
+        custombtn.classList.remove("btn-primary");
+        custombtn.classList.add("btn-light");
+        if (neighborhoodselector.style.maxHeight != '1px') {
+          /*$("#neighborhoodselector").collapse('hide');*/
+          chevron1.style.transform = "rotateX(0deg)";
+          neighborhoodselector.style.maxHeight = '1px';
+        }
+        chevron1.style.color = "gray";
+      } else {
+        /*$("#neighborhoodselector").collapse('toggle');*/
+        publicbtn.classList.remove("btn-primary");
+        publicbtn.classList.add("btn-light");
+        privatebtn.classList.remove("btn-primary");
+        privatebtn.classList.add("btn-light");
+        custombtn.classList.remove("btn-light");
+        custombtn.classList.add("btn-primary");
+        if (chevron1.style.color == 'white') {
+          chevron1.style.transform = "rotateX(0deg)";
+          chevron1.style.color = "#f2f2f2";
+          neighborhoodselector.style.maxHeight = '1px';
+        } else {
+          chevron1.style.transform = "rotateX(180deg)";
+          chevron1.style.color = "white";
+          neighborhoodselector.style.maxHeight = '142px';
+        }
+
+      }
+
+    }
+
+  function getNeighborhoodList() {
+    if (document.getElementById("toolvis").value == 'custom') {
+
+        // get reference to element containing toppings checkboxes
+        var el = document.getElementById('neighborhoodselector');
+
+        // get reference to input elements in toppings container element
+        var NBHs = el.getElementsByTagName('input');
+
+        var finalList;
+        var finalList2;
+        finalList = "";
+
+        // assign function to onclick property of each checkbox
+        for (var i=0, len=NBHs.length; i<len; i++) {
+            if ( NBHs[i].type === 'checkbox' ) {
+                if (NBHs[i].checked) {
+                  //window.alert(NBHs[i].id + ' is checked');
+                  finalList += (NBHs[i].id + ',');
+                } //else {
+                //  window.alert(NBHs[i].id + ' is not checked');
+                //}
+            }
+        }
+
+        if (finalList != "") {
+          finalList2 = finalList.slice(0, -1);
+        } else {
+          finalList2 = finalList;
+        }
+
+        document.getElementById("toolvis").value = finalList2;
+
+      }
+  }
+
+
+
+    </script>
+
+
+{% endblock %}

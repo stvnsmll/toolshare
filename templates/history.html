@@ -1,0 +1,159 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+{% block main %}
+<div class="container p-3">
+    <h4 class="smalltopspace">{{ firstname }}'s History</h4>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs nav-justified container tab_format bottom_tabnav" role="tablist">
+        <li class="nav-item">
+            <a class="active" data-toggle="tab" href="#toolhistory">Tool</a>
+        </li>
+        <li class="nav-item">
+            <a class="" data-toggle="tab" href="#nbhhistory">Neighborhood</a>
+        </li>
+
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content actionpage">
+        <div id="toolhistory" name="toolhistory" class="tab-pane active">
+          <div class="list-div">
+            <table class="table table-sm" style="margin-bottom: 0; background-color: #994000; color: white;">
+                <thead>
+                  <tr>
+                    <th scope="col" style="width: 15%; white-space: nowrap; border: 0; border-bottom: 1px solid #dee2e6;">Date</th>
+                    <th scope="col" style="width: 30%; white-space: nowrap; border: 0; border-bottom: 1px solid #dee2e6;">Tool</th>
+                    <th scope="col" style="border: 0; border-bottom: 1px solid #dee2e6;">Description</th>
+                  </tr>
+                </thead>
+            </table>
+          </div>
+          <div class="list_div history_list">
+              <table class="table table-sm table-hover" style="cursor: pointer">
+                <tbody>
+                  {% for item in toolhistory %}
+                  <tr onclick="showInfoModal('{{ toolhistory[item]['toolname'] }}', '{{ toolhistory[item]['timestamp'] }}', '{{ toolhistory[item]['comment'] }}');">
+                    <th scope="row" style="width: 15%; white-space: nowrap; vertical-align: middle">{{ toolhistory[item]['date'] }}</th>
+                    <td style="width: 30%; vertical-align: middle">{{ toolhistory[item]['toolname'] }}</td>
+                    <td style="vertical-align: middle; padding-right: 0;">
+                      <div style="">
+                        {{ toolhistory[item]['comment'] }}
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            <div class="deadspace"></div>
+            <div class="deadspace"></div>
+            <div class="deadspace"></div>
+          </div>
+        </div>
+
+
+        <div id="nbhhistory" name="nbhhistory" class="tab-pane fade">
+                    <div class="list-div">
+            <table class="table table-sm" style="margin-bottom: 0; background-color: #994000; color: white;">
+                <thead>
+                  <tr>
+                    <th scope="col" style="width: 15%; white-space: nowrap; border: 0; border-bottom: 1px solid #dee2e6;">Date</th>
+                    <th scope="col" style="width: 30%; white-space: nowrap; border: 0; border-bottom: 1px solid #dee2e6;">Neighborhood</th>
+                    <th scope="col" style="border: 0; border-bottom: 1px solid #dee2e6;">Description</th>
+                  </tr>
+                </thead>
+            </table>
+          </div>
+          <div class="list_div history_list">
+              <table class="table table-sm table-hover" style="cursor: pointer">
+                <tbody>
+                  {% for item in nbhhistory %}
+                  <tr onclick="showInfoModal('{{ nbhhistory[item]['neighborhoodname'] }}', '{{ nbhhistory[item]['timestamp'] }}', '{{ nbhhistory[item]['comment'] }}');">
+                    <th scope="row" style="width: 15%; white-space: nowrap;">{{ nbhhistory[item]['date'] }}</th>
+                    <td style="width: 30%; overflow-x: scroll;">{{ nbhhistory[item]['neighborhoodname'] }}</td>
+                    <td style="height: 32px; padding-right: 0; overflow-x: scroll;">
+                      <div style="height: 24px;">
+                        {{ nbhhistory[item]['comment'] }}
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            <div class="deadspace"></div>
+            <div class="deadspace"></div>
+            <div class="deadspace"></div>
+          </div>
+        </div>
+    </div>
+</div>
+
+  <!-- The INFO Modal -->
+  <div class="modal fade" id="myInfoModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">History Details</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-left">
+          <strong>Tool Name: </strong><span id="toolnamehere">defaultname</span>
+          <br>
+          <strong>Timestamp:</strong> <span id="timestamp">defaulttimestamp</span>
+          <br><br>
+          <strong>Details:</strong> <span id="detailshere">defaultdetails</span>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" data-dismiss="modal">OK</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+<script>
+    var showInfoModal;
+    $().ready(function(){
+      //jQuery function
+      showInfoModal = function(toolname, timestamp, details)
+      {
+        jQuery.noConflict();
+        var myInfoModal = $('#myInfoModal');
+        myInfoModal.find('#toolnamehere').text(toolname);
+        myInfoModal.find('#timestamp').text(timestamp);
+        myInfoModal.find('#detailshere').text(details);
+        myInfoModal.modal('show');
+      };
+    });
+
+    // Javascript to enable link to tab
+    var url = document.location.toString();
+    if (url.match('#')) {
+        $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
+    }
+
+    // Change hash for page-reload
+    $('.nav-tabs a').on('shown.bs.tab', function (e) {
+        window.location.hash = e.target.hash;
+    });
+
+
+    </script>
+{% endblock %}

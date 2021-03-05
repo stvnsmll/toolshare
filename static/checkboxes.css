@@ -1,0 +1,108 @@
+
+.selector_list {
+  display: flex; /*either none or flex*/
+  justify-content: center;
+  margin: 5px 0 0 0;
+  padding: 0;
+  width: 100%;
+  /*overflow-y: scroll;*/
+  /*height: 100%;*/
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0px;
+  width: 80%;
+  max-width: 400px;
+  border-radius: 0px;
+  /*box-shadow: 10px 10px 0 0 rgba(0, 0, 0, 0.2);*/
+  list-style: none;
+  /*overflow: hidden;*/
+  border: 1px solid #ecf0f1;
+}
+.list .list-item {
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid #ecf0f1;
+  position: relative;
+}
+.list .list-item:last-child {
+  border: 0;
+}
+.hidden-box {
+  position: absolute;
+  /*top: 99px;
+  left: 99px;*/
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  opacity: 0;
+}
+.check--label {
+  font-size: 0.8em;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  transition: all 0.1s ease-in;
+}
+.check--label-box {
+  display: flex;
+  align-self: center;
+  position: relative;
+  height: 16px;
+  width: 16px;
+  margin: 0 16px;
+  border: 2px solid #cc5500;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.check--label-text {
+  display: flex;
+  align-self: center;
+  position: relative;
+  cursor: pointer;
+  padding: 10px;
+  border-left: 1px solid #ecf0f1;
+}
+.hidden-box:checked + .check--label {
+  background-color: #F9F9F9;
+  letter-spacing: 0.04em;
+  font-weight: strong;
+}
+.hidden-box:checked + .check--label .check--label-box {
+  background-color: #cc5500;
+}
+.hidden-box:checked + .check--label .check--label-box:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 3px;
+  width: 6px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.hidden-box:checked + .check--label .check--label-text:after {
+  width: 85%;
+}
+
+
+.list-link {
+    color: #cccccc;
+    margin-top: -36px;
+    padding: 8px;
+    font-size: 12px;
+    z-index: 10;
+    float: right;
+}
+
+.list-link:hover {
+  color: #cc5500;
+  cursor: pointer;
+}

@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Delete Account
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+
+{% block main %}
+    <div class="scrolling_page">
+    <h3 class="smalltopspace">Are you sure you want to leave?</h3>
+    <br>
+    <p>
+        <div style="color: red; font-weight: bold;">WARNING</div>
+        <i>If you click Delete, your account will be permanently deleted.</i>
+    </p>
+    <form action="/deleteaccount" method="post">
+        <br>
+        <p>Confirm your password to delete your account.</p>
+        <div class="form-group">
+            <input autofocus class="form-control" id="password" onkeyup="buttonShowCheck()" name="password" placeholder="confirm password" type="password">
+        </div>
+        <button class="btn btn-secondary" id="delete" type="submit" style="width: 190px" disabled>Delete</button><br><br><br>
+        <button class="btn btn-primary" id="cancel" type="submit"style="width: 190px">Cancel</button>
+
+
+        <br><input id="hiddenInfoBox" name="returnedAction" value=""></input>
+        <div class="deadspace"></div>
+        <div class="deadspace"></div>
+
+    </form>
+    </div>
+
+    <script>
+
+        var hiddenInfoBox = document.getElementById("hiddenInfoBox");
+
+        var password = document.getElementById("password");
+        var deleteAccount = document.getElementById("delete");
+        var cancelBtn = document.getElementById("cancel");
+
+        hiddenInfoBox.style.display = 'none';
+
+        deleteAccount.onclick = function(){
+            hiddenInfoBox.value = "deleteAccount";
+        };
+
+        cancelBtn.onclick = function(){
+            hiddenInfoBox.value = "returnHome";
+        };
+
+        function buttonShowCheck() {
+            if (password.value != "") {
+                deleteAccount.disabled = false;
+            } else {
+                deleteAccount.disabled = true;
+            }
+        }
+
+    </script>
+{% endblock %}

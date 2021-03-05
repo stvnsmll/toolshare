@@ -1,0 +1,314 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Neighborhoods
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+{% block main %}
+<!--<div class="scrolling_page no-x">-->
+<div class="container p-3">
+  <h4 class="smalltopspace">{{ firstname }}'s Neighborhoods</h4>
+
+
+<script src="/static/jquery.mobile.custom.min.js"></script>
+
+<script>
+    $(function() {
+        $(".tab-content").swiperight(function() {
+            var $tab = $('#tablist .active').prev();
+            if ($tab.length > 0)
+                $tab.find('a').tab('show');
+        });
+        $(".tab-content").swipeleft(function() {
+            var $tab = $('#tablist .active').next();
+            if ($tab.length > 0)
+                $tab.find('a').tab('show');
+        });
+    });
+</script>
+
+<div role="tabpanel">
+  <!-- Nav tabs -->
+    <ul class="nav nav-tabs nav-justified tab_format container bottom_tabnav" role="tablist">
+        <li class="nav-item">
+            <a class="active" data-toggle="tab" href="#mine">Mine</a>
+        </li>
+        <li class="nav-item">
+            <a class="" data-toggle="tab" href="#join">Join</a>
+        </li>
+        <li class="nav-item">
+            <a class="" data-toggle="tab" href="#create">Create</a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content"><!-- add/remove the cutoff class-->
+      <div class="tab-pane container active"id="mine">
+        <div class="search_header">
+          <div class="filters">
+                <input class="form-control top_search" id="search1" type="text" autocomplete="off" style="width: 100% !important;" placeholder="Search...">
+                <button id="cancel1" class="btn bg-transparent btn-pos" style="margin-left: -40px; z-index: 100; visibility: hidden;">
+                  <i class="fa fa-times"></i>
+                </button>
+          </div>
+        </div>
+        <div class="list_div">
+            <ul class="list-group list-group-flush" id="myList1">
+                {% for nbhid in myneighborhoods %}
+                  <li class="list-group-item" onclick="gotosite('{{ myneighborhoods[nbhid]['neighborhoodid'] }}')">
+                    {{ myneighborhoods[nbhid]["neighborhood"] }}
+                    <span class="hiddencategory">
+                      {{ myneighborhoods[nbhid]["zipcode"] }}
+                    </span>
+                  </li>
+                {% endfor %}
+                <!-- Hardcoded Data:
+                <li class="list-group-item" onclick="gotosite(6)">TheLivingRoom<span class="hiddencategory">47201</span></li>
+                <li class="list-group-item" onclick="gotosite(8)">TheGrid-SoNoH<span class="hiddencategory">47201</span></li>
+                -->
+            </ul>
+            <div class="deadspace"></div>
+            <div class="deadspace"></div>
+            <div class="deadspace"></div>
+        </div>
+      </div>
+
+      <div class="tab-pane container fade" id="join">
+        <div class="search_header">
+          <div class="filters">
+                <input class="form-control top_search" id="search2" type="text" autocomplete="off" placeholder="Search...">
+                <button id="cancel2" class="btn bg-transparent btn-pos" style="margin-left: -40px; margin-top: -8px; z-index: 100; visibility: hidden;">
+                  <i class="fa fa-times"></i>
+                </button>
+                <button class="filterIcon" onclick="searchsite()">
+                  <i class="fas fa-search"></i>
+                </button>
+          </div>
+        </div>
+        <div class="list_div">
+            <ul class="list-group list-group-flush" id="myList2">
+                {% for nbhid in allneighborhoods %}
+                  <li class="list-group-item" onclick="gotosite('{{ allneighborhoods[nbhid]['neighborhoodid'] }}')">
+                    {{ allneighborhoods[nbhid]["neighborhood"] }}
+                    <span class="hiddencategory">
+                      {{ allneighborhoods[nbhid]["zipcode"] }}
+                    </span>
+                  </li>
+                {% endfor %}
+                <!-- Hardcoded data:
+                <li class="list-group-item"></i> TheLivingRoom<span class="hiddencategory">47201</span></li>
+                <li class="list-group-item"></i> TheGrid-SoNoH<span class="hiddencategory">47201</span></li>
+                <li class="list-group-item"></i> SCF<span class="hiddencategory">47203</span></li>
+                <li class="list-group-item"></i> SomewhereElse<span class="hiddencategory">12345</span></li>
+                -->
+            </ul>
+            <div class="deadspace"></div>
+            <div class="deadspace"></div>
+            <div class="deadspace"></div>
+        </div>
+      </div>
+
+      <div class="tab-pane container fade"id="create">
+        <div class="list_div" style="height: calc(100vh - 230px);">
+              <br>
+              <form action="/neighborhoods" method="post">
+                <div class="input-group mb-3 long-input mx-auto">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <span class="redstar">*</span>
+                      Neighborhood
+                    </span>
+                  </div>
+                  <input autofocus type="text" class="form-control" name="neighborhoodname" placeholder="unique name">
+                </div>
+                <div class="input-group mb-3 long-input mx-auto">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <span class="redstar">*</span>
+                      Zip Code
+                    </span>
+                  </div>
+                  <input autofocus type="tel" maxlength=5 minlength=5 class="form-control" name="zipcode" placeholder="5-digit zip">
+                </div>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" value="" id="privatecheck" checked>Private
+                    <span class="text-muted" data-toggle="modal" data-target="#myModal">
+                        <a href="#"><u>?</u></a>
+                    </span>
+                  </label>
+                  <br><br>
+                  <div class="d-flex justify-content-start">
+                    <label class="text-left" for="description">Description:</label><br>
+                  </div>
+                  <textarea class="form-control" rows="4" id="features" name="features" style="width: 90%" placeholder="city / state / organization / neighborhood / rules / special instructions / etc"></textarea>
+                  <br>
+                </div><br>
+                <p>You can add a password to help control the members.
+                  <span class="text-muted" data-toggle="modal" data-target="#myModal2">
+                    <a href="#"><u>?</u></a>
+                  </span>
+                </p>
+                <input autofocus class="form-control" id="nbhpassword" name="password" placeholder="(optional password)" type="password">
+                <br><br>
+
+                <button class="btn btn-success" type="submit" data-toggle="modal" data-target="#spinnerCogModal">Create Neighborhood</button>
+                <br><input id="hiddenChecbox" name="private" value="1"></input>
+                <div class="deadspace"></div>
+                <div class="deadspace"></div>
+              </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+<!--</div>-->
+
+
+
+      <!-- The Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Private Nieghborhoods</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-left">
+          Marking your neighborhood as private just means that it will not show up in the list that is visible to all users.
+          To find a private neighborhood, you must search for the exact neighborhood name in the "Join" search field.
+          <br>
+          You can use still have your neighborhood be password protected or not.
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+      <!-- The Modal (2) -->
+  <div class="modal fade" id="myModal2">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Nieghborhood Passwords</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-left">
+          If you choose to add a password to your neighborhood, the user must type the password to become a member of the nieghborhood.
+          This can be used to help restrict access to friends/family.
+          <br>
+          You will be the Admin for this neighborhood and can change or remove the password at a later time.
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script>
+    $(document).ready(function(){
+      $("#search1").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myList1 li").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+      });
+    });
+
+    $(document).ready(function(){
+      $("#search2").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myList2 li").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+      });
+    });
+
+    var search1 = document.getElementById("search1");
+    var cancel1 = document.getElementById("cancel1");
+    var search2 = document.getElementById("search2");
+    var cancel2 = document.getElementById("cancel2");
+
+
+    search1.onkeyup = function() {
+      var value = search1.value;
+      if (value == '') {
+        cancel1.style.visibility = 'hidden';
+      } else {
+        cancel1.style.visibility = 'visible';
+      }
+    };
+
+    search2.onkeyup = function() {
+      var value = search2.value;
+      if (value == '') {
+        cancel2.style.visibility = 'hidden';
+      } else {
+        cancel2.style.visibility = 'visible';
+      }
+    };
+
+    $(document).on('click', '#cancel1', function(){
+        $("#search1").val('').trigger("keyup").focus();
+    });
+
+    $(document).on('click', '#cancel2', function(){
+        $("#search2").val('').trigger("keyup").focus();
+    });
+
+    // Javascript to enable link to tab
+    var url = document.location.toString();
+    if (url.match('#')) {
+        $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
+    }
+
+    // Change hash for page-reload
+    $('.nav-tabs a').on('shown.bs.tab', function (e) {
+        window.location.hash = e.target.hash;
+    });
+
+    var hiddenChecbox = document.getElementById("hiddenChecbox");
+    var privatecheck = document.getElementById("privatecheck");
+
+    hiddenChecbox.style.display = 'none';
+
+    privatecheck.onchange = function() {
+      if (privatecheck.checked) {
+        hiddenChecbox.value = "1";
+      } else {
+        hiddenChecbox.value = "0";
+      }
+    };
+
+    function gotosite(siteid){
+      window.location.href = "/neighborhood_details?neighborhoodid=" + siteid;
+    }
+
+    function searchsite(sitename){
+      gotosite(search2.value);
+    }
+    </script>
+{% endblock %}

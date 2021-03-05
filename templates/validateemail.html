@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Email Verification
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+
+{% block main %}
+    <div class="scrolling_page">
+    <h4 class="smalltopspace">Let's validate that email address!</h4>
+    <br>
+    {% if errormessage %}
+    <div style="display: non1">
+        <span style="color: red; font-weight: bold;">ERROR</span>
+        <i>{{ errormessage }}</i>
+    </div>
+    {% endif %}
+    <form action="/validateemail" method="post">
+        <br>
+        <p>
+          An email has been sent to {{ new_email }} with a code that will expire in 2 minites.<br>
+          (check your spam folder if you don't see it)<br>
+          Please enter that code here:
+        </p>
+
+        <div class="form-group">
+            <input autofocus class="form-control" id="authcode" name="authcode" placeholder="* * * * * *" type="text" style="text-transform:uppercase; font-size: 1.3em; color: #cc5500; font-weight: bold; width: 6em; text-align: center;" maxlength="6">
+        </div>
+        <button class="btn btn-primary" id="confirmAccount" type="submit" style="width: 220px" disabled>Confirm</button><br><br>
+        <button class="btn btn-outline-info btn-sm" id="resendCode" type="submit"style="width: 200px">Send me a new code</button>
+
+
+        <br><input id="hiddenInfoBox" style="display: none;" name="returnedAction" value=""></input>
+        <input style="display: none;" name="useremail" value="{{ new_email }}"></input>
+        <div class="deadspace"></div>
+        <div class="deadspace"></div>
+
+    </form>
+    </div>
+
+    <script>
+        var authcode = document.getElementById("authcode");
+        var confirmAccount = document.getElementById("confirmAccount");
+        var resendBtn = document.getElementById("resendCode");
+
+        confirmAccount.onclick = function(){
+            hiddenInfoBox.value = "confirmAccount";
+        };
+
+        resendBtn.onclick = function(){
+            hiddenInfoBox.value = "resendCode";
+        };
+
+        window.onload=function(){
+          authcode.addEventListener("keyup", function(){
+            if (authcode.value.length > 5) {
+                confirmAccount.disabled = false;
+            } else {
+                confirmAccount.disabled = true;
+            }
+          })
+        }
+
+    </script>
+{% endblock %}

@@ -1,0 +1,667 @@
+body {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    /*background-color: #292929;*/
+}
+
+/* hide all link formattings*/
+ul a {
+    color: inherit; /* blue colors for links too */
+    text-decoration: inherit; /* no underline */
+}
+ul a:hover {
+    color: inherit; /* blue colors for links too */
+    text-decoration: inherit; /* no underline */
+}
+
+.scrolling_page {
+    padding: 50px;
+    overflow-x: scroll;
+    height: 100vh;
+    /*-ms-overflow-style: none;  /* IE and Edge */
+    /*scrollbar-width: none;  /* Firefox */
+}
+
+/*.scrolling_page::-webkit-scrollbar {
+  display: none;
+}*/
+
+.no-x {
+    overflow-x: hidden;
+}
+
+input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    border: 1px solid #dee2e6;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 3px;
+    background-color: #f8f9fa;
+}
+.custom-file-upload:hover {
+    background-color: #e1e6ea;
+}
+
+.long-input {
+    max-width: 320px;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  width: auto;
+  padding: 0;
+  margin: 0;
+}
+
+
+nav .navbar-brand
+{
+    /* size for brand */
+    font-size: xx-large;
+}
+
+/* colors for brand */
+nav .navbar-brand .orange
+{
+    color: #cc5500;
+}
+
+.alert {
+    z-index: 1031;
+    position: fixed;
+    top: 5px;
+    transition: transform 200ms ease-in;
+    -webkit-transition: transform 200ms ease-in;
+    -moz-transition: transform 200ms ease-in;
+    -o-transition: transform 200ms ease-in;
+}
+
+.alert_in {
+    transform: translateY(75px);
+}
+
+.alert_out {
+    transform: translateY(-400px);
+}
+
+.tab_format {
+    font-weight: bold;
+    font-size: 1em;
+    margin-top: 10px;
+}
+
+main .form-control
+{
+    /* center form controls */
+    display: inline-block;
+
+    /* override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+main
+{
+    /*top margin to offset the fixed header*/
+    margin-top: 28px;
+
+    /* scroll horizontally as needed */
+    overflow-x: auto;
+
+    /* center contents */
+    text-align: center;
+}
+
+main img
+{
+    /* constrain images on small screens */
+    max-width: 100%;
+}
+
+.smalltopspace {
+    padding-top: 42px;
+    padding-bottom: 2px;
+}
+
+.filters {
+    display: block;
+    border-bottom: 1px solid #dee2e6;
+    background-color: white;
+    padding: 6px;
+    height: 50px;
+}
+
+.top_search {
+    float: left;
+    width: calc(100% - 48px) !important;/*or -48 or -90*/
+}
+
+.btn-pos {
+    position:relative;
+    z-index:1;
+    left: -1px;
+    color: #9f9f9f;
+}
+
+.btn-pos:hover {
+    color: gray;
+}
+
+.leftborder {
+    border-left: 1px solid #d2d2d2;
+}
+
+.filterIconBox {
+    width: 42px;
+    height: 42px;
+    display: block;
+    float: right;
+    background-color: transparent;
+    z-index: 5;
+}
+
+.filterIcon i {
+    margin: 0;
+    width: 38px;
+    height: 38px;
+    padding-top: 8px;
+    font-size: 21px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 3px;
+    z-index: 6;
+}
+
+.redstar {
+    color: red;
+}
+
+.filterIcon i:hover {
+    background-color: #e1e6ea;
+    cursor: pointer;
+}
+
+.padd_left {
+    margin-left: 12px;
+}
+
+.dropdown_formatsjs {
+    margin-top: 40px !important;
+    transform: translate3d(-135px, 0px, 0px)!important;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.tab_header {
+    font-weight: bold;
+    font-size: 1.8em;
+}
+
+.tab-content {
+    border-left: 1px solid #dee2e6;
+    border-right: 1px solid #dee2e6;
+    border-top: 1px solid #dee2e6;
+    /*height: 100vh;/*calc(100vh - 500px);
+    height: -moz-calc(100% - 500px);
+    height: -webkit-calc(100% - 500px);
+    height: -o-calc(100% - 500px);*/
+    width: 100%;
+    overflow-y: hidden;
+    margin-bottom: 80px;
+}
+
+.cutoff {
+    height: calc(100vh - 360px);
+    border-bottom: 1px solid #dee2e6;
+}
+
+.search_header {
+    background-color: green;
+}
+
+.list_div {
+    height: calc(100vh - 276px);
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.list_div::-webkit-scrollbar {
+  display: none;
+}
+
+.find_tool_list {
+    height: calc(100vh - 226px);
+}
+
+.history_list {
+    height: calc(100vh - 182px);
+}
+
+.history_tool {
+    overflow-y: scroll;
+    height: auto;
+    max-height: 253px;
+    max-width: 400px;
+    border: 1px solid #d3d3d3;
+    border-radius: 4px;
+    padding: 0 2px 0 2px;
+    margin-top: 8px;
+}
+
+.deadspace {
+    display: block;
+    width: 100%;
+    height: calc(100vh / 8);
+    background-color: transparent;
+}
+
+.list-group-item {
+    text-align: left;
+    font-size: 1.2em;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+.greyedout {
+    color: #b3b3b3;
+    background-color: #f2f2f2;
+}
+
+.redout {
+    color: #ff4d4d;
+    font-weight: bold;
+}
+
+.hiddencategory {
+    display: none;
+}
+
+table, th, td {
+  border-collapse: collapse;
+  text-align: center;
+}
+
+
+footer {
+    height: auto;
+    background-color: #f8f9fa;
+    font-size: 1px;
+    z-index: 1;
+    /*position: fixed;
+    bottom: 0;
+    width: 100%;*/
+    border-top: 1px solid #dee2e6;
+}
+
+.footercenter {
+    border-right: 1px solid #e1e3e4;
+    border-top: 5px solid #f8f9fa;
+    border-bottom: 8px solid #f8f9fa;
+}
+
+.footer_button {
+           /*top right bottom left*/
+    padding: 5px 7vw 2px 7vw;
+    margin: -2px 12px 4px 12px;
+    color: gray;
+    border-bottom: 2px solid transparent;
+    -webkit-transition: all 200ms ease-out;
+    -moz-transition: all 200ms ease-out;
+    -o-transition: all 200ms ease-out;
+    transition: all 200ms ease-out;
+    /*border: 1px solid red;*/
+}
+
+.footer_button i {
+    font-size: 26px;
+    padding-bottom: 3px;
+}
+
+.footer_button:hover {
+    color: #cc5500;
+    border-bottom: 2px solid #cc5500;
+}
+
+.footer_button.active {
+    color: black;
+    border-bottom: 2px solid #cc5500;
+}
+
+.footer_button:active {
+    color: #3a3a3a;
+    border-bottom: 2px solid #cc5500;
+}
+
+.footer_nav {
+    margin: auto;
+    width: 50%;
+}
+
+.copyright {
+    color: #a6a6a6;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    font-size: 10px;
+}
+
+
+.tab_actions {
+    position: relative;
+}
+
+.tab_button {
+    position: fixed;
+    width: 180px;
+    /*transform: translateX(-90px);*/
+    margin-left: -90px;
+    bottom: 123px;
+    z-index: 5;
+    border-radius: 1000px;
+    font-size: 1.2em;
+}
+
+.tab_actions .btn-info {
+    background-color: #cc5500;
+    border-color: #cc5500;
+}
+
+.tab_actions .btn-info:active {
+    background-color: #994000;
+    border-color: #994000;
+}
+.tab_actions .btn-info:focus {
+    background-color: #994000;
+    border-color: #994000;
+}
+
+.nbh_pwd {
+    position: fixed;
+    width: 200px;
+    /*transform: translateX(-90px);*/
+    margin-left: -96px;
+    bottom: 136px;
+    z-index: 5;
+    font-size: 0.7em;
+}
+
+
+/*Badges*/
+
+.badgeholder {
+    position: relative;
+}
+
+.footer_button .badge {
+    position: absolute;
+    display: block;
+    font-weight: normal;
+    z-index: 2;
+    font-size: 8px;
+    padding-bottom: 3px;
+    margin-left: 50%;
+    transform: translate(5px, -12px);
+}
+
+li .badge {
+    z-index: 2;
+    font-size: 10px;
+    font-weight: bold;
+    padding-bottom: 3px;
+    margin: 6px 3px 0 0;
+}
+
+.badge-danger {
+    background-color: #cc5500;
+}
+
+
+
+
+
+
+
+
+
+.actioncard2 {
+    transition: 0.13s ease-out;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
+}
+
+.actioncard2:hover {
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+}
+
+.actioncard {
+    border: 1px solid #c5ced3;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
+    /*height: 110px;*/
+    max-height: 600px;
+    width: 100%;
+    background-color: white;
+    margin: 10px 0 10px 0;
+    overflow: hidden;
+    transition: 0.13s ease-out;
+}
+
+
+
+.actioncard:hover {
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+}
+
+.actioncard:focus {
+    height: 190px;
+}
+
+.toolimage {
+    width: 63px;
+    height: 63px;
+    background-color: orange;
+    display: inline-block;
+    float: left;
+}
+.toolicon {
+    font-size: 30px;
+    color: #cc5500;
+}
+
+.actionbuttons {
+    position: relative;
+    display: inline-block;
+    /*float: right;*/
+    bottom: 0;
+    font-size: 47px;
+    height: 100%;
+    width: 155px;
+    /*border: 1px solid green;*/
+    padding: 0 5px 0 5px;
+}
+
+.nospace {
+    margin: 0;
+    padding: 0;
+}
+
+.roundaction {
+    /*position: relative;
+    display: inline-block;*/
+    width: 38px;
+    height: 38px;
+    overflow: hidden;
+    transition: 0.3s ease-out;
+    padding: 6px;
+    margin-top: 0px;
+}
+
+.replybtn {
+    margin-top: 30px;
+}
+
+.sha {
+    text-shadow: 2px 6px 5px #272643;
+}
+
+.expanddowncontainer {
+    position: relative;
+}
+
+.expanddown {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 22px;
+    margin: 0 10px -8px 0;
+}
+
+.expandanimate {
+    transition: max-height 0.2s ease-in-out;
+    overflow: hidden;
+}
+
+.spinme {
+    transition-delay: 0.13s;
+    transition: all 0.8s ease;
+     -moz-transition: all 0.8s ease;
+     -webkit-transition: all 0.8s ease;
+}
+
+
+
+/* make the tool image square*/
+.makesquareimg {
+    /*height: 300px;  size is being set by the image-square-resizer.js script
+    width: 300px;*/
+    object-fit: cover;
+    display: block;
+    margin: auto;
+    border-radius: .6rem!important;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+    font-size: small;
+color: lightgray;
+max-width: 70%;
+text-transform: capitalize;
+min-height: 40px;
+}
+
+/*Thumnail formatting*/
+.thumbnail {
+    position: absolute;
+    height: 40px;
+    width: 40px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-left: -13px;
+    margin-top: -6px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.15);
+}
+
+.approvalimg {
+    border-radius: 12px;
+    max-width: 150px;
+    margin: 10px;
+}
+
+.notificationimg {
+    border-radius: 8px;
+    max-width: 92px;
+    margin: 10px;
+}
+
+.bottom_tabnav {
+    position: fixed;
+    font-size: 1.2em;
+    height: 2.3em;
+    padding-right: 32px;
+    bottom: 60px;
+    z-index: 5;
+}
+
+.bottom_tabnav .nav-item{
+    padding: 3px;
+    /*height: 45px;
+    border-radius: 0 0 12px 12px;*/
+}
+
+.bottom_tabnav li{
+    border-top: 1px solid #dee2e6;
+    border-right: 1px solid #dee2e6;
+    border-left: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+    /*padding: 5px;*/
+}
+
+.bottom_tabnav a{
+    border-top: 2px solid #a5b3c0;
+    height: 2.6em;
+    padding: 6px;
+    width: 80%;
+    margin: auto;
+    margin-top: -4px;
+    font-weight: normal;
+    display: block;
+    transition: 0.13s ease-out;
+}
+
+.bottom_tabnav a:hover{
+    border-top-color: #cc5500;
+    color: #cc5500;
+    /*background-color: #f0f2f4;*/
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.bottom_tabnav a.active{
+    border-top-color: #cc5500;
+    /*background-color: #f0f2f4;*/
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.contactbtn {
+    background-color: #f1f1f1;
+    padding: 1px 3px 1px 3px;
+    font-size: 12px;
+    height: 17px;
+    width: 17px;
+    color: #cc5500;
+    border-radius: 4px;
+    border: 1px solid #dcd7d7;
+}
+
+.contactbtn:hover {
+    color: #8e3b01;
+    background-color: #c1c0c0;
+    border: 1px solid #afafaf;
+    cursor: pointer;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05), 0 4px 8px 0 rgba(0, 0, 0, 0.04);
+}
+
+/*
+
+<i class="fas fa-coffee"></i>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ornare elementum porttitor. Mauris ultrices mollis molestie. Vestibulum vel sem sit amet elit pellentesque tempus nec non arcu. Sed id mi mi. Proin bibendum, massa ac luctus condimentum, sapien nunc ullamcorper odio, sit amet dignissim erat purus vitae nibh. Quisque diam nulla, consectetur id pellentesque vitae, dignissim sed risus. Donec egestas dignissim ligula at hendrerit. Proin condimentum placerat massa vitae ultrices. Maecenas in justo in ligula placerat ultrices. Mauris luctus luctus ligula vel venenatis. Quisque accumsan semper felis in eleifend.
+
+Donec non sodales neque. Nam quis nisl finibus, convallis sem id, efficitur dui. Vestibulum blandit massa non pulvinar facilisis. Proin eu maximus tortor, sit amet faucibus velit. Phasellus sit amet nibh enim. In id ultricies ligula, eu eleifend tellus. Etiam commodo purus velit, euismod ornare ante rhoncus quis. Mauris sit amet sapien facilisis, viverra odio pretium, ullamcorper nunc. Proin imperdiet at nunc at laoreet. Proin mollis consequat mauris viverra vestibulum. Pellentesque porta mauris ut est elementum euismod. Cras sit amet dictum urna. Vestibulum consequat enim eget velit molestie posuere. Nunc ac massa vulputate, sollicitudin massa et, sollicitudin mauris.
+
+Phasellus porttitor venenatis velit eu convallis. Sed dictum purus eu tincidunt hendrerit. In mollis justo velit, ac vulputate lectus placerat vel. Aenean suscipit mi a scelerisque consequat. Sed interdum sit amet ex eu luctus. Aenean facilisis purus libero, vel rutrum arcu accumsan non. In facilisis tempus ornare. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum laoreet pharetra sem, at pulvinar lacus gravida vel. Nulla facilisi.
+
+Integer accumsan massa risus. In vitae eros fermentum, malesuada felis nec, suscipit arcu. Quisque bibendum urna placerat, pellentesque erat at, faucibus mi. Mauris suscipit nisl id sem suscipit commodo. Vestibulum scelerisque viverra arcu eget interdum. In et ultrices tellus, aliquet hendrerit mi. Nam commodo risus id odio tincidunt, id porta ligula auctor.
+
+Fusce est diam, vehicula quis dignissim sit amet, vulputate vel nunc. Donec viverra risus ante, eu dapibus massa malesuada in. Etiam posuere, libero non tempus suscipit, dui risus scelerisque eros, vitae volutpat arcu felis id nibh. Integer mattis arcu in odio tristique mollis. Etiam diam tellus, blandit finibus sapien ut, pulvinar posuere nunc. Vivamus pharetra velit massa. Ut sagittis venenatis lectus, dapibus vulputate risus iaculis id. Duis nec fringilla risus, id porttitor lorem. Duis interdum purus non augue vehicula efficitur. Praesent consectetur tempus risus, sit amet interdum augue finibus vel. Nunc non sapien at justo varius molestie eget in arcu.
+
+
+
+
+*/

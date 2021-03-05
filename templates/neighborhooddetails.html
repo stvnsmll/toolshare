@@ -1,0 +1,247 @@
+{% extends "layout.html" %}
+
+{% block moreHead %}
+    <link href="/static/checkboxes.css" rel="stylesheet">
+{% endblock %}
+
+{% block title %}
+    Neighborhood Details
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+
+{% block main %}
+<div class="scrolling_page">
+    <br>
+    <h3>Neighborhood Details</h3>
+    <h4>{{ neighborhoodname }}</h4>
+    <hr>
+    <p>
+        Zip Code: {{ zipcode }}
+        <br>
+        Members: {{ membercount }}<br><br>
+    </p>
+    <h5>Description:</h5>
+    {% autoescape false %}
+    <p>
+        <i>{% for line in description %}{{ line }}<br />{% endfor %}</i><br><br>
+    </p>
+    {% endautoescape %}
+    <h5>Privacy Settings</h5>
+    <p>
+        Private Group: {{ privateYN }} <br>
+        Password Required: {{ passwordYN }}
+    </p>
+
+    <hr>
+
+    <form action="/neighborhood_details" method="post">
+        {% if notmember %}
+            {% if passwordYN == 'Yes' -%}
+                <input onkeyup="buttonShowCheck()" id="nbhpw" name="password" type="password" placeholder="password required" required></input><br><br>
+            {%- endif %}
+            <button class="btn btn-info" onclick="updateinfobox('join')" id="joinbtn" type="submit" style="width: 260px"
+                {% if passwordYN == 'Yes' -%}
+                    disabled
+                {%- endif %}
+            >Join Neighborhood</button><br><br>
+        {% else %}
+            <div class="form-check">
+            <!--
+            <label class="form-check-label">
+              <input type="checkbox" id="publicCheck" class="form-check-input" value="" checked>Public
+            </label>
+            <br>
+            -->
+            <button type="button" id="toolvisbutton" onclick=setVisibility() class='btn btn-info'>Modify Shared Tools List&nbsp;&nbsp;<i id="chevron1" class="fa fa-chevron-down spinme" style="color: #f2f2f2; font-size: 10px"></i></button>
+            <span class="text-muted" data-toggle="modal" data-target="#myModal">
+                &nbsp; <a href="#"><u>?</u></a>
+            </span>
+            <div id="toolselector" class="expandanimate" style="max-height: 0px">
+              <div class="btn-group btn-group-sm" style="margin-top: 5px">
+                <button class="btn btn-success" onclick="updateinfobox('updatetoolvis')" type="submit">Save <i class="fa fa-check"></i></button>
+                <button type="button" class="btn btn-warning" onclick="window.location.reload();">Discard <i class="fa fa-times"></i></button>
+              </div>
+              <div class="selector_list ">
+                <ul class="list" style="overflow-y: scroll;">
+
+                {% for item in myTools %}
+                <li class="list-item">
+                  <input type="checkbox" class="hidden-box" id="{{ myTools[item]['toolID'] }}" {{ 'checked' if myTools[item]['isVisible'] }}/>
+                  <label for="{{ myTools[item]['toolID'] }}" class="check--label">
+                    <span class="check--label-box"></span>
+                    <span class="check--label-text">{{ myTools[item]['toolName'] }}</span>
+                  </label>
+                  <div class="list-link" onclick="gotosite('{{ myTools[item]['toolID'] }}')">
+                    <i class="fa fa-link"></i>
+                  </div>
+                </li>
+                {% endfor %}
+
+                <!-- Demo checkbox items
+                <li class="list-item">
+                  <input type="checkbox" class="hidden-box" id="first"/>
+                  <label for="first" class="check--label">
+                    <span class="check--label-box"></span>
+                    <span class="check--label-text">First Tool</span>
+                  </label>
+                </li>
+                <li class="list-item">
+                  <input type="checkbox" class="hidden-box" id="second"/>
+                  <label for="second" class="check--label">
+                    <span class="check--label-box"></span>
+                    <span class="check--label-text">Second Tool</span>
+                  </label>
+                </li>
+                <li class="list-item">
+                  <input type="checkbox" class="hidden-box" id="third" />
+                  <label for="third" class="check--label">
+                    <span class="check--label-box"></span>
+                    <span class="check--label-text">Third Tool</span>
+                  </label>
+                </li>
+                -->
+
+
+              </ul>
+              </div>
+            </div>
+          </div><br>
+            {% if yesadmin %}
+                <button class="btn btn-secondary" onclick="updateinfobox('edit')" type="submit" style="width: 260px">Edit Details</button><br><br>
+                <button class="btn btn-secondary" onclick="updateinfobox('managemembers')" type="submit" style="width: 260px" disabled>Manage Members&nbsp;😒</button><br><br>
+                <button class="btn btn-danger" onclick="updateinfobox('delete')" type="submit" style="width: 260px">Delete Neighborhood</button><br><br>
+            {% endif %}
+
+            <button class="btn btn-warning" onclick="updateinfobox('leave')" type="submit" style="width: 260px">Leave Neighborhood</button><br><br>
+
+        {% endif %}
+
+        <a class="btn btn-primary" onclick="window.history.go(-1); return false;" style="width: 190px; color: white;">Cancel</a>
+        <br><input id="hiddenInfoBox" style="display: none;" name="returnedAction" value=""></input>
+        <br><input id="hiddenInfoBox2" style="display: none;" name="nbhid" value="{{ neighborhoodid }}"></input>
+        <input id="toolvis" name="toolvis" style="display: none;" value="{{ toolVis }}"></input>
+        <br><br>
+    </form>
+    <div class="deadspace"></div>
+    <div class="deadspace"></div>
+</div>
+
+      <!-- The Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Tool Visibilities</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-left">
+          When a tool is <strong>checked</strong> in this list, it will be visible and available for borrowing to any member of this neighborhood.
+          <br><br>
+          You can <strong>uncheck</strong> a tool here to not allow this tool to be visible to this neighborhood. It will not impact the visibilities
+          that this tool will have to any of your other neighborhoods.
+          <br><br>
+          Be sure to click <strong>save</strong> if you want your selections to be updated.
+          <br><br>
+          <small>To modify tool visibility by tool instead of by neighborhood, navigate to the tool in your toolbox and modify its visibilities there.</small>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+    <script>
+
+        var hiddenInfoBox = document.getElementById("hiddenInfoBox");
+        //var hiddenInfoBox2 = document.getElementById("hiddenInfoBox2");
+        var neighborhoodpassword = document.getElementById("nbhpw");
+        var joinbtn = document.getElementById("joinbtn");
+
+        //hiddenInfoBox.style.display = 'none';
+        //hiddenInfoBox2.style.display = 'none';
+
+        function updateinfobox(newtext) {
+            if (newtext == 'updatetoolvis') {
+              getToolList();
+            }
+            hiddenInfoBox.value = newtext;
+        }
+
+        function buttonShowCheck() {
+            if (neighborhoodpassword.value != "") {
+                joinbtn.disabled = false;
+            } else {
+                joinbtn.disabled = true;
+            }
+        }
+
+        function setVisibility() {
+          var toolvis = document.getElementById("toolvis");
+          var toolvisbutton = document.getElementById("toolvisbutton");
+          var chevron1 = document.getElementById('chevron1');
+          var toolselector = document.getElementById("toolselector");
+
+            /*$("#toolselector").collapse('toggle');*/
+            if (chevron1.style.color == 'white') {
+              chevron1.style.transform = "rotateX(0deg)";
+              chevron1.style.color = "#f2f2f2";
+              toolselector.style.maxHeight = '0px';
+            } else {
+              chevron1.style.transform = "rotateX(180deg)";
+              chevron1.style.color = "white";
+              toolselector.style.maxHeight = '1042px';
+            }
+
+        }
+
+        function gotosite(siteid){
+          window.location.href = "/tool_details?toolid=" + siteid;
+        }
+
+  function getToolList() {
+        // get reference to element containing toppings checkboxes
+        var el = document.getElementById('toolselector');
+
+        // get reference to input elements in toppings container element
+        var tools = el.getElementsByTagName('input');
+
+        var finalList;
+        var finalList2;
+        finalList = "";
+
+        // assign function to onclick property of each checkbox
+        for (var i=0, len=tools.length; i<len; i++) {
+            if ( tools[i].type === 'checkbox' ) {
+                if (tools[i].checked) {
+                  //window.alert(tools[i].id + ' is checked');
+                  finalList += (tools[i].id + ',');
+                } //else {
+                //  window.alert(tools[i].id + ' is not checked');
+                //}
+            }
+        }
+
+        if (finalList != "") {
+          finalList2 = finalList.slice(0, -1);
+        } else {
+          finalList2 = finalList;
+        }
+
+        document.getElementById("toolvis").value = finalList2;
+
+      }
+
+    </script>
+{% endblock %}

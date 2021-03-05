@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- documentation at http://getbootstrap.com/docs/4.1/, alternative themes at https://bootswatch.com/ -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+
+        <!--
+        <link rel="stylesheet" href="/static/bootstrap.min.slate.css">
+        //Note: Replace ^[theme]^ (examples: darkly, slate, cosmo, spacelab, and superhero. See https://bootswatch.com/ for current theme names.)
+        -->
+
+        <!-- https://favicon.io/emoji-favicons/money-mouth-face/ -->
+        <link href="/static/favicon.ico" rel="icon">
+
+        <link href="/static/styles.css" rel="stylesheet">
+
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>-->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+        {% block moreHead %}{% endblock %}
+
+        <title>Tool Share: {% block title %}{% endblock %}</title>
+        <!-- {% block head %}{% endblock %} -->
+    </head>
+
+    <body>
+
+        <nav class="navbar navbar-expand-md navbar-light bg-light border fixed-top">
+            <a class="navbar-brand" href="/"><span class="orange"><i class='fas fa-tools'></i> Tool Share</span></a>
+            <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar">
+                {% if session.user_uuid %}
+                    <!-- Include these functionalities in the Account Settings page -->
+                    <!--<ul class="navbar-nav mr-auto mt-2">
+                        <li class="nav-item" align="center"><a class="nav-link" href="/index"><i class='fas fa-toolbox'></i>&nbsp; Tools</a></li>
+                        <li class="nav-item" align="center"><a class="nav-link" href="/actions"><i class='fas fa-envelope-open-text'></i>&nbsp; Actions</a></li>
+                        <li class="nav-item" align="center"><a class="nav-link" href="/history"><i class='fas fa-history'></i>&nbsp; History</a></li>
+                    </ul>
+                    <hr>-->
+                    <ul class="navbar-nav ml-auto mt-2">
+                        <li class="nav-item" align="center" style="text-align:center;" data-toggle="modal" data-target="#spinnerCogModal"><a class="nav-link" href="/manageaccount"><i class='fas fa-user-cog'></i>&nbsp;<u>{% block firstname %}{% endblock %}</u></a></li>
+                        <li class="nav-item" align="center" style="text-align:center;" data-toggle="modal" data-target="#spinnerCogModal"><a class="nav-link" href="/logout"><i class='fas fa-sign-out-alt'></i>&nbsp; Log Out</a></li>
+                    </ul>
+                {% else %}
+                    <ul class="navbar-nav ml-auto mt-2">
+                        <li class="nav-item" align="center" style="text-align:center;"><a class="nav-link" href="/register"><i class='fas fa-user-plus'></i>&nbsp; Sign Up</a></li>
+                        <li class="nav-item" align="center" style="text-align:center;"><a class="nav-link" href="/login"><i class='fas fa-sign-in-alt'></i>&nbsp; Log In</a></li>
+                    </ul>
+                {% endif %}
+            </div>
+        </nav>
+
+
+
+        <main>
+            {% block main %}{% endblock %}
+
+        <!-- The Spinner Modal-->
+        <div class="modal" style="width: 100vw; height: 100vh; z-index: 1055;" id="spinnerModal">
+            <div class="modal-dialog-centered">
+                <div style="width: 50%; margin: auto; height: 120px;">
+                    <i class="fas fa-circle-notch fa-spin" style="margin-top: 40px; font-size:40px; color: white;"></i>
+                </div>
+            </div>
+        </div>
+        <!-- The Cog Spinner Modal-->
+        <div class="modal" style="width: 100vw; height: 100vh; z-index: 1055;" id="spinnerCogModal">
+            <div class="modal-dialog-centered">
+                <div style="width: 50%; margin: auto; height: 120px;">
+                    <i class="fa fa-cog fa-spin" style="margin-top: 40px; font-size:40px; color: white;"></i>
+                </div>
+            </div>
+        </div>
+
+        </main>
+
+        {% if get_flashed_messages() %}
+            <header>
+                <div id="flashed_message" class="alert alert-primary border text-center col-md-8 offset-md-2" role="alert">
+                    {{ get_flashed_messages() | join(" ") }}
+                </div>
+            </header>
+        {% endif %}
+
+        <footer class="text-center fixed-bottom">
+            {% if session.user_uuid %}
+                <!-- Only show this footer once the user is logged in -->
+                <table class="footer_nav">
+                    <tr>
+                        <th class="footercenter">
+                            <a href="/neighborhoods">
+                                <div id="tools_btn" class='footer_button {{ setActive3 }}'>
+                                    <i class='fas fa-users'></i>
+                                    <div class="badgeholder">
+                                        <span class="badge badge-pill"></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </th>
+                        <th class="footercenter">
+                            <a href="/">
+                                <div id="tools_btn" class='footer_button {{ setActive1 }}'>
+                                    <i class='fas fa-toolbox'></i>
+                                    <div class="badgeholder">
+                                        <span class="badge badge-pill"></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="/actions">
+                                <div id="tools_btn" class='footer_button {{ setActive2 }}'>
+                                    <i class='fas fa-envelope-open-text'></i>
+                                    <div class="badgeholder">
+                                        {% if openActions is number %}
+                                            <span id="notificationcount" class="badge badge-pill badge-danger">{{ openActions }}</span>
+                                        {% else %}
+                                            <span id="notificationcount" class="badge badge-pill"></span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </a>
+                        </th>
+                    </tr>
+                </table>
+            {% else %}
+
+            <div class="small copyright">
+                &copy 2020 -
+                <script type="text/JavaScript">
+                    document.write(new Date().getFullYear());
+                </script>
+                / Steven Small / All Rights Reserved
+            </div>
+            {% endif %}
+        </footer>
+
+    </body>
+
+    <script>
+        var hide_the_flash = document.getElementById("flashed_message");
+
+        //If it isn't "undefined" and it isn't "null", then it exists.
+        if(typeof(hide_the_flash) != 'undefined' && hide_the_flash != null){
+            /*alert('Element exists!');*/
+            hide_the_flash.classList.add("alert_in");
+            setTimeout(function () {
+                hide_the_flash.classList.add("alert_in");
+            }, 10);
+            setTimeout(function () {
+                hide_the_flash.classList.remove("alert_out");
+                hide_the_flash.classList.add("alert_out");
+                /*hide_the_flash.style.display='none';*/
+            }, 2000);
+            setTimeout(function () {
+                hide_the_flash.style.display='none';
+            }, 3000);
+        }/* else {
+            alert('Element does not exist!');
+        }*/
+
+
+    </script>
+    {% block endscript %}{% endblock %}
+</html>

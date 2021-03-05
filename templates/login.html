@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+<div class="scrolling_page">
+    <div class="deadspace"> </div>
+    <h3>User Login</h3>
+    <hr>
+    <form action="/login" method="post">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="username or email" type="text">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="password" placeholder="Password" type="password">
+        </div>
+        <br>
+        <button class="btn btn-primary" type="submit" style="width: 140px;" data-toggle="modal" data-target="#spinnerModal">Log In</button>
+        <br><input type="hidden" name="next" value="{{ request.args.get('next', '') }}"/>
+    </form>
+    <br><br><br>
+    <div class="text-muted">
+        Need to create an account? Sign up <a href="/register">here</a>.
+    </div>
+
+
+    <div class="deadspace"></div>
+    <div class="deadspace"></div>
+    <div class="deadspace"></div>
+</div>
+
+
+
+{% endblock %}

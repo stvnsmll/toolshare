@@ -1,0 +1,32 @@
+<script src="jquery.mobile.custom.min.js"></script>
+
+<script>
+    $(function() {
+        $(".tab-content").swiperight(function() {
+            var $tab = $('#tablist .active').prev();
+            if ($tab.length > 0)
+                $tab.find('a').tab('show');
+        });
+        $(".tab-content").swipeleft(function() {
+            var $tab = $('#tablist .active').next();
+            if ($tab.length > 0)
+                $tab.find('a').tab('show');
+        });
+    });
+</script>
+
+<div role="tabpanel">
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist" id="tablist">
+    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
+    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="home">...</div>
+    <div role="tabpanel" class="tab-pane" id="profile">...</div>
+  </div>
+
+</div>

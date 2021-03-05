@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Apology
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+{% block main %}
+    <div class="deadspace"></div>
+    <!-- dark: https://i.imgur.com/c1BoXUL.png -->
+    <!-- light: https://i.imgur.com/UEnFo66.png -->
+    <img alt="{{ top }}" class="border" style="max-width: 80%" src="http://memegen.link/custom/{{ top | urlencode }}/{{ bottom | urlencode }}.jpg?alt=https://i.imgur.com/c1BoXUL.png" title="{{ top }}">
+{% endblock %}

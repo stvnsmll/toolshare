@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Update Password
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+{% block main %}
+<div class="scrolling_page no-x">
+    <div class="smalltopspace"></div>
+    <h4>Change Password:</h4>
+    <form action="/changepassword" method="post">
+        <div class="form-group">
+            <input autofocus class="form-control" id="oPW" onkeyup="buttonShowCheck()" name="oldPassword" placeholder="confirm old password" type="password">
+        </div><br>
+        <div class="form-group">
+            <input class="form-control" id="nPW1" onkeyup="buttonShowCheck()" name="newPassword1" placeholder="New password" type="password">
+        </div>
+        <div class="form-group">
+            <input class="form-control" id="nPW2" onkeyup="buttonShowCheck()" name="newPassword2" placeholder="Confirm new password" type="password">
+        </div>
+        <br><br>
+        <button class="btn btn-primary" id="pwdChange" type="submit" style="width: 150px" data-toggle="modal" data-target="#spinnerCogModal" disabled>Change Password</button>
+        <br><br>
+        <button class="btn btn-secondary" id="cancel" type="submit" style="width: 150px" data-toggle="modal" data-target="#spinnerModal">Cancel</button>
+
+        <br><input id="hiddenInfoBox" name="returnedAction" value=""></input>
+    </form>
+    <div class="deadspace"></div>
+    <div class="deadspace"></div>
+    </div>
+
+    <script>
+        var hiddenInfoBox = document.getElementById("hiddenInfoBox");
+        hiddenInfoBox.style.display = 'none';
+
+        var oPW = document.getElementById("oPW");
+        var nPW1 = document.getElementById("nPW1");
+        var nPW2 = document.getElementById("nPW2");
+        var pwdChange = document.getElementById("pwdChange");
+        var cancelBtn = document.getElementById("cancel");
+
+        cancelBtn.onclick = function(){
+            hiddenInfoBox.value = "returnHome";
+        };
+
+        pwdChange.onclick = function(){
+            hiddenInfoBox.value = "changePassword";
+        };
+
+        function buttonShowCheck() {
+            if ((oPW.value != "") && (nPW1.value != "") && (nPW2.value != "")) {
+                pwdChange.disabled = false;
+            } else {
+                pwdChange.disabled = true;
+            }
+        }
+
+    </script>
+{% endblock %}

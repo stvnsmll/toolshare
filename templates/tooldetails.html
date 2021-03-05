@@ -1,0 +1,230 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Tool Details
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+{% block main %}
+<div class="scrolling_page">
+    <br>
+    <h3>Tool Details</h3>
+    <h4>{{ toolname }}</h4>
+    {% if photo %}
+        <img src="{{ photo }}" alt="image lookup error" class="makesquareimg"><br>
+    {% else %}
+        <p>
+          <div class="small copyright">[ no image ]</div>
+        </p>
+        <br>
+    {% endif %}
+    <p>Tool Owner:
+        {% if yesowner %}
+            {{ ownerfirstname }}
+        {% else %}
+            <a href="#" role="button" data-toggle="popover" data-placement="top" title="" data-content="From {{ commonneighborhoods }}" data-original-title='{{ ownerusername }} <span class="contactbtn" href="sms:+18121231234"><i class="fa fa-comment fa-sm"></i></span>&nbsp;<span class="contactbtn" onclick="text()"><i class="fa fa-envelope fa-sm"></i></span>'>{{ ownerfirstname }}</a>
+        {% endif %}
+        &nbsp;
+        <a class="contactbtn" href="sms:+18121231234"><i class='fa fa-comment fa-sm'></i></a>
+        <a class="contactbtn" href="mailto:testemail@something.com"><i class='fa fa-envelope fa-sm'></i></a>
+        <a class="contactbtn" href="tel:+18121231234"><i class='fa fa-phone fa-sm'></i></a>
+        <span class="contactbtn" onclick="text()"><i class="fa fa-phone fa-sm"></i></span>
+        <br>
+        <!--
+        <a href="#" role="button" data-toggle="popover" data-placement="top" title="" data-content='test content' data-original-title='test title <span class="contactbtn" onclick="text()"><i class="fa fa-envelope fa-sm"></i></span>'>test link</a>
+        -->
+    </p>
+    <p>Status: {{ state }}
+        {% if isborrowed or isrequested %}
+            {% if yesowner %}
+                by <a href="#" data-toggle="popover" data-placement="top" title="{{ activeuserusername }}" data-content="From {{ commonneighborhoods }}">{{ activeuserfirstname }}</a>
+            {% else %}
+                by {{ activeuserfirstname }}
+            {% endif %}
+        {% elif isoverdue %}
+            {% if yesowner %}
+                (<a href="#" data-toggle="popover" data-placement="top" title="{{ activeuserusername }}" data-content="From {{ commonneighborhoods }}">{{ activeuserfirstname }}</a> must return)
+            {% else %}
+                ({{ activeuserfirstname }} must return)
+            {% endif %}
+        {% else %}
+        {% endif %}
+    <br>Category: {{ category }}
+    <br>Health: {{ health }}</p>
+    <hr>
+
+    <h5>Features and Rules</h5>
+    <p>
+        <i>{% for line in description %}{{ line }}<br />{% endfor %}</i>
+    </p>
+    {% if yesowner %}
+    <h5>Private Notes</h5>
+    <p>
+        <i>{% for line in notes %}{{ line }}<br />{% endfor %}</i>
+    </p>
+
+    <button class="btn btn-info" data-toggle="collapse" data-target="#demo">View Tool History</button>
+
+    <div id="demo" class="collapse">
+        <div class="history_tool container">
+            <table class="table table-sm table-hover">
+                <tbody>
+                  {% for item in toolhistory %}
+                  <tr>
+                    <th scope="row" style="white-space: nowrap;">{{ toolhistory[item]['date'] }}</th>
+                    <td style="height: 32px; overflow-x: scroll;">
+                      <div style="height: 24px;">
+                        {{ toolhistory[item]['comment'] }}
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+    <hr>
+
+    <form action="/tool_details" onsubmit="document.getElementById('deleteButton').disabled=true;" method="post">
+        {% if yesowner %}
+            <!-- current user IS the owner of the tool -->
+            <button class="btn btn-secondary" onclick="updateinfobox('edit')" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerModal">Edit Details</button><br><br>
+            {% if private == 1 %}
+                <button class="btn btn-secondary" onclick="updateinfobox('makePublic')" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerCogModal">Make Public</button><br><br>
+            {% else %}
+                <button class="btn btn-secondary" onclick="updateinfobox('makePrivate')" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerCogModal">Make Private</button><br><br>
+            {% endif %}
+
+            <!-- onclick="updateinfobox('deleteTool')" type="submit" -->
+            <div class="btn btn-danger"  style="width: 260px" target="#" data-toggle="modal" data-target="#deleteModal">Delete Tool</div><br><br>
+            {% if isavailable %}
+                <button class="btn btn-success" onclick="updateinfobox('markBorrowed')" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerCogModal">Mark as Borrowed</button><br><br>
+            {% elif isrequested %}
+                <button class="btn btn-success" onclick="updateinfobox('approveRequest')" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerCogModal">Approve Request</button><br><br>
+                <button class="btn btn-danger" onclick="updateinfobox('denyRequest')" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerCogModal">Deny Request</button><br><br>
+            {% elif isborrowed %}
+                {% if userborrowed %}
+                    <button class="btn btn-info" onclick="updateinfobox('returnTool')" type="submit" style="width: 260px;" data-toggle="modal" data-target="#spinnerCogModal">Return Tool</button><br><br>
+                {% else %}
+                    <button class="btn btn-warning" onclick="updateinfobox('requireReturn')" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerCogModal">Require Return</button><br><br>
+                {% endif %}
+            {% else %} <!-- isoverdue -->
+                <button class="btn btn-warning" onclick="updateinfobox('requireReturn')" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerCogModal" disabled>Require Return</button><br><br>
+            {% endif %}
+        {% else %}
+            <!-- current user is NOT the owner of the tool -->
+            {% if isavailable %}
+                <!-- Request the Tool Section -->
+                <div id="requestCommentContainer" style="display: none;"><textarea class="form-control" rows="3" name="requestComment" id="requestComment" style="width: 60%" placeholder="estimated duration / project / location / etc"></textarea><br>
+                <div class="small text-muted">(To place your request with a comment, leave this box open when you click Request)</div><br></div>
+
+                <div class="btn-group">
+                  <button type="submit" onclick="updateinfobox('requestBorrow')" class="btn btn-success" data-toggle="modal" data-target="#spinnerCogModal">Request to Borrow</button>
+                  <button type="button" onclick="showCommentBox()" id="commentButton" class="btn btn-success leftborder"><i class="fas fa-edit"></i></button>
+                </div><br><br>
+            {% elif isrequested %}
+                {% if userborrowed %}
+                    <button class="btn btn-warning" onclick="updateinfobox('cancelRequest')" type="submit" style="width: 260px;" data-toggle="modal" data-target="#spinnerCogModal">Cancel Request</button><br><br>
+                {% else %}
+                    <button class="btn btn-secondary" style="width: 260px" disabled>Tool Unavailable</button><br><br>
+                {% endif %}
+            {% elif isborrowed %}
+                <!-- tool is borrowed -->
+                {% if userborrowed %} <!-- true if the the active user is borrower or requestor of the tool -->
+                    {% if isborrowed %}
+                        <button class="btn btn-info" onclick="updateinfobox('returnTool')" type="submit" style="width: 260px;" data-toggle="modal" data-target="#spinnerCogModal">Return Tool</button><br><br>
+                    {% else %}
+                        <button class="btn btn-secondary" style="width: 260px" disabled>Tool Unavailable</button><br><br>
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                <!-- tool is overdue -->
+                {% if userborrowed %} <!-- true if the the active user is borrower or requestor of the tool -->
+                    {% if isoverdue %}
+                        <button class="btn btn-info" onclick="updateinfobox('returnTool')" type="submit" style="width: 260px;" data-toggle="modal" data-target="#spinnerCogModal">Return Tool</button><br><br>
+                    {% else %}
+                        <button class="btn btn-secondary" style="width: 260px" disabled>Tool Unavailable</button><br><br>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+
+        <button class="btn btn-primary" onclick="window.history.go(-1); return false;" type="submit" style="width: 190px" data-toggle="modal" data-target="#spinnerModal">Cancel</button>
+        <br>
+
+        <input id="hiddenInfoBox" name="returnedAction" style="display: none;" value=""></input>
+        <input id="toolid" name="toolid" style="display: none;" value="{{ toolid }}"></input>
+        <br><br>
+
+          <!-- The 'Delete Tool' Modal -->
+          <div class="modal fade" id="deleteModal">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Confirm Delete</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body text-left">
+                    <div style="color: red; font-weight: bold;">WARNING</div>
+                    <i>If you click Delete, this tool will be deleted.</i>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-danger" onclick="updateinfobox('deleteTool')" id="deleteButton">Delete</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+    </form>
+    <div class="deadspace"></div>
+    <div class="deadspace"></div>
+</div>
+
+
+
+    <script>
+        var requestCommentContainer = document.getElementById("requestCommentContainer");
+        var requestComment = document.getElementById("requestComment");
+        var commentButton = document.getElementById("commentButton");
+        //requestCommentContainer.style.display = "none";
+
+        function updateinfobox(newtext) {
+            if ((newtext == 'requestBorrow') && (requestCommentContainer.style.display === "none")) {
+                requestComment.value = "";
+            }
+            hiddenInfoBox.value = newtext;
+        }
+
+        function showCommentBox() {
+            if (requestCommentContainer.style.display === "none") {
+                requestCommentContainer.style.display = "inline";
+            } else {
+                requestCommentContainer.style.display = "none";
+            }
+        }
+
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover({
+                trigger: 'focus',
+                html: true
+            });
+        });
+
+        function text() {
+            window.alert("banana");
+        }
+    </script>
+{% endblock %}

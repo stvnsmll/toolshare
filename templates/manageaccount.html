@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Manage Account
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+
+{% block main %}
+<div class="scrolling_page">
+    <br>
+    <h3>Manage Your Account</h3>
+    <h5>Name: {{ firstname }}</h5>
+    <p>
+        Username: {{ username }}
+        <span class="text-muted small">(cannot change)</span><br>
+        Email: {{ email }}
+    </p>
+    <hr>
+    <form action="/manageaccount" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>User Details</h5>
+                    <button class="btn btn-info" id="changeName" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerCogModal">Change Name</button><br><br>
+                    <button class="btn btn-info" id="changePassword" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerCogModal">Change Password</button><br><br>
+                    <button class="btn btn-info" id="updateEmail" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerCogModal">Update Email</button><br><br><br>
+            </div>
+            <div class="col-md-6">
+                <h5>Account Settings</h5>
+                    <button class="btn btn-secondary" id="myNeighborhoods" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerModal">My Neighborhoods</button><br><br>
+                    <button class="btn btn-secondary" id="viewHistory" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerModal">View History</button><br><br>
+                    <button class="btn btn-danger" id="deleteAccount" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerModal">Delete Account</button><br><br>
+            </div>
+        </div>
+        <hr>
+        <br>
+        <button class="btn btn-primary" id="done" type="submit" style="width: 190px">Done</button>
+        <br><input id="hiddenInfoBox" name="returnedAction" value=""></input>
+        <br><br>
+    </form>
+    <div class="deadspace"></div>
+    <div class="deadspace"></div>
+</div>
+
+    <script>
+
+        var hiddenInfoBox = document.getElementById("hiddenInfoBox");
+
+        var changeName = document.getElementById("changeName");
+        var changePassword = document.getElementById("changePassword");
+        var updateEmail = document.getElementById("updateEmail");
+        var myNeighborhoods = document.getElementById("myNeighborhoods");
+        var viewHistory = document.getElementById("viewHistory");
+        var deleteAccount = document.getElementById("deleteAccount");
+        var done = document.getElementById("done");
+
+        hiddenInfoBox.style.display = 'none';
+
+        changeName.onclick = function(){
+            hiddenInfoBox.value = "changeName";
+        };
+
+        changePassword.onclick = function(){
+            hiddenInfoBox.value = "changePassword";
+        };
+
+        updateEmail.onclick = function(){
+            hiddenInfoBox.value = "updateEmail";
+        };
+
+        myNeighborhoods.onclick = function(){
+            hiddenInfoBox.value = "myNeighborhoods";
+        };
+
+        viewHistory.onclick = function(){
+            hiddenInfoBox.value = "viewHistory";
+        };
+
+        deleteAccount.onclick = function(){
+            hiddenInfoBox.value = "deleteAccount";
+        };
+
+        done.onclick = function(){
+            hiddenInfoBox.value = "returnHome";
+        };
+
+    </script>
+{% endblock %}

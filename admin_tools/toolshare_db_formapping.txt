@@ -1,0 +1,104 @@
+//Paste this into here: https://dbdiagram.io/d
+
+Table users {
+    id INTEGER // PRIMARY KEY AUTOINCREMENT NOT NULL
+    uuid TEXT // NOT NULL
+    firstname TEXT // NOT NULL
+    username TEXT // NOT NULL UNIQUE
+    email TEXT // NOT NULL
+    hash TEXT // NOT NULL
+    deleted INTEGER // NOT NULL DEFAULT 0
+    theme TEXT // NOT NULL DEFAULT "light"
+}
+
+//CREATE TABLE sqlite_sequence(name,seq)
+//CREATE UNIQUE INDEX "username" ON "users" ("username")
+//CREATE UNIQUE INDEX "uuid" ON "users" ("uuid")
+
+
+TABLE neighborhoods {
+    neighborhood_simpleID INTEGER // PRIMARY KEY AUTOINCREMENT NOT NULL
+    neighborhoodid TEXT // NOT NULL
+    neighborhood TEXT // NOT NULL
+    adminuuid TEXT //
+    zip INTEGER // NOT NULL
+    description TEXT //
+    private INTEGER // NOT NULL DEFAULT 1
+    pwd TEXT // DEFAULT ""
+    deleted INTEGER // NOT NULL DEFAULT 0
+}
+
+
+Table memberships {
+    membershipid INTEGER // PRIMARY KEY AUTOINCREMENT NOT NULL
+    useruuid TEXT // NOT NULL
+    neighborhoodid TEXT // NOT NULL
+    admin INTEGER // NOT NULL DEFAULT 0
+}
+
+
+Table tools {
+    tool_simpleID INTEGER // PRIMARY KEY AUTOINCREMENT NOT NULL
+    toolid TEXT // NOT NULL
+    toolname TEXT // NOT NULL
+    owneruuid TEXT // NOT NULL
+    state TEXT // NOT NULL DEFAULT "available"
+    activeuseruuid TEXT // DEFAULT ""
+    health INTEGER // NOT NULL DEFAULT 10
+    photo TEXT // NOT NULL
+    features TEXT //
+    notes TEXT //
+    category TEXT // NOT NULL DEFAULT "undefined"
+    private INTEGER // NOT NULL DEFAULT 0
+    deleted INTEGER // NOT NULL DEFAULT 0
+}
+
+
+Table actions {
+    actionid INTEGER // PRIMARY KEY AUTOINCREMENT NOT NULL
+    type TEXT // NOT NULL
+    state TEXT // NOT NULL DEFAULT "open"
+    originuuid TEXT // NOT NULL
+    targetuuid TEXT // NOT NULL
+    toolid TEXT //
+    messages TEXT //
+    timestamp_open TEXT // NOT NULL
+    timestamp_close TEXT //
+    deleted INTEGER // NOT NULL DEFAULT 0
+}
+
+
+Table history {
+    historyid INTEGER // PRIMARY KEY AUTOINCREMENT NOT NULL
+    action TEXT // NOT NULL
+    useruuid TEXT // NOT NULL
+    toolid INTEGER //
+    neighborhoodid INTEGER //
+    timestamp TEXT // NOT NULL
+}
+
+Table toolvisibility {
+  toolvisID INTEGER // PRIMARY KEY AUTOINCREMENT NOT NULL
+  neighborhoodid TEXT // NOT NULL
+  toolid TEXT // NOT NULL
+}
+
+
+
+Ref: "users"."uuid" < "memberships"."useruuid"
+
+Ref: "users"."uuid" < "neighborhoods"."adminuuid"
+
+Ref: "users"."uuid" < "tools"."owneruuid"
+
+Ref: "users"."uuid" < "actions"."originuuid"
+
+Ref: "users"."uuid" < "actions"."targetuuid"
+
+Ref: "tools"."toolid" < "actions"."toolid"
+
+Ref: "neighborhoods"."neighborhoodid" < "memberships"."neighborhoodid"
+
+Ref: "tools"."toolid" < "toolvisibility"."toolid"
+
+Ref: "neighborhoods"."neighborhoodid" < "toolvisibility"."neighborhoodid"
