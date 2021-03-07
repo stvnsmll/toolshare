@@ -55,6 +55,15 @@
         </div>
       </div>
 
+      <span class="redstar" style="margin-right: 1.4em">*</span>
+      <label class="form-check-label" style="margin-bottom: 15px">
+        <input type="checkbox" class="form-check-input" value="" id="privatecheck" required>
+        By checking this box, I agree with the
+        <span data-toggle="modal" data-target="#TandC">
+            <a href="#"><u>terms and conditions</u></a>
+        </span>
+      </label>
+      <br>
 
         <button class="btn btn-primary" data-toggle="modal" data-target="#spinnerCogModal" type="submit">Create Account</button>
         <br><br>
@@ -94,6 +103,42 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- The Modal: Terms and Conditions -->
+<div class="modal fade" id="TandC">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+
+  <!-- Modal Header -->
+  <div class="modal-header">
+    <h4 class="modal-title">Terms and Conditions</h4>
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+  </div>
+
+  <!-- Modal body -->
+  <div class="modal-body text-left">
+    <p>
+      The terms and conditions for using this service are pretty similar to many other ones.
+      To view them in detail, you can read through them all <a href="/TermsAndConditions" target="_blank" rel="noopener noreferrer">here</a>.
+    </p>
+    <p>
+    There are some key items you are agreeing to:
+    <ul>
+      <li>You are responsible for your own safety and your own property.</li>
+      <li>You are liable for damages you cause to other peoples' tools.</li>
+    </ul>
+    </p>
+    Please still read through the full T&C, but make special note of these.
+  </div>
+
+  <!-- Modal footer -->
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+  </div>
+
+</div>
+</div>
 </div>
 
 {% endblock %}

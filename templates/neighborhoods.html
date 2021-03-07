@@ -9,27 +9,10 @@
 {% endblock %}
 
 {% block main %}
-<!--<div class="scrolling_page no-x">-->
+
 <div class="container p-3">
   <h4 class="smalltopspace">{{ firstname }}'s Neighborhoods</h4>
 
-
-<script src="/static/jquery.mobile.custom.min.js"></script>
-
-<script>
-    $(function() {
-        $(".tab-content").swiperight(function() {
-            var $tab = $('#tablist .active').prev();
-            if ($tab.length > 0)
-                $tab.find('a').tab('show');
-        });
-        $(".tab-content").swipeleft(function() {
-            var $tab = $('#tablist .active').next();
-            if ($tab.length > 0)
-                $tab.find('a').tab('show');
-        });
-    });
-</script>
 
 <div role="tabpanel">
   <!-- Nav tabs -->

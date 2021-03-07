@@ -1141,6 +1141,15 @@ def deleteneighborhood():
             return apology("Misc Error")
 
 
+@app.route("/TermsAndConditions")
+def termsandconditions():
+    if session.get("user_uuid") is None:
+        firstname = ""
+        openActions = 0
+    else:
+        firstname = session.get("firstname")
+        openActions = countActions()
+    return render_template("TermsAndConditions.html", openActions=openActions, firstname=firstname)
 
 
 ################################################################
