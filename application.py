@@ -75,22 +75,17 @@ def after_request(response):
 # sqlite = 1 (development)
 # postgreSQL = 2 (production on Heroku)
 DATABASE__TYPE = 2
+try:
+    db = SQL_db(os.getenv("DATABASE_URL"))
+except:
+    db = SQL_db("sqlite:///toolshare.db")
+    app.config["SESSION_FILE_DIR"] = mkdtemp()# <-- not used for Heroku
+    print("sqlite3 database: development mode")
+    DATABASE__TYPE = 1
 
-# Configure session to use filesystem (instead of signed cookies)
-if DATABASE__TYPE == 1:
-    app.config["SESSION_FILE_DIR"] = mkdtemp()# <-- commented out for Heroku
-else:
-    pass#omit this line of code
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
-
-if DATABASE__TYPE == 1:
-    # Configure CS50 Library to use SQLite database
-    db = SQL_db("sqlite:///toolshare.db")
-else:
-    # Change from sqlite3 to PostgreSQL database
-    db = SQL_db(os.getenv("DATABASE_URL"))
 
 # setup s3 file storage
 app.config['S3_BUCKET'] = S3_BUCKET
@@ -1141,15 +1136,6 @@ def deleteneighborhood():
             return apology("Misc Error")
 
 
-@app.route("/TermsAndConditions")
-def termsandconditions():
-    if session.get("user_uuid") is None:
-        firstname = ""
-        openActions = 0
-    else:
-        firstname = session.get("firstname")
-        openActions = countActions()
-    return render_template("TermsAndConditions.html", openActions=openActions, firstname=firstname)
 
 
 ################################################################
@@ -1645,6 +1631,28 @@ def history():
 
     else:
         pass
+
+
+@app.route("/TermsAndConditions")
+def termsandconditions():
+    if session.get("user_uuid") is None:
+        firstname = ""
+        openActions = 0
+    else:
+        firstname = session.get("firstname")
+        openActions = countActions()
+    return render_template("TermsAndConditions.html", openActions=openActions, firstname=firstname)
+
+
+@app.route("/PrivacyPolicy")
+def privacypolicy():
+    if session.get("user_uuid") is None:
+        firstname = ""
+        openActions = 0
+    else:
+        firstname = session.get("firstname")
+        openActions = countActions()
+    return render_template("PrivacyPolicy.html", openActions=openActions, firstname=firstname)
 
 
 
