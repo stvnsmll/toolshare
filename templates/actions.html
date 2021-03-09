@@ -75,7 +75,7 @@
                     </div>
                 </div>
                 <div class="card-footer w-100 text-muted expandanimate" id="footerrequestid{{ myapprovals[item]['actionid'] }}" style='max-height: 0px; padding: 0px'>
-                    {{ myapprovals[item]['requestorfirstname'] }}: {{ myapprovals[item]['messages'] }} &nbsp;
+                    {% for line in myapprovals[item]['messages'] %}{{ line }}<br />{% endfor %}
                     <div class="btn btn-warning badge-pill roundaction" onclick="toggleResponse('responseCommentContainerrequestid{{ myapprovals[item]['actionid'] }}')"><i class="fa fa-reply fa-lg"></i></div>
                     <div id="responseCommentContainerrequestid{{ myapprovals[item]['actionid'] }}" style="max-height: 0px;" class="expandanimate">
                         <br>
@@ -330,7 +330,7 @@
                 </div>
 
                 <div class="card-footer w-100 text-muted">
-                    {{ myrequests[item]['requestorfirstname'] }}: "{{ myrequests[item]['messages'] }}" &nbsp;
+                  {% for line in myrequests[item]['messages'] %}{{ line }}<br />{% endfor %}
                 </div>
             </div>
             {% endfor %}

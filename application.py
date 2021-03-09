@@ -191,7 +191,7 @@ def actions():
                     'commonNeighborhoods': commonneighborhoods,
                     'requestDate': requestDate,
                     'state': item["state"],
-                    'messages': item["messages"],
+                    'messages': item["messages"].split("\n"),
                     'actionid': item["actionid"],
                     'photo': photo}
             myapprovals[item["actionid"]] = info
@@ -215,11 +215,11 @@ def actions():
                     'toolid': tooldetails["toolid"],
                     'ownerusername': toolowner["username"],
                     'ownerfirstname': toolowner["firstname"],
-                    'commonNeighborhoods': commonneighborhoods,#"[The Living Room, The Grid SONO]",#TODO################
+                    'commonNeighborhoods': commonneighborhoods,
                     'requestorfirstname': firstname,
                     'requestDate': requestDate,
                     'state': item["state"],
-                    'messages': item["messages"],
+                    'messages': item["messages"].split("\n"),
                     'actionid': item["actionid"],
                     'photo': photo}
             myrequests[item["actionid"]] = info
@@ -252,12 +252,14 @@ def actions():
             approveReject_comments = request.form.get("approveReject_comments")
             # console log display
             print(returnedAction + ", actionid: " + returnedActionID + " -- " + approveOrReject + "\n Response Comments: " + approveReject_comments)
-            toolid = db.execute("SELECT toolid FROM actions WHERE actionid = :returnedActionID;", returnedActionID=returnedActionID)[0]['toolid']
+            action_deetz = db.execute("SELECT * FROM actions WHERE actionid = :returnedActionID;", returnedActionID=returnedActionID)[0]
+            toolid = action_deetz['toolid']
+            prev_comments = action_deetz['messages']
+            all_comments = firstname + ': "' + approveReject_comments + '"' + "\n" + prev_comments
             # database update to either approve or reject
             if approveOrReject == "approve":
                 # change the state of the actionid to show it is closed with closed date - add any comments
-                db.execute("UPDATE actions SET state = 'closed', timestamp_close = :timeclose, messages = :comments WHERE actionid = :returnedActionID;", timeclose=datetime.datetime.now(), comments=approveReject_comments, returnedActionID=returnedActionID)
-                # TODO - figure out how to append the messages instead of overriding
+                db.execute("UPDATE actions SET state = 'closed', timestamp_close = :timeclose, messages = :comments WHERE actionid = :returnedActionID;", timeclose=datetime.datetime.now(), comments=all_comments, returnedActionID=returnedActionID)
                 # change the state of the tool to borrowed
                 db.execute("UPDATE tools SET state = 'borrowed' WHERE toolid = :toolid;", toolid=toolid)
                 #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
@@ -266,8 +268,7 @@ def actions():
                 logHistory("tool", "borrow", borroweruuid, toolid, "", approveReject_comments)
             else: # the request was rejected
                 # change the state of the actionid to show it is closed with closed date - add any comments
-                db.execute("UPDATE actions SET state = 'closed', timestamp_close = :timeclose, messages = :comments WHERE actionid = :returnedActionID;", timeclose=datetime.datetime.now(), comments=approveReject_comments, returnedActionID=returnedActionID)
-                # TODO - figure out how to append the messages instead of overriding
+                db.execute("UPDATE actions SET state = 'closed', timestamp_close = :timeclose, messages = :comments WHERE actionid = :returnedActionID;", timeclose=datetime.datetime.now(), comments=all_comments, returnedActionID=returnedActionID)
                 # change the state of the tool to available
                 db.execute("UPDATE tools SET state = 'available', activeuseruuid = NULL WHERE toolid = :toolid;", toolid=toolid)
                 #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
@@ -529,9 +530,11 @@ def tool_details():
         if formAction == "returnHome":
             return redirect(url_for('index') + '#myTools')
         elif formAction == "requestBorrow":
-            requestComment = request.form.get("requestComment")
-            if requestComment == "":
-                requestComment = "(no message)"
+            requestComment_raw = request.form.get("requestComment")
+            if requestComment_raw == "":
+                requestComment = ""
+            else:
+                requestComment = firstname + ': "' + requestComment_raw + '"'
             toolownerUUID = db.execute("SELECT * FROM tools WHERE toolid = :toolid AND deleted = 0;", toolid=toolid)[0]["owneruuid"]
             db.execute("INSERT INTO actions (type, originuuid, targetuuid, toolid, messages, timestamp_open) VALUES (?, ?, ?, ?, ?, ?);", "toolrequest", userUUID, toolownerUUID, toolid, requestComment, datetime.datetime.now())
             db.execute("UPDATE tools SET state = 'requested', activeuseruuid = :userUUID WHERE toolid = :toolid;", toolid=toolid, userUUID=userUUID)
@@ -539,7 +542,7 @@ def tool_details():
             logHistory("tool", "request", toolownerUUID, toolid, "", request.form.get("requestComment"))
             # notify the tool owner via email
             #send_email_toolaction(toolid, othername, actionmsg)
-            send_email_toolaction(toolid, firstname, "requested")
+            #send_email_toolaction(toolid, firstname, "requested")
             flash('Tool Requested')
             return redirect(url_for('index') + '#borrowed')
         elif formAction == "markBorrowed":
@@ -1672,6 +1675,8 @@ def contactus():
             full_message = "\n" + firstname + " has submitted a 'contact us' email from " + email + "\n" + "Username: " + username + "\n" + " ----- message follows ----- \n\n" + message + "\n\n ----- end message -----"
             #print(full_message)
             send_mail([app.config['MAIL_USERNAME']], "ContactUs_Submission", full_message)
+            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            logHistory("other", "feedback_email", "", "", "", "")
             flash("Your message has been sent, thank you!")
             return redirect("/manageaccount")
         else:
@@ -1874,8 +1879,6 @@ def get_image_s3(image_uuid_with_ext, expire_in=3600):
         print("Something Happened - ImageFetchFail: ", e)
         return None
 
-    print(response)
-
     # The response contains the presigned URL
     return response
 
@@ -1884,7 +1887,7 @@ def get_image_s3(image_uuid_with_ext, expire_in=3600):
 def send_mail(recipients, subject, message):
     msg = Message(subject, sender = "sharetools.tk@gmail.com", recipients = recipients)
     msg.body = message
-    msg.html = message
+    msg.html = message.replace("\n","<br />\n")
     mail.send(msg)
     print("Mail Sent")
 
