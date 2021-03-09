@@ -632,7 +632,7 @@ def tool_details():
             flash('Tool deleted')
             return redirect(url_for('index') + '#myTools')
         else:
-            return apology("todo")
+            return apology("Misc error")
 
 
 @app.route("/edittool", methods=["GET", "POST"])
