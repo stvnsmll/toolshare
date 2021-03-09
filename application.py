@@ -946,7 +946,12 @@ def neighborhood_details():
         formAction = request.form.get("returnedAction")
         neighborhoodid = request.form.get("nbhid")
         if formAction == "join":
-            # todo: do some checks to make sure they're not already a member
+            already_member_ckeck = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID AND neighborhoodid = :neighborhoodid;", userUUID=userUUID, neighborhoodid=neighborhoodid)
+            if len(already_member_ckeck) != 0:
+                #already a member, cannot rejoin
+                flash("Already a member of this neighborhood")
+                return redirect(url_for('neighborhood_details') + '?neighborhoodid=' + neighborhoodid)
+
             neighborhooddeetz = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)[0]
             if not check_password_hash(neighborhooddeetz["pwd"], ""):
                 # (if yes No password is required)
@@ -966,7 +971,7 @@ def neighborhood_details():
                 myTools[allmyToolsData[i]['toolid']] = info
 
             for tool in myTools:
-                if tool['private'] == 0:
+                if myTools[tool]['private'] == 0:
                     exists = db.execute("SELECT * FROM toolvisibility WHERE neighborhoodid = :neighborhoodid AND toolid = :tool;", neighborhoodid=neighborhoodid, tool=tool)
                     if len(exists) == 0:
                         db.execute("INSERT INTO toolvisibility (neighborhoodid, toolid) VALUES (?, ?);", neighborhoodid, tool)
@@ -976,7 +981,13 @@ def neighborhood_details():
                 db.execute("INSERT INTO memberships (useruuid, neighborhoodid) VALUES (?, ?);", userUUID, neighborhoodid)
             session["neighborhood_check"] = "1"
             #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
-            nbhAdmin = db.execute("SELECT useruuid FROM memberships WHERE neighborhoodid = :neighborhoodid AND admin = 1;", neighborhoodid=neighborhoodid)[0]["useruuid"]
+            nbhAdmin_db = db.execute("SELECT useruuid FROM memberships WHERE neighborhoodid = :neighborhoodid AND admin = 1;", neighborhoodid=neighborhoodid)
+            if len(nbhAdmin_db) != 1:
+                nbhAdmin = ""
+            else:
+                nbhAdmin = nbhAdmin_db[0]["useruuid"]
+                if nbhAdmin == userUUID:
+                    nbhAdmin = ""
             logHistory("neighborhood", "join", nbhAdmin, "", neighborhoodid, "")
             flash('Joined the neighborhood!')
             return redirect(url_for('neighborhoods') + '#mine')
@@ -1059,9 +1070,6 @@ def editneighborhood():
     userUUID = session.get("user_uuid")
     firstname = session.get("firstname")
     if request.method == "GET":
-        # make sure the user is the owner of the neightborhood -- TODO
-
-
         neighborhoodid = request.args.get("neighborhoodid")
         if not neighborhoodid:
             return apology("Need to provide a neighborhood id")
@@ -1069,7 +1077,9 @@ def editneighborhood():
         neighborhooddeetz = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid = :neighborhoodid AND deleted = 0;", neighborhoodid=neighborhoodid)[0]
 
         if userUUID != neighborhooddeetz["adminuuid"]:
-            return apology("You are not the neighborhood admin!")
+            # The active user is not the neighborhood admin
+            flash("UNAUTHORIZED - cannot edit the neighborhood if not the admin.")
+            return redirect(url_for('neighborhood_details') + '?neighborhoodid=' + neighborhoodid)
 
         neighborhood = neighborhooddeetz["neighborhood"]
         zipcode = neighborhooddeetz["zip"]
@@ -1106,15 +1116,25 @@ def deleteneighborhood():
     firstname = session.get("firstname")
     if request.method == "GET":
         neighborhoodid = request.args.get("neighborhoodid")
-        #confirm that the active user is an admin for the neighborhood TODO, otherwise return unauthorized
-        neighborhoodname = db.execute("SELECT neighborhood FROM neighborhoods WHERE neighborhoodid = :neighborhoodid AND deleted = 0;", neighborhoodid=neighborhoodid)[0]['neighborhood']
+        neighborhooddeetz = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid = :neighborhoodid AND deleted = 0;", neighborhoodid=neighborhoodid)[0]
+        neighborhoodname = neighborhooddeetz['neighborhood']
+        #confirm that the active user is an admin for the neighborhood, otherwise return unauthorized
+        if userUUID != neighborhooddeetz["adminuuid"]:
+            # The active user is not the neighborhood admin
+            flash("UNAUTHORIZED - cannot delete the neighborhood if not the admin.")
+            return redirect(url_for('neighborhood_details') + '?neighborhoodid=' + neighborhoodid)
+
         return render_template("confirmdelete_nbh.html", openActions=countActions(), firstname=firstname, neighborhoodname=neighborhoodname, neighborhoodid=neighborhoodid)
     else:
         formAction = request.form.get("returnedAction")
         neighborhoodid = request.form.get("neighborhoodid")
-        print("yellow")
-        print(formAction)
         if formAction == "deleteNeighborhood":
+            neighborhooddeetz = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid = :neighborhoodid AND deleted = 0;", neighborhoodid=neighborhoodid)[0]
+            if userUUID != neighborhooddeetz["adminuuid"]:
+                # The active user is not the neighborhood admin
+                flash("UNAUTHORIZED - cannot delete the neighborhood if not the admin.")
+                return redirect(url_for('neighborhood_details') + '?neighborhoodid=' + neighborhoodid)
+
             # first confirm password...
             password = request.form.get("password")
             if not password:
@@ -1237,7 +1257,6 @@ def register():
         firstname = request.form.get("firstname")
         newUsername = request.form.get("username").lower()
         email = request.form.get("email").lower()
-        #todo: ensure email is unique
         password1 = request.form.get("password")
         password2 = request.form.get("confirmation")
         # Confirm the user entered something into the firstname field
