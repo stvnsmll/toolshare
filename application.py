@@ -1204,9 +1204,12 @@ def login():
             #db.execute("INSERT INTO history (type, action, useruuid, timestamp) VALUES (?, ?, ?, ?);", "other", "failedlogin2", "unknown", datetime.datetime.now())
             return apology("This accound has been shutdown. Contact admin to reactivate.", 423)
 
-        if len(rows[0]["theme"]) > 7:
-            flash("Please validate your email.")
-            return redirect(f"/validateemail?email={rows[0]['email']}")
+        if rows[0]["theme"][0:4] not in ['ligh', 'dark']:
+            if rows[0]["theme"][0:14] == "password_reset":
+                flash("You have been sent an email to reset your password")
+            else:
+                flash("Please validate your email.")
+                return redirect(f"/validateemail?email={rows[0]['email']}")
 
 
         # Remember which user has logged in
@@ -1653,6 +1656,144 @@ def history():
 
     else:
         pass
+
+
+@app.route("/passwordreset", methods=["GET", "POST"])
+def passwordreset():
+    """Password Reset"""
+    if session.get("user_uuid") is not None:
+        flash("Already logged in...")
+        return redirect("/manageaccount")
+    if request.method == "GET":
+        return render_template("passwordreset.html")
+    else:
+        formAction = request.form.get("returnedAction")
+        if formAction == "resetPW":
+            # first confirm that the email address is linked to an active user
+            # generate_new_authcode
+            # send email with authcode
+            # redirect to confirm password
+            flash('Sorry, this feature has not been setup yet.')
+            #flash('If valid, an email was sent with a password reset link.')
+            return redirect("/login")
+        elif formAction == "returnHome":
+            return redirect("/login")
+        else:
+            return apology("Misc Error")
+
+
+@app.route("/validatepwchange", methods=["GET", "POST"])
+def validatePWchange():
+    code_timeout_limit = 2#minutes
+    if session.get("user_uuid") is not None:
+        flash("Already logged in...")
+        return redirect("/")
+    if request.method == "GET":
+        new_email = request.args.get("email")
+        error = request.args.get("error")
+        if new_email == "":
+            return apology("not found","404")
+        new_user = db.execute("SELECT * FROM users WHERE email = :email", email=new_email)
+        if len(new_user) != 1:
+            return apology("No user found")
+        elif (new_user[0]['theme'] == "light") or (new_user[0]['theme'] == "dark"):
+            flash("Email already validated")
+            return redirect("/")
+        #get the user's autorization code:
+        fullcodedetails = new_user[0]['theme'].split(";")
+        valid_code = fullcodedetails[1]
+        start_timestamp = datetime.datetime.strptime(fullcodedetails[2], '%Y-%m-%d %H:%M:%S.%f')
+        validate_timestamp = datetime.datetime.now()
+        time_dif = validate_timestamp - start_timestamp
+        time_dif_minutes = time_dif.total_seconds() / 60
+        if time_dif_minutes > code_timeout_limit:
+            # authorization code expired, new authcode and send email
+            authcode = generate_new_authcode(new_email)
+            error = "timeout"
+            return redirect(f"/validateemail?email={new_email}&error={error}")
+
+        # If the authcode was sent with the url (GET), this would be the case if the user clicks the email link
+        authcode = request.args.get("authcode")
+        if authcode != None:
+            authcode = authcode.upper()
+            if authcode == valid_code:
+                # accound validated
+                db.execute("UPDATE users SET theme = 'light' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
+                session["user_uuid"] = new_user[0]["uuid"]
+                session["firstname"] = new_user[0]["firstname"]
+                session["neighborhood_check"] = "0"
+                logHistory("other", "email_validated", "", "", "", "")
+                # redirect back to the index (root) page
+                flash(new_user[0]["firstname"] + ", your email has been validated.")
+                return redirect("/")
+            else:
+                error = "incorrect"
+                return redirect(f"/validateemail?email={new_email}&error={error}")
+
+        errormessage = ""
+        error = request.args.get("error")
+        if error != None:
+            if error == "":
+                errormessage = ""
+            elif error == "timeout":
+                errormessage = "Your prior code has expired, please check your email for a new one."
+            elif error == "incorrect":
+                errormessage = "Incorrect authorization code. Please try again."
+        return render_template("validateemail.html", new_email=new_email, errormessage=errormessage)
+    else:#POST
+        formAction = request.form.get("returnedAction")
+        new_email = request.form.get("useremail")
+        if formAction == "resendCode":
+            new_user = db.execute("SELECT * FROM users WHERE email = :email", email=new_email)
+            if len(new_user) != 1:
+                return apology("Error: No user found")
+            elif (new_user[0]['theme'] == "light") or (new_user[0]['theme'] == "dark"):
+                flash("Email already validated")
+                return redirect("/")
+            # resend new user confirmation
+            # get a new authcode (and set it in the db and send email)
+            authcode = generate_new_authcode(new_email)
+            flash("New authorization code has been emailed.")
+            return redirect(f"/validateemail?email={new_email}")
+        elif formAction == "confirmAccount":
+            # get the form data
+            input_authcode = request.form.get("authcode").upper()
+            new_user = db.execute("SELECT * FROM users WHERE email = :email", email=new_email)
+            if len(new_user) != 1:
+                return apology("Error: No user found")
+            elif (new_user[0]['theme'] == "light") or (new_user[0]['theme'] == "dark"):
+                flash("Email already validated")
+                return redirect("/")
+            #get the user's autorization code:
+            fullcodedetails = new_user[0]['theme'].split(";")
+            valid_code = fullcodedetails[1]
+            start_timestamp = datetime.datetime.strptime(fullcodedetails[2], '%Y-%m-%d %H:%M:%S.%f')
+            validate_timestamp = datetime.datetime.now()
+            time_dif = validate_timestamp - start_timestamp
+            time_dif_minutes = time_dif.total_seconds() / 60
+            if time_dif_minutes > code_timeout_limit:
+                # authorization code expired, new authcode and send email
+                authcode = generate_new_authcode(new_email)
+
+                errormessage = "Your prior code has expired, please check your email for a new one."
+                return render_template("validateemail.html", new_email=new_email, errormessage=errormessage)
+            if input_authcode == valid_code:
+                # accound validated
+                send_email_welcome(new_email, new_user[0]["firstname"])
+                db.execute("UPDATE users SET theme = 'light' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
+                session["user_uuid"] = new_user[0]["uuid"]
+                session["firstname"] = new_user[0]["firstname"]
+                session["neighborhood_check"] = "0"
+                logHistory("other", "email_validated", "", "", "", "")
+                # redirect back to the index (root) page
+                flash(new_user[0]["firstname"] + ", your email has been validated.")
+                return redirect("/")
+            else:
+                error = "incorrect"
+                return redirect(f"/validateemail?email={new_email}&error={error}")
+
+        else:
+            return apology("Misc Error")
 
 
 @app.route("/ContactUs", methods=["GET", "POST"])

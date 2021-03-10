@@ -13,10 +13,10 @@
     <div class="scrolling_page">
     <h3 class="smalltopspace">Are you sure you want to leave?</h3>
     <br>
-    <p>
+    <div>
         <div style="color: red; font-weight: bold;">WARNING</div>
         <i>If you click Delete, your account will be permanently deleted.</i>
-    </p>
+    </div>
     <form action="/deleteaccount" method="post">
         <br>
         <p>Confirm your password to delete your account.</p>
@@ -27,7 +27,7 @@
         <button class="btn btn-primary" id="cancel" type="submit"style="width: 190px">Cancel</button>
 
 
-        <br><input id="hiddenInfoBox" name="returnedAction" value=""></input>
+        <br><input id="hiddenInfoBox" name="returnedAction" value="" style="display: none;"></input>
         <div class="deadspace"></div>
         <div class="deadspace"></div>
 
@@ -41,8 +41,6 @@
         var password = document.getElementById("password");
         var deleteAccount = document.getElementById("delete");
         var cancelBtn = document.getElementById("cancel");
-
-        hiddenInfoBox.style.display = 'none';
 
         deleteAccount.onclick = function(){
             hiddenInfoBox.value = "deleteAccount";
