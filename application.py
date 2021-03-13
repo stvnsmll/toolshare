@@ -320,7 +320,7 @@ def newtool():
         # get data from the form
         toolname = request.form.get("toolname")
         if toolname == "":
-            flash("Tool entry errer: please provide a tool name.")
+            flash("Tool entry error: please provide a tool name.")
             return render_template("newtool.html", openActions=countActions(), firstname=firstname, myNeighborhoods=myNeighborhoods)
 
         #Create the tools new UUID
@@ -698,7 +698,7 @@ def edittool():
         toolid = request.form.get("toolid")
         toolname = request.form.get("toolname")
         if toolname == "":
-            flash("Tool entry errer: please provide a tool name.\nNo changes made to the tool.")
+            flash("Tool entry error: please provide a tool name.\nNo changes made to the tool.")
             return redirect(url_for('tool_details') + '?toolid=' + toolid)
         category = request.form.get("category")
         health = request.form.get("health")
@@ -1204,17 +1204,16 @@ def login():
             #db.execute("INSERT INTO history (type, action, useruuid, timestamp) VALUES (?, ?, ?, ?);", "other", "failedlogin2", "unknown", datetime.datetime.now())
             return apology("This accound has been shutdown. Contact admin to reactivate.", 423)
 
-        if rows[0]["theme"][0:4] not in ['ligh', 'dark']:
-            if rows[0]["theme"][0:14] == "password_reset":
-                flash("You have been sent an email to reset your password")
-            else:
-                flash("Please validate your email.")
-                return redirect(f"/validateemail?email={rows[0]['email']}")
+        if rows[0]["validateemail"] != "":
+            flash("Please validate your email.")
+            return redirect(f"/validateemail?email={rows[0]['email']}")
 
+        # If the user had requested a password reset, but then logs in, clear their recoverykey
+        db.execute("UPDATE users SET recoverykey = '' WHERE uuid = :userUUID;", userUUID=rows[0]["uuid"])
 
         # Remember which user has logged in
         session["user_uuid"] = rows[0]["uuid"]
-        session["firstname"] = db.execute("SELECT firstname FROM users WHERE uuid = :userUUID;", userUUID = session["user_uuid"])[0]["firstname"]
+        session["firstname"] = rows[0]["firstname"]
 
         # See if the user is a member of any neighborhoods
         myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
@@ -1282,8 +1281,8 @@ def register():
 
         # generate a new UUID for the user
         new_uuid = uuid.uuid4().hex
-        # Initiate the user with an unregistered_email "theme":
-        db.execute("INSERT INTO users (uuid, firstname, username, email, hash, theme) VALUES (?, ?, ?, ?, ?, ?);", new_uuid, firstname, newUsername, email, generate_password_hash(password1), "unregistered_email")
+        # Initiate the user with an unregistered_email:
+        db.execute("INSERT INTO users (uuid, firstname, username, email, hash, validateemail) VALUES (?, ?, ?, ?, ?, ?);", new_uuid, firstname, newUsername, email, generate_password_hash(password1), "unregistered_email")
         #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
         db.execute("INSERT INTO history (type, action, useruuid, comment, timestamp) VALUES (?, ?, ?, ?, ?);", "other", "signup", new_uuid, "NEW USER!!", datetime.datetime.now())
 
@@ -1308,11 +1307,11 @@ def validateemail():
         new_user = db.execute("SELECT * FROM users WHERE email = :email", email=new_email)
         if len(new_user) != 1:
             return apology("No user found")
-        elif (new_user[0]['theme'] == "light") or (new_user[0]['theme'] == "dark"):
+        elif new_user[0]['validateemail'] == "":
             flash("Email already validated")
             return redirect("/")
         #get the user's autorization code:
-        fullcodedetails = new_user[0]['theme'].split(";")
+        fullcodedetails = new_user[0]['validateemail'].split(";")
         valid_code = fullcodedetails[1]
         start_timestamp = datetime.datetime.strptime(fullcodedetails[2], '%Y-%m-%d %H:%M:%S.%f')
         validate_timestamp = datetime.datetime.now()
@@ -1330,7 +1329,7 @@ def validateemail():
             authcode = authcode.upper()
             if authcode == valid_code:
                 # accound validated
-                db.execute("UPDATE users SET theme = 'light' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
+                db.execute("UPDATE users SET validateemail = '' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
                 session["neighborhood_check"] = "0"
@@ -1359,7 +1358,7 @@ def validateemail():
             new_user = db.execute("SELECT * FROM users WHERE email = :email", email=new_email)
             if len(new_user) != 1:
                 return apology("Error: No user found")
-            elif (new_user[0]['theme'] == "light") or (new_user[0]['theme'] == "dark"):
+            elif new_user[0]['validateemail'] == "":
                 flash("Email already validated")
                 return redirect("/")
             # resend new user confirmation
@@ -1373,11 +1372,11 @@ def validateemail():
             new_user = db.execute("SELECT * FROM users WHERE email = :email", email=new_email)
             if len(new_user) != 1:
                 return apology("Error: No user found")
-            elif (new_user[0]['theme'] == "light") or (new_user[0]['theme'] == "dark"):
+            elif new_user[0]['validateemail'] == "":
                 flash("Email already validated")
                 return redirect("/")
             #get the user's autorization code:
-            fullcodedetails = new_user[0]['theme'].split(";")
+            fullcodedetails = new_user[0]['validateemail'].split(";")
             valid_code = fullcodedetails[1]
             start_timestamp = datetime.datetime.strptime(fullcodedetails[2], '%Y-%m-%d %H:%M:%S.%f')
             validate_timestamp = datetime.datetime.now()
@@ -1392,7 +1391,7 @@ def validateemail():
             if input_authcode == valid_code:
                 # accound validated
                 send_email_welcome(new_email, new_user[0]["firstname"])
-                db.execute("UPDATE users SET theme = 'light' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
+                db.execute("UPDATE users SET validateemail = '' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
                 session["neighborhood_check"] = "0"
@@ -1440,14 +1439,31 @@ def manageaccount():
 
 
 @app.route("/changepassword", methods=["GET", "POST"])
-@login_required
+#@login_required
 def changepassword():
     """change your password"""
-    userUUID = session.get("user_uuid")
-    firstname = session.get("firstname")
     if request.method == "GET":
-        return render_template("updatepwd.html", openActions=countActions(), firstname=firstname)
+        verb = "Change"
+        # If the user is not logged in, check if they are passing in email and recovery token for password recovery
+        if session.get("user_uuid") is None:
+            email = request.args.get("email")
+            recoverytoken = request.args.get("recoverytoken")
+            if email != None:
+                userdeetz = db.execute("SELECT * FROM users WHERE email = :email", email=email)
+                if len(userdeetz) == 1:
+                    if (userdeetz[0]['recoverykey'] != "") and (recoverytoken != None):
+                        if userdeetz[0]['recoverykey'] == recoverytoken:
+                            verb = "New"
+                            return render_template("updatepwd.html", recoverytoken=recoverytoken, email=email, verb=verb)
+                        else:
+                            flash("Password reset link has expired.")
+            return redirect(url_for("login", next=request.url))
+        else:
+            userUUID = session.get("user_uuid")
+            firstname = session.get("firstname")
+            return render_template("updatepwd.html", openActions=countActions(), verb=verb, firstname=firstname)
     else:
+        #todo add in the recovery key check and if valid, change password, login the user (set session), reset recoverykey, redirecto to "/"
         formAction = request.form.get("returnedAction")
         if formAction == "returnHome":
             return redirect("/manageaccount")
@@ -1456,6 +1472,46 @@ def changepassword():
             oldPassword = request.form.get("oldPassword")
             newPassword1 = request.form.get("newPassword1")
             newPassword2 = request.form.get("newPassword2")
+            if oldPassword == None:
+                # password recovery via token:
+                # confirm token:
+                recoverytoken = request.form.get("recoverytoken")
+                email = request.form.get("email")
+                userdeetz = db.execute("SELECT * FROM users WHERE email = :email", email=email)
+                if len(userdeetz) != 0:
+                    if userdeetz[0]['recoverykey'] != recoverytoken:
+                        return apology("Misc error")#token doesnt match
+                #user exists and the tken matches:
+                # ensure fields are all provided
+                if not newPassword1 or not newPassword2:
+                    return apology("You must enter all of the password fields", "403")
+                # confirm both new passwords are the same
+                if newPassword1 != newPassword2:
+                    return apology("Your new password entries do not match", "403")
+                # clear their recoverykey
+                db.execute("UPDATE users SET recoverykey = '' WHERE uuid = :userUUID;", userUUID=userdeetz[0]["uuid"])
+                # go agead and log the user in at this point
+                session["user_uuid"] = userdeetz[0]["uuid"]
+                session["firstname"] = userdeetz[0]["firstname"]
+                # See if the user is a member of any neighborhoods
+                myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
+                if len(myneighborhoods) != 0:
+                    session["neighborhood_check"] = "1"
+                else:
+                    session["neighborhood_check"] = "0"
+                # Update the user's password
+                db.execute("UPDATE users SET hash = :newPW WHERE uuid = :userUUID;",
+                           newPW=generate_password_hash(newPassword1), userUUID=session["user_uuid"])
+                #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+                logHistory("other", "recoveredpassword", "", "", "", "")
+                flash('Your password was reset.')
+                return redirect("/")
+
+            #ELSE, the user was just changing their password
+            if session.get("user_uuid") is None:
+                return redirect(url_for("login"))
+            userUUID = session.get("user_uuid")
+            firstname = session.get("firstname")
             # ensure fields are all provided
             if not oldPassword or not newPassword1 or not newPassword2:
                 return apology("You must enter all of the password fields", "403")
@@ -1658,23 +1714,60 @@ def history():
         pass
 
 
-@app.route("/passwordreset", methods=["GET", "POST"])
-def passwordreset():
-    """Password Reset"""
+@app.route("/passwordrecovery", methods=["GET", "POST"])
+def passwordrecovery():
+    """Password Recovery"""
     if session.get("user_uuid") is not None:
         flash("Already logged in...")
         return redirect("/manageaccount")
     if request.method == "GET":
-        return render_template("passwordreset.html")
+        return render_template("passwordrecovery.html")
     else:
         formAction = request.form.get("returnedAction")
         if formAction == "resetPW":
             # first confirm that the email address is linked to an active user
-            # generate_new_authcode
+            email = request.form.get("email")
+            userdeetz = db.execute("SELECT * FROM users WHERE email = :email", email=email)
+            if len(userdeetz) != 1:
+                return apology("email check fail")
+
+            # generate new recovery key, and set it to the user
+            recoverykey = uuid.uuid4().hex
+            db.execute("UPDATE users SET recoverykey = :key WHERE uuid = :userUUID;", key=recoverykey, userUUID=userdeetz[0]["uuid"])
+
             # send email with authcode
-            # redirect to confirm password
-            flash('Sorry, this feature has not been setup yet.')
-            #flash('If valid, an email was sent with a password reset link.')
+            recipients = [userdeetz[0]["email"]]
+            subject = "ToolShare Password Reset"
+            message = f"""\
+                        <html style="font-family: arial; background-color: lightgray;">
+                          <head>
+                            <title>Tool Share - Password Recovery</title>
+                          </head>
+
+                          <body style="margin: 0; background-color: white; border: 7px solid lightgray; position: absolute; top: 0; left: 0;">
+                            <div style="width: 100%; background-color: #f8f9fa;">
+                              <a href="https://sharetools.tk"><img src="https://i.imgur.com/dzuJftm.png" alt=""></a>
+                            </div>
+                            <div style="padding: 20px 10px 30px 10px; background-color: white; ">
+                              In order to reset the password to your ToolShare account, please click the link below<br>
+                              <span style="font-size: small;">If you did not request this password change, you may disregard this email.</span>
+                              <div style="padding: 25px;">
+                                <span style="padding-left: 12px;">
+                                  <a href="https://sharetools.tk/changepassword?email={email}&recoverytoken={recoverykey}">Reset my password</a>.
+                                </span>
+                              </div>
+                            </div>
+                            <div style="padding: 8px; position: fixed; bottom: 0; left: 0; width: 100%;">
+                              <div style="font-size: 10px; color: gray; text-align: center; width: 100%;">
+                                Copyright 2021 / Steven Small / All Rights Reserved
+                              </div>
+                            </div>
+                          </body>
+                        </html>
+                        """
+            send_mail(recipients, subject, message)
+
+            # redirect back to login
             return redirect("/login")
         elif formAction == "returnHome":
             return redirect("/login")
@@ -1696,11 +1789,11 @@ def validatePWchange():
         new_user = db.execute("SELECT * FROM users WHERE email = :email", email=new_email)
         if len(new_user) != 1:
             return apology("No user found")
-        elif (new_user[0]['theme'] == "light") or (new_user[0]['theme'] == "dark"):
+        elif new_user[0]['validateemail'] == "":
             flash("Email already validated")
             return redirect("/")
         #get the user's autorization code:
-        fullcodedetails = new_user[0]['theme'].split(";")
+        fullcodedetails = new_user[0]['validateemail'].split(";")
         valid_code = fullcodedetails[1]
         start_timestamp = datetime.datetime.strptime(fullcodedetails[2], '%Y-%m-%d %H:%M:%S.%f')
         validate_timestamp = datetime.datetime.now()
@@ -1718,7 +1811,7 @@ def validatePWchange():
             authcode = authcode.upper()
             if authcode == valid_code:
                 # accound validated
-                db.execute("UPDATE users SET theme = 'light' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
+                db.execute("UPDATE users SET validateemail = '' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
                 session["neighborhood_check"] = "0"
@@ -1747,7 +1840,7 @@ def validatePWchange():
             new_user = db.execute("SELECT * FROM users WHERE email = :email", email=new_email)
             if len(new_user) != 1:
                 return apology("Error: No user found")
-            elif (new_user[0]['theme'] == "light") or (new_user[0]['theme'] == "dark"):
+            elif new_user[0]['validateemail'] == "":
                 flash("Email already validated")
                 return redirect("/")
             # resend new user confirmation
@@ -1761,11 +1854,11 @@ def validatePWchange():
             new_user = db.execute("SELECT * FROM users WHERE email = :email", email=new_email)
             if len(new_user) != 1:
                 return apology("Error: No user found")
-            elif (new_user[0]['theme'] == "light") or (new_user[0]['theme'] == "dark"):
+            elif new_user[0]['validateemail'] == "":
                 flash("Email already validated")
                 return redirect("/")
             #get the user's autorization code:
-            fullcodedetails = new_user[0]['theme'].split(";")
+            fullcodedetails = new_user[0]['validateemail'].split(";")
             valid_code = fullcodedetails[1]
             start_timestamp = datetime.datetime.strptime(fullcodedetails[2], '%Y-%m-%d %H:%M:%S.%f')
             validate_timestamp = datetime.datetime.now()
@@ -1780,7 +1873,7 @@ def validatePWchange():
             if input_authcode == valid_code:
                 # accound validated
                 send_email_welcome(new_email, new_user[0]["firstname"])
-                db.execute("UPDATE users SET theme = 'light' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
+                db.execute("UPDATE users SET validateemail = '' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
                 session["neighborhood_check"] = "0"
@@ -2192,7 +2285,7 @@ def generate_new_authcode(email):
     authcode = str(uuid.uuid4().hex)[:6].upper()
     time_now = str(datetime.datetime.now())
     authcode_withtime = "Unregistered_Email" + ";" + authcode + ";" + time_now
-    db.execute("UPDATE users SET theme = :authcode WHERE email = :email", authcode=authcode_withtime, email=email)
+    db.execute("UPDATE users SET validateemail = :authcode WHERE email = :email", authcode=authcode_withtime, email=email)
     send_email_auth(email, authcode)
     return authcode
 
