@@ -1729,7 +1729,9 @@ def passwordrecovery():
             email = request.form.get("email")
             userdeetz = db.execute("SELECT * FROM users WHERE email = :email", email=email)
             if len(userdeetz) != 1:
-                return apology("email check fail")
+                # no email with this account... but don't release this information
+                return render_template("passwordrecoverysent.html")
+                #return apology("email check fail")
 
             # generate new recovery key, and set it to the user
             recoverykey = uuid.uuid4().hex
@@ -1750,7 +1752,7 @@ def passwordrecovery():
                             </div>
                             <div style="padding: 20px 10px 30px 10px; background-color: white; ">
                               In order to reset the password to your ToolShare account, please click the link below<br>
-                              <span style="font-size: small;">If you did not request this password change, you may disregard this email.</span>
+                              <span style="font-size: small;">If you did not request this password change, please log back in to confirm your account.</span>
                               <div style="padding: 25px;">
                                 <span style="padding-left: 12px;">
                                   <a href="https://sharetools.tk/changepassword?email={email}&recoverytoken={recoverykey}">Reset my password</a>.
@@ -1767,8 +1769,8 @@ def passwordrecovery():
                         """
             send_mail(recipients, subject, message)
 
-            # redirect back to login
-            return redirect("/login")
+            # redirect back to confirmation
+            return render_template("passwordrecoverysent.html")
         elif formAction == "returnHome":
             return redirect("/login")
         else:
