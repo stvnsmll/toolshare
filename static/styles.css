@@ -1,5 +1,5 @@
 body {
-    /*position: fixed;*/
+    position: fixed;
     width: 100%;
     top: 0;
     overflow-y: hidden;
@@ -225,7 +225,7 @@ main img
 }
 
 .list_div {
-    height: calc(100vh - 276px);
+    height: calc(100vh - 206px);
     overflow-y: scroll;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
@@ -294,7 +294,7 @@ table, th, td {
 
 
 footer {
-    height: auto;
+    height: 50px;
     background-color: #f8f9fa;
     font-size: 1px;
     z-index: 1;
@@ -312,7 +312,7 @@ footer {
 
 .footer_button {
            /*top right bottom left*/
-    padding: 5px 7vw 2px 7vw;
+    padding: 0 7vw 2px 7vw;
     margin: -2px 12px 4px 12px;
     color: gray;
     border-bottom: 2px solid transparent;
@@ -365,7 +365,7 @@ footer {
     width: 180px;
     /*transform: translateX(-90px);*/
     margin-left: -90px;
-    bottom: 123px;
+    bottom: 102px;
     z-index: 5;
     border-radius: 1000px;
     font-size: 1.2em;
@@ -581,10 +581,11 @@ min-height: 40px;
 
 .bottom_tabnav {
     position: fixed;
-    font-size: 1.2em;
+    font-size: 1.1em;
     height: 2.3em;
     padding-right: 32px;
-    bottom: 60px;
+    bottom: 40px;
+    border: 0;
     z-index: 5;
 }
 
@@ -605,7 +606,7 @@ min-height: 40px;
 .bottom_tabnav a{
     border-top: 2px solid #a5b3c0;
     height: 2.6em;
-    padding: 6px;
+    padding: 2px 6px 0 6px;
     width: 80%;
     margin: auto;
     margin-top: -4px;
