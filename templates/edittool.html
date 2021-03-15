@@ -12,10 +12,14 @@
     {{ firstname }}
 {% endblock %}
 
+{% block heading %}
+    Edit Tool
+{% endblock %}
+
 {% block main %}
 
 <div class="scrolling_page no-x">
-  <h4 class="smalltopspace">Edit Tool</h4>
+  <div class="smalltopspace"></div>
     <p>Update your tool deteils here.</p>
     <hr>
     <form action="/edittool" method="post" enctype="multipart/form-data" id="newtoolform" name="newtoolform" target="_blank">

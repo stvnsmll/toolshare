@@ -8,10 +8,13 @@
     {{ firstname }}
 {% endblock %}
 
+{% block heading %}
+    Tool Details
+{% endblock %}
+
 {% block main %}
 <div class="scrolling_page">
-    <br>
-    <h3>Tool Details</h3>
+    <div class="smalltopspace"></div>
     <h4>{{ toolname }}</h4>
     {% if photo %}
         <img src="{{ photo }}" alt="image lookup error" class="makesquareimg"><br>

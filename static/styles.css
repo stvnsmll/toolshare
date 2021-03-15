@@ -18,7 +18,7 @@ ul a:hover {
 }
 
 .scrolling_page {
-    padding: 50px;
+    padding: 2px 50px;
     overflow-x: scroll;
     height: 100vh;
     /*-ms-overflow-style: none;  /* IE and Edge */
@@ -109,7 +109,7 @@ main .form-control
 main
 {
     /*top margin to offset the fixed header*/
-    margin-top: 45px;
+    margin-top: 54px;
 
     /* scroll horizontally as needed */
     overflow-x: auto;
@@ -309,6 +309,7 @@ footer {
     border-top: 1px solid #dee2e6;
 }
 
+
 .footercenter {
     border-right: 2px solid #ccced0;
     border-top: 5px solid #e2e5e8;
@@ -402,6 +403,25 @@ footer {
   }
   .brandname_small {
     display: block;
+  }
+}
+
+
+.nav-item{
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .navmenu_itemholder {
+    position: fixed;
+    right: 0;
+    top: 32px;
+  }
+  @media (max-height: 400px) {
+    .nav-link{
+      padding-top: 0;
+      padding-bottom: 18px;
+    }
   }
 }
 
@@ -631,7 +651,7 @@ min-height: 40px;
     position: fixed;
     font-size: 1.1em;
     height: 2.3em;
-    padding-right: 32px;
+    padding-right: 16px;
     bottom: 40px;
     border: 0;
     z-index: 5;
@@ -639,6 +659,8 @@ min-height: 40px;
 
 .bottom_tabnav .nav-item{
     padding: 3px;
+    width: auto;
+    text-align: center;
     /*height: 45px;
     border-radius: 0 0 12px 12px;*/
 }
@@ -678,6 +700,27 @@ min-height: 40px;
     cursor: pointer;
 }
 
+.menu_nav {
+  display: none;
+}
+
+@media (max-height: 400px) {
+  footer {
+    display: none;
+  }
+  .bottom_tabnav {
+    bottom: -10px;
+  }
+  .tab_button {
+    bottom: 52px;
+  }
+  .menu_nav {
+    display: block;
+  }
+
+}
+
+
 .contactbtn {
     background-color: #f1f1f1;
     padding: 1px 3px 1px 3px;
@@ -696,21 +739,3 @@ min-height: 40px;
     cursor: pointer;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05), 0 4px 8px 0 rgba(0, 0, 0, 0.04);
 }
-
-/*
-
-<i class="fas fa-coffee"></i>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ornare elementum porttitor. Mauris ultrices mollis molestie. Vestibulum vel sem sit amet elit pellentesque tempus nec non arcu. Sed id mi mi. Proin bibendum, massa ac luctus condimentum, sapien nunc ullamcorper odio, sit amet dignissim erat purus vitae nibh. Quisque diam nulla, consectetur id pellentesque vitae, dignissim sed risus. Donec egestas dignissim ligula at hendrerit. Proin condimentum placerat massa vitae ultrices. Maecenas in justo in ligula placerat ultrices. Mauris luctus luctus ligula vel venenatis. Quisque accumsan semper felis in eleifend.
-
-Donec non sodales neque. Nam quis nisl finibus, convallis sem id, efficitur dui. Vestibulum blandit massa non pulvinar facilisis. Proin eu maximus tortor, sit amet faucibus velit. Phasellus sit amet nibh enim. In id ultricies ligula, eu eleifend tellus. Etiam commodo purus velit, euismod ornare ante rhoncus quis. Mauris sit amet sapien facilisis, viverra odio pretium, ullamcorper nunc. Proin imperdiet at nunc at laoreet. Proin mollis consequat mauris viverra vestibulum. Pellentesque porta mauris ut est elementum euismod. Cras sit amet dictum urna. Vestibulum consequat enim eget velit molestie posuere. Nunc ac massa vulputate, sollicitudin massa et, sollicitudin mauris.
-
-Phasellus porttitor venenatis velit eu convallis. Sed dictum purus eu tincidunt hendrerit. In mollis justo velit, ac vulputate lectus placerat vel. Aenean suscipit mi a scelerisque consequat. Sed interdum sit amet ex eu luctus. Aenean facilisis purus libero, vel rutrum arcu accumsan non. In facilisis tempus ornare. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum laoreet pharetra sem, at pulvinar lacus gravida vel. Nulla facilisi.
-
-Integer accumsan massa risus. In vitae eros fermentum, malesuada felis nec, suscipit arcu. Quisque bibendum urna placerat, pellentesque erat at, faucibus mi. Mauris suscipit nisl id sem suscipit commodo. Vestibulum scelerisque viverra arcu eget interdum. In et ultrices tellus, aliquet hendrerit mi. Nam commodo risus id odio tincidunt, id porta ligula auctor.
-
-Fusce est diam, vehicula quis dignissim sit amet, vulputate vel nunc. Donec viverra risus ante, eu dapibus massa malesuada in. Etiam posuere, libero non tempus suscipit, dui risus scelerisque eros, vitae volutpat arcu felis id nibh. Integer mattis arcu in odio tristique mollis. Etiam diam tellus, blandit finibus sapien ut, pulvinar posuere nunc. Vivamus pharetra velit massa. Ut sagittis venenatis lectus, dapibus vulputate risus iaculis id. Duis nec fringilla risus, id porttitor lorem. Duis interdum purus non augue vehicula efficitur. Praesent consectetur tempus risus, sit amet interdum augue finibus vel. Nunc non sapien at justo varius molestie eget in arcu.
-
-
-
-
-*/

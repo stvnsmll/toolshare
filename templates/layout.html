@@ -50,7 +50,9 @@
               </span>
             </a>
             <div class="page_header">
-              <h4>{% block heading %}{% endblock %}</h4>
+              <div style="width: max-content; margin: auto;">
+                <h4>{% block heading %}{% endblock %}</h4>
+              </div>
             </div>
 
             <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
@@ -65,17 +67,26 @@
                         <li class="nav-item" align="center"><a class="nav-link" href="/history"><i class='fas fa-history'></i>&nbsp; History</a></li>
                     </ul>
                     <hr>-->
+                    <div class="menu_nav navmenu_itemholder">
+                      <ul class="navbar-nav ml-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/"><i class='fas fa-toolbox'></i>&nbsp;<u>Toolbox</u></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/actions"><i class='fas fa-envelope-open-text'></i>&nbsp;<u>Actions</u></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/neighborhoods"><i class='fas fa-users'></i>&nbsp;<u>Neighborhoods</u></a></li>
+                      </ul>
+                      <div class="smalltopspace" style="padding-top: 4px;"></div>
+                    </div>
                     <ul class="navbar-nav ml-auto mt-2">
-                        <li class="nav-item" align="center" style="text-align:center;" data-toggle="modal" data-target="#spinnerCogModal"><a class="nav-link" href="/manageaccount"><i class='fas fa-user-cog'></i>&nbsp;<u>{% block firstname %}{% endblock %}</u></a></li>
-                        <li class="nav-item" align="center" style="text-align:center;" data-toggle="modal" data-target="#spinnerCogModal"><a class="nav-link" href="/logout"><i class='fas fa-sign-out-alt'></i>&nbsp; Log Out</a></li>
+                        <li class="nav-item" data-toggle="modal" data-target="#spinnerCogModal"><a class="nav-link" href="/manageaccount"><i class='fas fa-user-cog'></i>&nbsp;<u>{% block firstname %}{% endblock %}</u></a></li>
+                        <li class="nav-item" data-toggle="modal" data-target="#spinnerCogModal"><a class="nav-link" href="/logout"><i class='fas fa-sign-out-alt'></i>&nbsp; Log Out</a></li>
                     </ul>
                 {% else %}
                     <ul class="navbar-nav ml-auto mt-2">
-                        <li class="nav-item" align="center" style="text-align:center;"><a class="nav-link" href="/register"><i class='fas fa-user-plus'></i>&nbsp; Sign Up</a></li>
-                        <li class="nav-item" align="center" style="text-align:center;"><a class="nav-link" href="/login"><i class='fas fa-sign-in-alt'></i>&nbsp; Log In</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/register"><i class='fas fa-user-plus'></i>&nbsp; Sign Up</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login"><i class='fas fa-sign-in-alt'></i>&nbsp; Log In</a></li>
                     </ul>
                 {% endif %}
-            </div>
+
+          </div>
         </nav>
 
 
