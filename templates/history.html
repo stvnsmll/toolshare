@@ -8,9 +8,13 @@
     {{ firstname }}
 {% endblock %}
 
+{% block heading %}
+    My History
+{% endblock %}
+
 {% block main %}
-<div class="container p-3">
-    <h4 class="smalltopspace">{{ firstname }}'s History</h4>
+<div class="container p-3" style="margin-top: 1em">
+    <!--<h4 class="smalltopspace">{{ firstname }}'s History</h4>-->
 
     <!-- Nav tabs -->
     <ul class="nav nav-tabs nav-justified container tab_format bottom_tabnav" role="tablist">

@@ -8,10 +8,14 @@
     {{ firstname }}
 {% endblock %}
 
+{% block heading %}
+    Neighborhoods
+{% endblock %}
+
 {% block main %}
 
 <div class="container p-3">
-  <h4 class="smalltopspace">{{ firstname }}'s Neighborhoods</h4>
+  <!--<h4 class="smalltopspace">{{ firstname }}'s Neighborhoods</h4>-->
 
 
 <div role="tabpanel">
@@ -96,8 +100,8 @@
       </div>
 
       <div class="tab-pane container fade"id="create">
-        <div class="list_div" style="height: calc(100vh - 230px);">
-              <br>
+        <div class="list_div">
+        <h5 style="margin: 0.8em;">New Neighborhood</h5>
               <form action="/neighborhoods" method="post">
                 <div class="input-group mb-3 long-input mx-auto">
                   <div class="input-group-prepend">

@@ -39,18 +39,20 @@
             <a class="navbar-brand" href="/">
               <span class="orange">
                 <i class='fas fa-tools2'></i>
-                <img src='/static/toolshare.svg' alt="" style="height: 60px; margin: -20px 0 -15px -15px;">
-                <div style="position: fixed; top: 15px; left: 70px;">
-                  <div style="margin: -15px 0 -15px 0;">Tool</div>
-                  <div style="margin: -20px 0 -15px 8px;">Share</div>
-              </div>
-              </span>
-              <div style="position: absolute; top: 24px; left: 1px; width: 99vw; text-align: center;">
-                <div style="border:1px solid #f8f9fa;width: max-content;margin: auto;box-shadow: 0 0 8px 8px rgb(248, 249, 250);border-radius: 10px;padding: 0 4px 0 4px;background-color: #f8f9fa;">
-                  <h4 style="margin: 2px;">{% block heading %}{% endblock %}</h4>
+                <img src='/static/toolshare.svg' alt="" style="height: 58px; margin: -20px 0 -15px -15px;">
+                <div class="brandname_big">
+                  <div style="margin: -4px 0 0 0; font-size:1.3em">ToolShare</div>
                 </div>
-              </div>
+                <div class="brandname_small" style="position: fixed; top: 15px; left: 70px;">
+                  <div style="margin: -4px 0 0 0; font-size:.7em">Tool</div>
+                  <div style="margin: -8px 0 0 0; font-size:.7em">Share</div>
+                </div>
+              </span>
             </a>
+            <div class="page_header">
+              <h4>{% block heading %}{% endblock %}</h4>
+            </div>
+
             <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon"></span>
             </button>
