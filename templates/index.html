@@ -104,29 +104,49 @@
               {% for tool in borrowedtools %}
 
                 {% if 'requested' in borrowedtools[tool]['state'] %}
-                  <li class="list-group-item greyedout" onclick="gotosite('{{ borrowedtools[tool]['toolid'] }}')">{% if borrowedtools[tool]['photo'] %}<img class="thumbnail" src="{{ borrowedtools[tool]['photo'] }}" alt="">{% endif %}<i class="fas fa-wrench"></i>  &nbsp; {{ borrowedtools[tool]["toolname"] }}<span class="hiddencategory">{{ borrowedtools[tool]["category"] }}</span><span class="badge badge-pill badge-success" style="float: right">requested</span></li>
+                  <li class="list-group-item greyedout" onclick="gotosite('{{ borrowedtools[tool]['toolid'] }}')">
+                    <div class="card_image-list">
+                      {% if borrowedtools[tool]['photo'] %}<img class="thumbnail" src="{{ borrowedtools[tool]['photo'] }}" alt="">
+                      {% else %}<i class="fas fa-wrench"></i>
+                      {% endif %}
+                    </div>
+                    <span id="tool_name" style="padding-left: 10px;">{{ borrowedtools[tool]["toolname"] }}</span>
+                    <span id="category" class="hiddencategory">{{ borrowedtools[tool]["category"] }}</span>
+                    <div class="tool_badges">
+                      <span class="badge badge-pill badge-success" style="float: right">requested</span>
+                    </div>
+                  </li>
                 {% elif 'overdue' in borrowedtools[tool]['state'] %}
-                  <li class="list-group-item redout" onclick="gotosite('{{ borrowedtools[tool]['toolid'] }}')">{% if borrowedtools[tool]['photo'] %}<img class="thumbnail" src="{{ borrowedtools[tool]['photo'] }}" alt="">{% endif %}<i class="fas fa-wrench"></i>  &nbsp; {{ borrowedtools[tool]["toolname"] }}<span class="hiddencategory">{{ borrowedtools[tool]["category"] }}</span><span class="badge badge-pill badge-danger" style="float: right">overdue</span></li>
+                  <li class="list-group-item redout" onclick="gotosite('{{ borrowedtools[tool]['toolid'] }}')">
+                    <div class="card_image-list">
+                      {% if borrowedtools[tool]['photo'] %}
+                        <img class="thumbnail" src="{{ borrowedtools[tool]['photo'] }}" alt="">
+                      {% else %}
+                        <i class="fas fa-wrench"></i>
+                      {% endif %}
+                    </div>
+                    <span id="tool_name" style="padding-left: 10px;">{{ borrowedtools[tool]["toolname"] }}</span>
+                    <span id="category" class="hiddencategory">{{ borrowedtools[tool]["category"] }}</span>
+                    <div class="tool_badges">
+                      <span class="badge badge-pill badge-danger" style="float: right">overdue</span>
+                    </div>
+                  </li>
                 {% else %}
-                  <li class="list-group-item" onclick="gotosite('{{ borrowedtools[tool]['toolid'] }}')">{% if borrowedtools[tool]['photo'] %}<img class="thumbnail" src="{{ borrowedtools[tool]['photo'] }}" alt="">{% endif %}<i class="fas fa-wrench"></i> &nbsp; {{ borrowedtools[tool]["toolname"] }}<span class="hiddencategory">{{ borrowedtools[tool]["category"] }}</span></li>
-
+                  <li class="list-group-item" onclick="gotosite('{{ borrowedtools[tool]['toolid'] }}')">
+                    <div class="card_image-list">
+                      {% if borrowedtools[tool]['photo'] %}
+                        <img class="thumbnail" src="{{ borrowedtools[tool]['photo'] }}" alt="">
+                      {% else %}
+                        <i class="fas fa-wrench"></i>
+                      {% endif %}
+                    </div>
+                    <span id="tool_name" style="padding-left: 10px;">{{ borrowedtools[tool]["toolname"] }}</span>
+                    <span id="category" class="hiddencategory">{{ borrowedtools[tool]["category"] }}</span>
+                  </li>
               {% endif %}
 
 
               {% endfor %}
-
-                <!--
-                <li class="list-group-item redout"><i class="fas fa-image"></i> Shop-Vac<span class="hiddencategory power">‰</span><span class="badge badge-pill badge-danger" style="float: right">overdue</span></li>
-                <li class="list-group-item greyedout"><i class="fas fa-image"></i> Adjustable Clamps<span class="hiddencategory hand">æ</span><span class="badge badge-pill badge-success" style="float: right">requested</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Adjustable Wrench<span class="hiddencategory hand">æ</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Allen Keys<span class="hiddencategory hand">æ</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Angle Grinder<span class="hiddencategory power">‰</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Aviation Snips<span class="hiddencategory hand">æ</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Bench Vise<span class="hiddencategory uncategorized">‡</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Bow Rake<span class="hiddencategory garden">»</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Brad / Finish Nailer<span class="hiddencategory power">‰</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Cable Ties<span class="hiddencategory fastening">Þ</span></li>
-                -->
             </ul>
             <div class="deadspace"></div>
             <div class="deadspace"></div>
@@ -206,39 +226,72 @@
               {% for tool in mytools %}
 
                 {% if 'borrowed' in mytools[tool]['state'] %}
-                  <li class="list-group-item greyedout" onclick="gotosite('{{ mytools[tool]['toolid'] }}')" data-toggle="modal" data-target="#spinnerModal">{% if mytools[tool]['photo'] %}<img class="thumbnail" src="{{ mytools[tool]['photo'] }}" alt="">{% endif %}<i class="fas fa-wrench"></i> &nbsp; {{ mytools[tool]["toolname"] }}<span class="hiddencategory">{{ mytools[tool]["category"] }}</span><span class="badge badge-pill badge-secondary" style="float: right">borrowed</span>{% if mytools[tool]['private'] == 1 %}<span class="badge badge-pill badge-dark" style="float: right">private</span>{% endif %}</li>
+                  <li class="list-group-item greyedout" onclick="gotosite('{{ mytools[tool]['toolid'] }}')" data-toggle="modal" data-target="#spinnerModal">
+                    <div class="card_image-list">
+                      {% if mytools[tool]['photo'] %}<img class="thumbnail" src="{{ mytools[tool]['photo'] }}" alt="">
+                      {% else %}<i class="fas fa-wrench"></i>
+                      {% endif %}
+                    </div>
+                    <span id="tool_name" style="padding-left: 10px;">{{ mytools[tool]["toolname"] }}</span>
+                    <span id="category" class="hiddencategory">{{ mytools[tool]["category"] }}</span>
+                    <div class="tool_badges">
+                      <span class="badge badge-pill badge-secondary" style="float: right">borrowed</span>
+                      {% if mytools[tool]['private'] == 1 %}
+                        <span class="badge badge-pill badge-dark" style="float: right">private</span>
+                      {% endif %}
+                    </div>
+                  </li>
                 {% elif 'requested' in mytools[tool]['state'] %}
-                  <li class="list-group-item" onclick="gotosite('{{ mytools[tool]['toolid'] }}')" data-toggle="modal" data-target="#spinnerModal">{% if mytools[tool]['photo'] %}<img class="thumbnail" src="{{ mytools[tool]['photo'] }}" alt="">{% endif %}<i class="fas fa-wrench"></i> &nbsp; {{ mytools[tool]["toolname"] }}<span class="hiddencategory">{{ mytools[tool]["category"] }}</span><span class="badge badge-pill badge-warning" style="float: right">requested</span>{% if mytools[tool]['private'] == 1 %}<span class="badge badge-pill badge-dark" style="float: right">private</span>{% endif %}</li>
+                  <li class="list-group-item" onclick="gotosite('{{ mytools[tool]['toolid'] }}')" data-toggle="modal" data-target="#spinnerModal">
+                    <div class="card_image-list">
+                      {% if mytools[tool]['photo'] %}<img class="thumbnail" src="{{ mytools[tool]['photo'] }}" alt="">
+                      {% else %}<i class="fas fa-wrench"></i>
+                      {% endif %}
+                    </div>
+                    <span id="tool_name" style="padding-left: 10px;">{{ mytools[tool]["toolname"] }}</span>
+                    <span id="category" class="hiddencategory">{{ mytools[tool]["category"] }}</span>
+                    <div class="tool_badges">
+                      <span class="badge badge-pill badge-warning" style="float: right">requested</span>
+                      {% if mytools[tool]['private'] == 1 %}
+                        <span class="badge badge-pill badge-dark" style="float: right">private</span>
+                      {% endif %}
+                    </div>
+                  </li>
                 {% elif 'overdue' in mytools[tool]['state'] %}
-                  <li class="list-group-item greyedout" onclick="gotosite('{{ mytools[tool]['toolid'] }}')" data-toggle="modal" data-target="#spinnerModal">{% if mytools[tool]['photo'] %}<img class="thumbnail" src="{{ mytools[tool]['photo'] }}" alt="">{% endif %}<i class="fas fa-wrench"></i> &nbsp; {{ mytools[tool]["toolname"] }}<span class="hiddencategory">{{ mytools[tool]["category"] }}</span><span class="badge badge-pill badge-danger" style="float: right">overdue</span>{% if mytools[tool]['private'] == 1 %}<span class="badge badge-pill badge-dark" style="float: right">private</span>{% endif %}</li>
+                  <li class="list-group-item greyedout" onclick="gotosite('{{ mytools[tool]['toolid'] }}')" data-toggle="modal" data-target="#spinnerModal">
+                    <div class="card_image-list">
+                      {% if mytools[tool]['photo'] %}<img class="thumbnail" src="{{ mytools[tool]['photo'] }}" alt="">
+                      {% else %}<i class="fas fa-wrench"></i>
+                      {% endif %}
+                    </div>
+                    <span id="tool_name" style="padding-left: 10px;">{{ mytools[tool]["toolname"] }}</span>
+                    <span id="category" class="hiddencategory">{{ mytools[tool]["category"] }}</span>
+                    <div class="tool_badges">
+                    <span class="badge badge-pill badge-danger" style="float: right">overdue</span>
+                      {% if mytools[tool]['private'] == 1 %}
+                        <span class="badge badge-pill badge-dark" style="float: right">private</span>
+                      {% endif %}
+                    </div>
+                  </li>
                 {% else %}
-                  <li class="list-group-item" onclick="gotosite('{{ mytools[tool]['toolid'] }}')" data-toggle="modal" data-target="#spinnerModal">{% if mytools[tool]['photo'] %}<img class="thumbnail" src="{{ mytools[tool]['photo'] }}" alt="">{% endif %}<i class="fas fa-wrench"></i> &nbsp; {{ mytools[tool]["toolname"] }}<span class="hiddencategory">{{ mytools[tool]["category"] }}</span>{% if mytools[tool]['private'] == 1 %}<span class="badge badge-pill badge-dark" style="float: right">private</span>{% endif %}</li>
+                  <li class="list-group-item" onclick="gotosite('{{ mytools[tool]['toolid'] }}')" data-toggle="modal" data-target="#spinnerModal">
+                    <div class="card_image-list">
+                      {% if mytools[tool]['photo'] %}<img class="thumbnail" src="{{ mytools[tool]['photo'] }}" alt="">
+                      {% else %}<i class="fas fa-wrench"></i>
+                      {% endif %}
+                    </div>
+                    <span id="tool_name" style="padding-left: 10px;">{{ mytools[tool]["toolname"] }}</span>
+                    <div class="tool_badges">
+                      <span id="category" class="hiddencategory">{{ mytools[tool]["category"] }}</span>
+                      {% if mytools[tool]['private'] == 1 %}
+                        <span class="badge badge-pill badge-dark" style="float: right">private</span>
+                      {% endif %}
+                    </div>
+                  </li>
                 {% endif %}
 
               {% endfor %}
 
-                <!--
-                <li class="list-group-item greyedout"><i class="fas fa-image"></i> Shop-Vac<span class="hiddencategory power">‰</span><span class="badge badge-pill badge-secondary" style="float: right">borrowed</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Shovel<span class="hiddencategory hand">æ</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Sledgehammer<span class="hiddencategory hand">æ</span><span class="badge badge-pill badge-warning" style="float: right">requested</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Sliding Miter Saw<span class="hiddencategory hand">æ</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Snap Ring Pliers<span class="hiddencategory hand">æ</span><span class="badge badge-pill badge-warning" style="float: right">requested</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Socket Wrench<span class="hiddencategory hand">æ</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Speed Square<span class="hiddencategory hand">æ</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Stud Finder<span class="hiddencategory hand">æ</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Table Saw<span class="hiddencategory power">‰</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Sawzall Reciprocating Saw<span class="hiddencategory power">‰</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Drill Bits<span class="hiddencategory power">‰</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Hacksaw<span class="hiddencategory hand">æ</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Pipe Wrench<span class="hiddencategory hand">æ</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Torque Wrench<span class="hiddencategory hand">æ</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Tongue And Groove Pliers<span class="hiddencategory hand">æ</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> WD-40<span class="hiddencategory fastening">Þ</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Wheelbarrow<span class="hiddencategory garden">»</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Wire Strippers<span class="hiddencategory hand">æ</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Gorilla Glue<span class="hiddencategory fastening">Þ</span></li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Wood Moisture Meter<span class="hiddencategory uncategorized">‡</span></li>
-                -->
             </ul>
             <div class="deadspace"></div>
             <div class="deadspace"></div>
@@ -248,7 +301,7 @@
   </div>
 
 
-    <script>
+<script>
 
     // Javascript to enable link to tab
     var url = document.location.toString();
@@ -266,7 +319,7 @@
       $("#search1").on("keyup", function() {
         var value = $(this).val().toLowerCase();
         $("#myList1 li").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+          $(this).toggle($(this).children('#tool_name').text().toLowerCase().indexOf(value) > -1);
         });
       });
     });
@@ -275,7 +328,7 @@
       $("#search2").on("keyup", function() {
         var value = $(this).val().toLowerCase();
         $("#myList2 li").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+          $(this).toggle($(this).children('#tool_name').text().toLowerCase().indexOf(value) > -1);
         });
       });
     });
@@ -470,52 +523,3 @@
     </script>
 
 {% endblock %}
-
-
-
-<!--
-                <li class="list-group-item"><i class="fas fa-image"></i> Chainsaw</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Chisels</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Circular Saw</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Claw Hammer</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Cordless Drill</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Drilling Hammer</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Duct Tape</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Electrical Tape</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Extension Cord</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Flashlight</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Ladder</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Utility Knife</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Handsaw</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Jab Saw</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Jigsaw</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Joint Knife</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Jumper Cables</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Knee Pads</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Linesman’s Pliers</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Locking Pliers</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Measuring Tape</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Chalk Line</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Digital Caliper</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Hose</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Measuring Cup</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Metal Files</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Plumb Bob</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Builders Level</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Toolbox</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Nail Punch</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Needle Nose Pliers</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Plunger</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Prybar</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Putty Knife</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Random Orbital Sander</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Rope</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Rubber Mallet</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Safety Glasses</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Safety Respirator</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Scissors</li>
-                <li class="list-group-item"><i class="fas fa-image"></i> Screwdrivers</li>
-
-
-
--->

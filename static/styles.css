@@ -262,7 +262,7 @@ main img
 .deadspace {
     display: block;
     width: 100%;
-    height: 130px;
+    height: 150px;
     background-color: transparent;
 }
 
@@ -271,6 +271,9 @@ main img
     font-size: 1.2em;
     margin-left: 5px;
     margin-right: 5px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
 }
 
 .list-group-item:hover {
@@ -390,14 +393,6 @@ footer {
 }
 
 @media (max-width: 576px) {
-  .tab_button {
-      width: 42px;
-      margin: auto;
-      box-shadow: 2px 2px 8px rgb(0 0 0 / 46%);
-      overflow: hidden;
-      bottom: 92px;
-      right: 30px;
-  }
   .brandname_big {
     display: none;
   }
@@ -422,6 +417,20 @@ footer {
       padding-top: 0;
       padding-bottom: 18px;
     }
+  }
+}
+
+@media (max-width: 406px) {
+  .tab_button {
+      width: 55px;
+      height: 55px;
+      font-size: 1.8em;
+      padding: 6px 0 0 14px;
+      margin: auto;
+      box-shadow: 2px 2px 8px rgb(0 0 0 / 46%);
+      overflow: hidden;
+      bottom: 98px;
+      right: 30px;
   }
 }
 
@@ -483,10 +492,11 @@ footer {
 
 li .badge {
     z-index: 2;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: bold;
-    padding-bottom: 3px;
-    margin: 6px 3px 0 0;
+    padding-bottom: 5px;
+    margin: 1px 2px 1px 2px;
+    display: flex
 }
 
 .badge-danger {
@@ -623,16 +633,27 @@ text-transform: capitalize;
 min-height: 40px;
 }
 
+.card_image-list {
+  width: 66px;/* <-- this sets the thumbnail image size!*/
+  display: inline-block;
+  text-align: center;
+  margin-left: -13px;
+}
+
 /*Thumnail formatting*/
 .thumbnail {
-    position: absolute;
-    height: 40px;
-    width: 40px;
-    border-radius: 8px;
+    /*
+    height: 60px;
+    width: 60px;*/
+    border-radius: 10%;
     display: inline-block;
-    margin-left: -13px;
-    margin-top: -6px;
+    /*margin-left: -13px;
+    margin-top: -6px;*/
     box-shadow: 0 1px 2px 0 rgba(0,0,0,0.15);
+}
+
+.tool_badges {
+  flex-grow: 100;
 }
 
 .approvalimg {
@@ -652,7 +673,7 @@ min-height: 40px;
     font-size: 1.1em;
     height: 2.3em;
     padding-right: 16px;
-    bottom: 40px;
+    bottom: 46px;
     border: 0;
     z-index: 5;
 }
@@ -676,7 +697,7 @@ min-height: 40px;
 .bottom_tabnav a{
     border-top: 2px solid #a5b3c0;
     height: 2.6em;
-    padding: 2px 6px 0 6px;
+    padding: 4px 6px 0 6px;
     width: 80%;
     margin: auto;
     margin-top: -4px;
