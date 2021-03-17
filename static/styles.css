@@ -404,8 +404,13 @@ footer {
 }
 
 
-.nav-item{
+.nav-item {
   text-align: center;
+  height: min-content;
+  z-index: 2;
+}
+.collapse .nav-link {
+  padding-bottom: 0.5rem;
 }
 
 @media (min-width: 768px) {
@@ -414,10 +419,13 @@ footer {
     right: 0;
     top: 32px;
   }
-  @media (max-height: 400px) {
-    .nav-link{
+  @media (max-height: 556px) {
+    .collapse .nav-link{
       padding-top: 0;
-      padding-bottom: 18px;
+      padding-bottom: 0;
+    }
+    .bumpup {
+      transform: translateY(-9px);
     }
   }
 }
@@ -444,6 +452,7 @@ footer {
   width: auto;
   text-align: center;
   margin: 2px;
+  z-index: 0;
 }
 
 .tab_button .fa-search {

@@ -69,15 +69,15 @@
                     <hr>-->
                     <div class="menu_nav navmenu_itemholder">
                       <ul class="navbar-nav ml-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/"><i class='fas fa-toolbox'></i>&nbsp;<u>Toolbox</u></a></li>
-                        <li class="nav-item"><a class="nav-link" href="/actions"><i class='fas fa-envelope-open-text'></i>&nbsp;<u>Actions</u></a></li>
-                        <li class="nav-item"><a class="nav-link" href="/neighborhoods"><i class='fas fa-users'></i>&nbsp;<u>Neighborhoods</u></a></li>
+                        <li class="nav-item" style="z-index: 3;"><a class="nav-link" href="/"><i class='fas fa-toolbox'></i>&nbsp;<u>Toolbox</u></a></li>
+                        <li class="nav-item" style="z-index: 3;"><a class="nav-link" href="/actions"><i class='fas fa-envelope-open-text'></i>&nbsp;<u>Actions</u></a></li>
+                        <li class="nav-item" style="z-index: 3;"><a class="nav-link" href="/neighborhoods"><i class='fas fa-users'></i>&nbsp;<u>Neighborhoods</u></a></li>
                       </ul>
                       <div class="smalltopspace" style="padding-top: 4px;"></div>
                     </div>
                     <ul class="navbar-nav ml-auto mt-2">
-                        <li class="nav-item" data-toggle="modal" data-target="#spinnerCogModal"><a class="nav-link" href="/manageaccount"><i class='fas fa-user-cog'></i>&nbsp;<u>{% block firstname %}{% endblock %}</u></a></li>
-                        <li class="nav-item" data-toggle="modal" data-target="#spinnerCogModal"><a class="nav-link" href="/logout"><i class='fas fa-sign-out-alt'></i>&nbsp; Log Out</a></li>
+                        <li class="nav-item bumpup" data-toggle="modal" data-target="#spinnerCogModal"><a class="nav-link" href="/manageaccount"><i class='fas fa-user-cog'></i>&nbsp;<u>{% block firstname %}{% endblock %}</u></a></li>
+                        <li class="nav-item bumpup" data-toggle="modal" data-target="#spinnerCogModal"><a class="nav-link" href="/logout"><i class='fas fa-sign-out-alt'></i>&nbsp; Log Out</a></li>
                     </ul>
                 {% else %}
                     <ul class="navbar-nav ml-auto mt-2">
