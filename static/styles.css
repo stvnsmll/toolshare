@@ -269,11 +269,13 @@ main img
 .list-group-item {
     text-align: left;
     font-size: 1.2em;
+    padding: .4rem 0.2rem 0.4rem 1.25rem;
     margin-left: 5px;
     margin-right: 5px;
     display: flex;
     align-items: center;
     white-space: nowrap;
+    overflow: hidden;
 }
 
 .list-group-item:hover {
@@ -492,9 +494,9 @@ footer {
 
 li .badge {
     z-index: 2;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: bold;
-    padding-bottom: 5px;
+    padding-bottom: 4px;
     margin: 1px 2px 1px 2px;
     display: flex
 }
@@ -690,7 +692,7 @@ min-height: 40px;
     border-top: 1px solid #dee2e6;
     border-right: 1px solid #dee2e6;
     border-left: 1px solid #dee2e6;
-    background-color: #f8f9fa;
+    background-color: #e8ebef;
     /*padding: 5px;*/
 }
 
@@ -725,12 +727,12 @@ min-height: 40px;
   display: none;
 }
 
-@media (max-height: 400px) {
+@media (max-height: 556px) {
   footer {
     display: none;
   }
   .bottom_tabnav {
-    bottom: -10px;
+    bottom: -4px;
   }
   .tab_button {
     bottom: 52px;

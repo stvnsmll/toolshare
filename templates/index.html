@@ -46,7 +46,7 @@
                         <div class="dropdown-header">Tool Caterory Filter</div>
                         <div class="form-check padd_left">
                           <label class="form-check-label">
-                            <input id="selectall1" type="checkbox" class="form-check-input" value="all" onclick="filterboxesall1();" checked>(Select All)
+                            <input id="selectall1" type="checkbox" class="form-check-input" value="all" onclick="filterboxesall1();" checked>(Select all/none)
                           </label>
                         </div>
                         <div class="dropdown-divider"></div>
@@ -119,10 +119,8 @@
                 {% elif 'overdue' in borrowedtools[tool]['state'] %}
                   <li class="list-group-item redout" onclick="gotosite('{{ borrowedtools[tool]['toolid'] }}')">
                     <div class="card_image-list">
-                      {% if borrowedtools[tool]['photo'] %}
-                        <img class="thumbnail" src="{{ borrowedtools[tool]['photo'] }}" alt="">
-                      {% else %}
-                        <i class="fas fa-wrench"></i>
+                      {% if borrowedtools[tool]['photo'] %}<img class="thumbnail" src="{{ borrowedtools[tool]['photo'] }}" alt="">
+                      {% else %}<i class="fas fa-wrench"></i>
                       {% endif %}
                     </div>
                     <span id="tool_name" style="padding-left: 10px;">{{ borrowedtools[tool]["toolname"] }}</span>
@@ -134,10 +132,8 @@
                 {% else %}
                   <li class="list-group-item" onclick="gotosite('{{ borrowedtools[tool]['toolid'] }}')">
                     <div class="card_image-list">
-                      {% if borrowedtools[tool]['photo'] %}
-                        <img class="thumbnail" src="{{ borrowedtools[tool]['photo'] }}" alt="">
-                      {% else %}
-                        <i class="fas fa-wrench"></i>
+                      {% if borrowedtools[tool]['photo'] %}<img class="thumbnail" src="{{ borrowedtools[tool]['photo'] }}" alt="">
+                      {% else %}<i class="fas fa-wrench"></i>
                       {% endif %}
                     </div>
                     <span id="tool_name" style="padding-left: 10px;">{{ borrowedtools[tool]["toolname"] }}</span>
@@ -177,7 +173,7 @@
                         <div class="dropdown-header">Tool Caterory Filter</div>
                         <div class="form-check padd_left">
                           <label class="form-check-label">
-                            <input id="selectall2" type="checkbox" class="form-check-input" value="all" onclick="filterboxesall2();" checked>(Select All)
+                            <input id="selectall2" type="checkbox" class="form-check-input" value="all" onclick="filterboxesall2();" checked>(Select all/none)
                           </label>
                         </div>
                         <div class="dropdown-divider"></div>
@@ -483,7 +479,7 @@
         re = RegExp(`.*[${value}].*$`);
         //alert(re);
         $("#myList1 li").filter(function() {
-          $(this).toggle($(this).text().match(re) > -1);
+          $(this).toggle($(this).children('#category').text().match(re) > -1);
         });
     }
 
@@ -510,7 +506,7 @@
         re = RegExp(`.*[${value}].*$`);
         //alert(re);
         $("#myList2 li").filter(function() {
-          $(this).toggle($(this).text().match(re) > -1);
+          $(this).toggle($(this).children('#category').text().match(re) > -1);
         });
     }
 

@@ -38,7 +38,7 @@
                     <div class="dropdown-header">Tool Caterory Filter</div>
                     <div class="form-check padd_left">
                       <label class="form-check-label">
-                        <input id="selectall2" type="checkbox" class="form-check-input" value="all" onclick="filterboxesall2();" checked>(Select All)
+                        <input id="selectall2" type="checkbox" class="form-check-input" value="all" onclick="filterboxesall2();" checked>(Select all/none)
                       </label>
                     </div>
                     <div class="dropdown-divider"></div>
@@ -86,39 +86,43 @@
         <ul class="list-group list-group-flush" id="myList2">
           {% for tool in alltools %}
             {% if 'borrowed' in alltools[tool]['state'] or 'overdue' in alltools[tool]['state'] %}
-            <li class="list-group-item greyedout" onclick="gotosite('{{ alltools[tool]['toolid'] }}')">{% if alltools[tool]['photo'] %}<img class="thumbnail" src="../static/toolimages/{{ alltools[tool]['toolid'] }}_thumb.png">{% endif %}<i class="fas fa-wrench"></i> &nbsp; {{ alltools[tool]["toolname"] }}<span class="hiddencategory">{{ alltools[tool]["category"] }}</span><span class="badge badge-pill badge-secondary" style="float: right">borrowed</span></li>
+              <li class="list-group-item greyedout" onclick="gotosite('{{ alltools[tool]['toolid'] }}')">
+                <div class="card_image-list">
+                  {% if alltools[tool]['photo'] %}<img class="thumbnail" src="{{ alltools[tool]['photo'] }}" alt="">
+                  {% else %}<i class="fas fa-wrench"></i>
+                  {% endif %}
+                </div>
+                <span id="tool_name" style="padding-left: 10px;">{{ alltools[tool]["toolname"] }}</span>
+                <span id="category" class="hiddencategory">{{ alltools[tool]["category"] }}</span>
+                <div class="tool_badges">
+                  <span class="badge badge-pill badge-secondary" style="float: right">borrowed</span>
+                </div>
+              </li>
             {% elif 'requested' in alltools[tool]['state'] %}
-            <li class="list-group-item greyedout" onclick="gotosite('{{ alltools[tool]['toolid'] }}')">{% if alltools[tool]['photo'] %}<img class="thumbnail" src="../static/toolimages/{{ alltools[tool]['toolid'] }}_thumb.png">{% endif %}<i class="fas fa-wrench"></i> &nbsp; {{ alltools[tool]["toolname"] }}<span class="hiddencategory">{{ alltools[tool]["category"] }}</span><span class="badge badge-pill badge-warning" style="float: right">requested</span></li>
+              <li class="list-group-item greyedout" onclick="gotosite('{{ alltools[tool]['toolid'] }}')">
+                <div class="card_image-list">
+                  {% if alltools[tool]['photo'] %}<img class="thumbnail" src="{{ alltools[tool]['photo'] }}" alt="">
+                  {% else %}<i class="fas fa-wrench"></i>
+                  {% endif %}
+                </div>
+                <span id="tool_name" style="padding-left: 10px;">{{ alltools[tool]["toolname"] }}</span>
+                <span id="category" class="hiddencategory">{{ alltools[tool]["category"] }}</span>
+                <div class="tool_badges">
+                  <span class="badge badge-pill badge-secondary" style="float: right">requested</span>
+                </div>
+              </li>
             {% else %}
-            <li class="list-group-item" onclick="gotosite('{{ alltools[tool]['toolid'] }}')">{% if alltools[tool]['photo'] %}<img class="thumbnail" src="../static/toolimages/{{ alltools[tool]['toolid'] }}_thumb.png">{% endif %}<i class="fas fa-wrench"></i> &nbsp; {{ alltools[tool]["toolname"] }}<span class="hiddencategory">{{ alltools[tool]["category"] }}</span></li>
+              <li class="list-group-item" onclick="gotosite('{{ alltools[tool]['toolid'] }}')">
+                <div class="card_image-list">
+                  {% if alltools[tool]['photo'] %}<img class="thumbnail" src="{{ alltools[tool]['photo'] }}" alt="">
+                  {% else %}<i class="fas fa-wrench"></i>
+                  {% endif %}
+                </div>
+                <span id="tool_name" style="padding-left: 10px;">{{ alltools[tool]["toolname"] }}</span>
+                <span id="category" class="hiddencategory">{{ alltools[tool]["category"] }}</span>
+              </li>
             {% endif %}
           {% endfor %}
-
-            <!--
-            <li class="list-group-item borrowed"><i class="fas fa-image"></i> Shop-Vac<span class="hiddencategory power">‰</span>
-              <span class="badge badge-pill badge-secondary" style="float: right">borrowed</span>
-            </li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Shovel<span class="hiddencategory hand">æ</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Sledgehammer<span class="hiddencategory hand">æ</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Sliding Miter Saw<span class="hiddencategory hand">æ</span></li>
-            <li class="list-group-item greyedout"><i class="fas fa-image"></i> Snap Ring Pliers<span class="hiddencategory hand">æ</span>
-              <span class="badge badge-pill badge-warning" style="float: right">requested</span>
-            </li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Socket Wrench<span class="hiddencategory hand">æ</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Speed Square<span class="hiddencategory hand">æ</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Stud Finder<span class="hiddencategory hand">æ</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Table Saw<span class="hiddencategory power">‰</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Sawzall Reciprocating Saw<span class="hiddencategory power">‰</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Drill Bits<span class="hiddencategory power">‰</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Hacksaw<span class="hiddencategory hand">æ</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Pipe Wrench<span class="hiddencategory hand">æ</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Torque Wrench<span class="hiddencategory hand">æ</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Tongue And Groove Pliers<span class="hiddencategory hand">æ</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> WD-40<span class="hiddencategory fastening">Þ</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Wheelbarrow<span class="hiddencategory garden">»</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Wire Strippers<span class="hiddencategory hand">æ</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Gorilla Glue<span class="hiddencategory fastening">Þ</span></li>
-            <li class="list-group-item"><i class="fas fa-image"></i> Wood Moisture Meter<span class="hiddencategory uncategorized">‡</span></li>-->
 
         </ul>
         <div class="deadspace"></div>
@@ -163,7 +167,7 @@
       $("#search2").on("keyup", function() {
         var value = $(this).val().toLowerCase();
         $("#myList2 li").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+          $(this).toggle($(this).children('#tool_name').text().toLowerCase().indexOf(value) > -1);
         });
       });
     });
@@ -253,7 +257,7 @@
         re = RegExp(`.*[${value}].*$`);
         //alert(re);
         $("#myList2 li").filter(function() {
-          $(this).toggle($(this).text().match(re) > -1);
+          $(this).toggle($(this).children('#category').text().match(re) > -1);
         });
     }
 
