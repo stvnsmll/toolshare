@@ -1,0 +1,173 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Update Password
+{% endblock %}
+
+{% block moreHead %}
+    <link href="/static/checkboxes.css" rel="stylesheet">
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+{% block main %}
+<div class="scrolling_page no-x">
+    <div class="smalltopspace"></div>
+    <div class="smalltopspace"></div>
+    <h4>Communication Preferences</h4>
+    <form action="/communication" method="post">
+      <h5 class="smalltopspace">Email Address</h5>
+        <p style="font-size: smaller; border: 1px solid lightgray; padding: 3px">
+          You are required to have a functional email to use this app. It helps ensure honesty and
+          commitment between neighborhood members. Your email will only be shared with people when
+          sharing a tool. For more information, you can view our <a href="/PrivacyPolicy" target="_blank" rel="noopener noreferrer">privacy policy</a>.
+        </p>
+        <div style="text-align: left; padding-left: 10vw">
+          <div style="margin: 0;" data-toggle="modal" data-target="#myModal">
+            <input type="checkbox" class="form-check-input" value="" id="shareemail" style="position: relative;" checked disabled>
+            <label for="shareemail">
+              <span class="check--label-text" style="border: 0; font-size: 0.9em; padding: 0.1em;">Share my email with other users.</span>
+            </label><br>
+            <input type="checkbox" class="form-check-input" value="" id="criticalemails" style="position: relative;" checked disabled>
+            <label for="criticalemails">
+              <span class="check--label-text" style="border: 0; font-size: 0.9em; padding: 0.1em;">Send me emails when a critical tool action is performed.</span>
+            </label>
+          </div>
+          <input type="checkbox" class="form-check-input" name="allchecks" value="nbh" id="neighborhoodemails" style="position: relative; cursor: pointer;" {{ 'checked' if nbhemails }}>
+          <label for="neighborhoodemails">
+            <span class="check--label-text" style="border: 0; font-size: 0.9em; padding: 0.1em;">Send me emails when a neighbor asks if I have a tool.</span>
+          </label><br>
+          <input type="checkbox" class="form-check-input" name="allchecks" value="optin" id="appUpdateEmails" style="position: relative; cursor: pointer;" {{ 'checked' if not optout }}>
+          <label for="appUpdateEmails">
+            <span class="check--label-text" style="border: 0; font-size: 0.9em; padding: 0.1em;">Send me infrequent emails about updates and changes to the app.</span>
+          </label>
+        </div>
+      <hr>
+      <h5 class="smalltopspace">Phone Number</h5>
+        <p style="font-size: smaller; border: 1px solid lightgray; padding: 3px">
+          You do NOT need to add a phone number to use this app. If you wish, you may choose from the
+          options below on how to share your number.
+        </p>
+        <div style="text-align: left; padding-left: 10vw">
+          <input type="checkbox" class="form-check-input" onclick="phoneshow()" name="allchecks" value="phoneyes" id="sharePhoneNumber" style="position: relative; cursor: pointer;" {% if phonepref != 'none' -%} checked {%- endif %}>
+          <label for="sharePhoneNumber">
+            <span class="check--label-text" style="border: 0; font-size: 0.9em; padding: 0.1em;">Share my phone number with others when I lend or borrow a tool.</span>
+          </label>
+          <div id="phonenumber_div" style="padding-left: 15px; font-size: 0.9em; {% if phonepref == 'none' -%} display: none {%- endif %};">
+            <input id="phone_number" type="text" class="form-control" name="phone_number" placeholder="12E-4S6-7eight90" maxlength="70" value="{{ phonenumber }}">
+            <div style="font-size: 0.6em; color: grey;">
+              You do not need to format it with numbers and dashes, you can use plain-text like "eight" or "E" to replace 8 or 3. Some
+              examples are: (70 character maximum)<br>
+              <ul>
+                <li>eight,6,five-double3,5,9-fourteen,O ==> 865-335-9140</li>
+                <li>4E7-one thr33 tw0, 7S2one ==> 437-132-7521</li>
+              </ul>
+              Just don't make it too hard for the other user to guess!
+            </div>
+            <div style="padding-left: 20px; padding-top: 12px">
+              <input type="checkbox" class="form-check-input" onclick="messagetype('sms')" name="allchecks" value="sms" id="textsPlease" style="position: relative; cursor: pointer;" {% if phonepref != 'call' -%} checked {%- endif %}>
+              <label for="textsPlease">
+                <span class="check--label-text" style="border: 0; font-size: 0.9em; padding: 0.1em;">Text messages are OK.<span style='font-size: 0.6em; color: gray;'> &nbsp; Msg & data rates may apply</span></span>
+              </label>
+              <br>
+              <input type="checkbox" class="form-check-input" onclick="messagetype('call')" name="allchecks" value="call" id="phonecalls" style="position: relative; cursor: pointer;"  {% if phonepref != 'sms' -%} checked {%- endif %}>
+              <label for="phonecalls">
+                <span class="check--label-text" style="border: 0; font-size: 0.9em; padding: 0.1em;">Phone calls are OK.</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <br><br>
+        <button class="btn btn-success" id="saveChanges" type="submit" style="width: 150px" data-toggle="modal" data-target="#spinnerCogModal">Save Changes</button>
+        <br><br>
+        <button class="btn btn-secondary" id="cancel" type="submit" style="width: 150px" data-toggle="modal" data-target="#spinnerModal">Cancel</button>
+
+        <br><input id="hiddenInfoBox" name="returnedAction" value="" style="display: none;"></input>
+    </form>
+    <div class="deadspace"></div>
+    <div class="deadspace"></div>
+</div>
+
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+
+  <!-- Modal Header -->
+  <div class="modal-header">
+    <h4 class="modal-title">Email Usage</h4>
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+  </div>
+
+  <!-- Modal body -->
+  <div class="modal-body text-left">
+    <p>
+      We only use your email for communication regarding your tools. You will get notified by email when
+      someone wants to borrow a tool or when your request to borrow a tool gets approved or rejected.
+    </p>
+    <p>
+      We will never share your email (or any of your data) with a third party outside of ToolShare (only other ToolShare users as required).
+    </p>
+    <p>
+      Your name, username, and email address will be shared with other ToolShare users with whom you either lend or borrow a tool from.
+      This is how users can connect and actually share their tools. This also ensures a level of accountability among users.
+      Please respect their privact and do not share their email address.
+    </p>
+    <p>
+      Other personal information, such as phone numbers, may be shared with others but you may elect what else is shared with others.
+    </p>
+    <div style="font-size: smaller;">
+      If you do not want to share you personal email, have a look at 33mail.com! You can create an alias email address that forwards
+      to a personal account.
+    </div>
+  </div>
+
+  <!-- Modal footer -->
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+  </div>
+
+</div>
+</div>
+</div>
+
+<script>
+    var saveChanges = document.getElementById("saveChanges");
+    var cancelBtn = document.getElementById("cancel");
+    var sharePhoneNumber = document.getElementById("sharePhoneNumber");
+
+    cancelBtn.onclick = function(){
+        hiddenInfoBox.value = "returnHome";
+    };
+
+    saveChanges.onclick = function(){
+        hiddenInfoBox.value = "saveChanges";
+    };
+
+    function phoneshow() {
+      if (sharePhoneNumber.checked) {
+        document.getElementById("phonenumber_div").style.display = 'block';
+      } else {
+        document.getElementById("phonenumber_div").style.display = 'none';
+      }
+    }
+
+    var textsPlease = document.getElementById("textsPlease");
+    var phonecalls = document.getElementById("phonecalls");
+
+    function messagetype(type) {
+      if ((textsPlease.checked == false) && (phonecalls.checked == false)) {
+        if (type == 'call') {
+          phonecalls.checked = false;
+          textsPlease.checked = true;
+        } else {
+          phonecalls.checked = true;
+          textsPlease.checked = false;
+        }
+      }
+    }
+
+</script>
+{% endblock %}

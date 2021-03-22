@@ -9,8 +9,12 @@
 {% endblock %}
 
 {% block main %}
-    <div class="deadspace"></div>
+    <div class="smalltopspace"></div>
     <!-- dark: https://i.imgur.com/c1BoXUL.png -->
     <!-- light: https://i.imgur.com/UEnFo66.png -->
-    <img alt="{{ top }}" class="border" style="max-width: 80%" src="http://memegen.link/custom/{{ top | urlencode }}/{{ bottom | urlencode }}.jpg?alt=https://i.imgur.com/c1BoXUL.png" title="{{ top }}">
+    <div style="max-width: 700px; margin: auto;">
+      <div style="padding: 0 5vw; top:18vh; overflow:hidden; position:absolute;">
+        <img alt="{{ top }}" style="width:100%; max-width: 600px;margin-bottom: -2%;" src="http://memegen.link/custom/{{ top | urlencode }}/{{ bottom | urlencode }}.jpg?alt=https://i.imgur.com/c1BoXUL.png" title="{{ top }}">
+      </div>
+    </div>
 {% endblock %}

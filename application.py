@@ -32,6 +32,7 @@ import uuid
 
 #from cs50 import SQL
 import SQL
+import config
 import boto3, botocore
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_session import Session
@@ -45,8 +46,7 @@ from PIL import Image
 from flask_mail import Mail, Message
 
 from helpers import apology, login_required, neighborhood_required
-from config import S3_BUCKET, S3_REGION, MAIL_SERVER, MAIL_PORT, MAIL_USERNAME
-from SQL import SQL_db
+
 
 
 ################################################################
@@ -76,9 +76,9 @@ def after_request(response):
 # postgreSQL = 2 (production on Heroku)
 DATABASE__TYPE = 2
 try:
-    db = SQL_db(os.getenv("DATABASE_URL"))
+    db = SQL.SQL_db(os.getenv("DATABASE_URL"))
 except:
-    db = SQL_db("sqlite:///toolshare.db")
+    db = SQL.SQL_db("sqlite:///toolshare.db")
     app.config["SESSION_FILE_DIR"] = mkdtemp()# <-- not used for Heroku
     print("sqlite3 database: development mode")
     DATABASE__TYPE = 1
@@ -88,12 +88,12 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # setup s3 file storage
-app.config['S3_BUCKET'] = S3_BUCKET
-app.config['S3_REGION'] = S3_REGION
+app.config['S3_BUCKET'] = config.S3_BUCKET
+app.config['S3_REGION'] = config.S3_REGION
 app.config['S3_KEY'] = os.environ.get('AWS_ACCESS_KEY_ID')
 app.config['S3_SECRET'] = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
-app.config['S3_LOCATION'] = 'http://{}.s3.amazonaws.com/'.format(S3_BUCKET)
+app.config['S3_LOCATION'] = 'http://{}.s3.amazonaws.com/'.format(config.S3_BUCKET)
 
 s3 = boto3.client(
    "s3",
@@ -111,9 +111,9 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 # Setup pconfiguration for email:
 mail = Mail(app)
-app.config['MAIL_SERVER'] = MAIL_SERVER
-app.config['MAIL_PORT'] = MAIL_PORT
-app.config['MAIL_USERNAME'] = MAIL_USERNAME
+app.config['MAIL_SERVER'] = config.MAIL_SERVER
+app.config['MAIL_PORT'] = config.MAIL_PORT
+app.config['MAIL_USERNAME'] = config.MAIL_USERNAME
 app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
@@ -1159,6 +1159,41 @@ def deleteneighborhood():
             return apology("Misc Error")
 
 
+@app.route("/sendmail", methods=["GET", "POST"])
+@login_required
+@neighborhood_required
+def sendmail():
+    """confirm account deletion"""
+    userUUID = session.get("user_uuid")
+    firstname = session.get("firstname")
+    if request.method == "GET":
+        mynbhlist = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID) AND deleted = 0;", userUUID=userUUID)
+        myneighborhoods = {}
+        for row in mynbhlist:
+            info = {'neighborhood': row["neighborhood"], 'neighborhoodid': row["neighborhoodid"]}
+            myneighborhoods[row["neighborhoodid"]] = info
+        userdeetz = db.execute("SELECT * FROM users WHERE uuid = :userUUID", userUUID=userUUID)[0]
+        username = userdeetz['username']
+        email = userdeetz['email']
+        return render_template("sendmail.html", openActions=countActions(), firstname=firstname, myneighborhoods=myneighborhoods, username=username, email=email)
+    else:
+        formAction = request.form.get("returnedAction")
+        if formAction == "sendMail":
+            nbhChecks = request.form.getlist("nbhChecks")
+            shareChecks = request.form.getlist("shareChecks")
+            if len(nbhChecks) == 0:
+                flash("You must pick at least one neighborhood.")
+                return apology("one neighborhood", "you must pick at least one")
+            if "email" in shareChecks:
+                print("YES: share the email address")
+            else:
+                print("NO: don't share the email address")
+            return apology("todo")
+        elif formAction == "cancel":
+            return redirect("/findtool")
+        else:
+            return apology("Misc Error")
+
 
 
 ################################################################
@@ -1281,8 +1316,10 @@ def register():
 
         # generate a new UUID for the user
         new_uuid = uuid.uuid4().hex
+        # generate uuid for email opt-out.
+        optouttoken = uuid.uuid4().hex
         # Initiate the user with an unregistered_email:
-        db.execute("INSERT INTO users (uuid, firstname, username, email, hash, validateemail) VALUES (?, ?, ?, ?, ?, ?);", new_uuid, firstname, newUsername, email, generate_password_hash(password1), "unregistered_email")
+        db.execute("INSERT INTO users (uuid, firstname, username, email, hash, validateemail, email_optout) VALUES (?, ?, ?, ?, ?, ?, ?);", new_uuid, firstname, newUsername, email, generate_password_hash(password1), "unregistered_email", optouttoken)
         #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
         db.execute("INSERT INTO history (type, action, useruuid, comment, timestamp) VALUES (?, ?, ?, ?, ?);", "other", "signup", new_uuid, "NEW USER!!", datetime.datetime.now())
 
@@ -1426,8 +1463,8 @@ def manageaccount():
             return redirect("/changepassword")
         elif formAction == "updateEmail":
             return redirect("/updateemail")
-        elif formAction == "myNeighborhoods":
-            return redirect("/neighborhoods")
+        elif formAction == "commPrefs":
+            return redirect("/communication")
         elif formAction == "viewHistory":
             return redirect("/history")
         elif formAction == "deleteAccount":
@@ -1438,8 +1475,125 @@ def manageaccount():
             return apology("Misc Error")
 
 
+@app.route("/communication", methods=["GET", "POST"])
+#@login_required <--managed internally
+def communication():
+    '''Update communication preferences'''
+    if request.method == "GET":
+        email = request.args.get("email")
+        optouttoken = request.args.get("optout")
+        if email != None:
+            if optouttoken != None:
+                #check if opt-out token matches the one in the user's account
+                userdeetz = db.execute("SELECT * FROM users WHERE email = :email", email=email)
+                if len(userdeetz) == 1:#a user exists with this email
+                    if "optin" in userdeetz[0]['emaillevel'].split(","):#if the user is still opted in
+                        if userdeetz[0]['email_optout'] == optouttoken:
+                            existing_mail_pref = userdeetz[0]['emaillevel'].split(",")
+                            new_mail_pref = ""
+                            for i in existing_mail_pref:
+                                if i == "optin":
+                                    new_mail_pref += "optout,"
+                                elif i == "":
+                                    pass
+                                else:
+                                    new_mail_pref += i
+                            db.execute("UPDATE users SET emaillevel = :new_mail_pref WHERE uuid = :userUUID;", userUUID=userdeetz[0]['uuid'], new_mail_pref=new_mail_pref)
+                            #if user is logged in, flash and redirect to communication Preferences
+                            if session.get("user_uuid") is not None:
+                                flash("You have been unsubscribed")
+                                userUUID = session.get("user_uuid")
+                                firstname = session.get("firstname")
+                                return render_template("communicationpreferences.html", openActions=countActions(), firstname=firstname)
+                            else:
+                                return render_template("unsubscribed.html")
+                        else:
+                            return apology("Invalid opt-out token", "contact admin")
+                    else:
+                        #user was already opted out
+                        if session.get("user_uuid") is not None:
+                            flash("You have already opted out.")
+                            userUUID = session.get("user_uuid")
+                            firstname = session.get("firstname")
+                            return render_template("communicationpreferences.html", openActions=countActions(), firstname=firstname)
+                        else:
+                            return redirect("/login")
+                else:
+                    #user does not exist...
+                    return redirect("/")
+        #email or optouttoken not provided
+        if session.get("user_uuid") is not None:
+            userUUID = session.get("user_uuid")
+            firstname = session.get("firstname")
+            #get the user communication preferences
+            userdeetz = db.execute("SELECT * FROM users WHERE uuid = :userUUID", userUUID=userUUID)[0]
+            phonenumber = userdeetz['phonenumber']
+            phonepref = userdeetz['phonepref']#none/call/sms/both
+            if phonepref == "none":
+                phonenumber = ""
+            emaillevel = userdeetz['emaillevel'].split(",")#optin/optout,nbh
+            if "nbh" in emaillevel:
+                nbhemails = True
+            else:
+                nbhemails = False
+            if "optout" in emaillevel:
+                optout = True
+            else:
+                optout = False
+            return render_template("communicationpreferences.html", openActions=countActions(), firstname=firstname, optout=optout, phonenumber=phonenumber, phonepref=phonepref, nbhemails=nbhemails)
+        else:
+            return redirect("/login")
+    else: #POST
+        #@login_required
+        if session.get("user_uuid") is None:
+            return redirect("/login")
+
+        userUUID = session.get("user_uuid")
+        formAction = request.form.get("returnedAction")
+        if formAction == "returnHome":
+            return redirect("/manageaccount")
+        elif formAction == "saveChanges":
+            # get the form data
+            allchecks = request.form.getlist("allchecks")
+            new_mail_pref = ""
+            if 'optin' in allchecks:
+                new_mail_pref += 'optin,'
+            else:
+                new_mail_pref += 'optout,'
+            if 'nbh' in allchecks:
+                new_mail_pref += 'nbh'
+            db.execute("UPDATE users SET emaillevel = :emaillevel WHERE uuid = :userUUID;", userUUID=userUUID, emaillevel=new_mail_pref)
+            if 'phoneyes' in allchecks:
+                phone_number = request.form.get("phone_number")
+                print(phone_number)
+                if phone_number == "":
+                    flash("Please add a phone number.")
+                    return redirect("/communication")
+                if (('call' not in allchecks) and ('sms' not in allchecks)):
+                    return apology("phonr contact type error")
+                if 'call' in allchecks:
+                    if 'sms' in allchecks:
+                        #both
+                        db.execute("UPDATE users SET phonepref = 'both', phonenumber = :phonenumber WHERE uuid = :userUUID;", userUUID=userUUID, phonenumber=phone_number)
+                    else:
+                        #call only
+                        db.execute("UPDATE users SET phonepref = 'call', phonenumber = :phonenumber WHERE uuid = :userUUID;", userUUID=userUUID, phonenumber=phone_number)
+                else:
+                    #sms only
+                    db.execute("UPDATE users SET phonepref = 'sms', phonenumber = :phonenumber WHERE uuid = :userUUID;", userUUID=userUUID, phonenumber=phone_number)
+            else:
+                #set the user's phone preference to 'none'
+                db.execute("UPDATE users SET phonepref = 'none' WHERE uuid = :userUUID;", userUUID=userUUID)
+            flash("Your communication preferences have been saved.")
+            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            logHistory("other", "editcommprefs", "", "", "", "")
+            return redirect("/manageaccount")
+        else:
+            return apology("Misc Error")
+
+
 @app.route("/changepassword", methods=["GET", "POST"])
-#@login_required
+#@login_required <--managed internally
 def changepassword():
     """change your password"""
     if request.method == "GET":
@@ -1457,10 +1611,16 @@ def changepassword():
                             return render_template("updatepwd.html", recoverytoken=recoverytoken, email=email, verb=verb)
                         else:
                             flash("Password reset link has expired.")
-            return redirect(url_for("login", next=request.url))
+            return redirect(url_for("login"))
         else:
             userUUID = session.get("user_uuid")
             firstname = session.get("firstname")
+            email = request.args.get("email")
+            recoverytoken = request.args.get("recoverytoken")
+            if ((email != None) or (recoverytoken != None)):
+                flash("Already logged in, no password reset needed.")
+                db.execute("UPDATE users SET recoverykey = '' WHERE uuid = :userUUID;", userUUID=userUUID)
+                return redirect("/")
             return render_template("updatepwd.html", openActions=countActions(), verb=verb, firstname=firstname)
     else:
         #todo add in the recovery key check and if valid, change password, login the user (set session), reset recoverykey, redirecto to "/"

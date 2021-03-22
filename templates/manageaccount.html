@@ -12,12 +12,13 @@
 <div class="scrolling_page">
     <br>
     <h3>Manage Your Account</h3>
-    <h5>Name: {{ firstname }}</h5>
-    <p>
+    <div class="smalltopspace"></div>
+    <div style="text-align: left; width: max-content; margin: auto;">
+        <h5>Name: {{ firstname }}</h5>
         Username: {{ username }}
         <span class="text-muted small">(cannot change)</span><br>
         Email: {{ email }}
-    </p>
+    </div>
     <hr>
     <form action="/manageaccount" method="post">
         <div class="row">
@@ -29,7 +30,7 @@
             </div>
             <div class="col-md-6">
                 <h5>Account Settings</h5>
-                    <button class="btn btn-secondary" id="myNeighborhoods" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerModal">My Neighborhoods</button><br><br>
+                    <button class="btn btn-secondary" id="commPrefs" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerModal">Communication Preferences</button><br><br>
                     <button class="btn btn-secondary" id="viewHistory" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerModal">View History</button><br><br>
                     <button class="btn btn-danger" id="deleteAccount" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerModal">Delete Account</button><br><br>
             </div>
@@ -37,13 +38,14 @@
         <hr>
         <br>
         <button class="btn btn-primary" id="done" type="submit" style="width: 190px">Done</button>
-        <div class="deadspace"></div>
+        <div class="smalltopspace"></div>
+        <div class="smalltopspace"></div>
+        <div class="smalltopspace"></div>
         <a href="/ContactUs">Feedback or Contact Us</a><br>
         <a href="/TermsAndConditions" target="_blank" rel="noopener noreferrer">Terms and Conditions</a><br>
         <a href="/PrivacyPolicy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-        <br>
         <input id="hiddenInfoBox" name="returnedAction" value=""></input>
-        <br><br>
+        <div class="smalltopspace"></div>
     </form>
     <div class="deadspace"></div>
 </div>
@@ -55,7 +57,7 @@
         var changeName = document.getElementById("changeName");
         var changePassword = document.getElementById("changePassword");
         var updateEmail = document.getElementById("updateEmail");
-        var myNeighborhoods = document.getElementById("myNeighborhoods");
+        var commPrefs = document.getElementById("commPrefs");
         var viewHistory = document.getElementById("viewHistory");
         var deleteAccount = document.getElementById("deleteAccount");
         var done = document.getElementById("done");
@@ -74,8 +76,8 @@
             hiddenInfoBox.value = "updateEmail";
         };
 
-        myNeighborhoods.onclick = function(){
-            hiddenInfoBox.value = "myNeighborhoods";
+        commPrefs.onclick = function(){
+            hiddenInfoBox.value = "commPrefs";
         };
 
         viewHistory.onclick = function(){

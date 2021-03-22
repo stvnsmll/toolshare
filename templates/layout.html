@@ -122,49 +122,50 @@
         {% endif %}
       </body>
 
-        <footer class="text-center fixed-bottom">
-            {% if session.user_uuid %}
-                <!-- Only show this footer once the user is logged in -->
-                <table class="footer_nav">
-                    <tr>
-                        <th class="footercenter">
-                            <a href="/neighborhoods">
-                                <div id="tools_btn" class='footer_button {{ setActive3 }}'>
-                                    <i class='fas fa-users'></i>
-                                    <div class="badgeholder">
-                                        <span class="badge badge-pill"></span>
-                                    </div>
-                                </div>
-                            </a>
-                        </th>
-                        <th class="footercenter">
-                            <a href="/">
-                                <div id="tools_btn" class='footer_button {{ setActive1 }}'>
-                                    <i class='fas fa-toolbox'></i>
-                                    <div class="badgeholder">
-                                        <span class="badge badge-pill"></span>
-                                    </div>
-                                </div>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="/actions">
-                                <div id="tools_btn" class='footer_button {{ setActive2 }}'>
-                                    <i class='fas fa-envelope-open-text'></i>
-                                    <div class="badgeholder">
-                                        {% if openActions is number %}
-                                            <span id="notificationcount" class="badge badge-pill badge-danger">{{ openActions }}</span>
-                                        {% else %}
-                                            <span id="notificationcount" class="badge badge-pill"></span>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </a>
-                        </th>
-                    </tr>
-                </table>
-            {% else %}
-
+      {% if session.user_uuid %}
+          <footer class="text-center fixed-bottom">
+            <!-- Only show this footer once the user is logged in -->
+            <table class="footer_nav">
+                <tr>
+                    <th class="footercenter">
+                        <a href="/neighborhoods">
+                            <div id="tools_btn" class='footer_button {{ setActive3 }}'>
+                                <i class='fas fa-users'></i>
+                                <div class="badgeholder">
+                                    <span class="badge badge-pill"></span>
+                                </div>
+                            </div>
+                        </a>
+                    </th>
+                    <th class="footercenter">
+                        <a href="/">
+                            <div id="tools_btn" class='footer_button {{ setActive1 }}'>
+                                <i class='fas fa-toolbox'></i>
+                                <div class="badgeholder">
+                                    <span class="badge badge-pill"></span>
+                                </div>
+                            </div>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="/actions">
+                            <div id="tools_btn" class='footer_button {{ setActive2 }}'>
+                                <i class='fas fa-envelope-open-text'></i>
+                                <div class="badgeholder">
+                                    {% if openActions is number %}
+                                        <span id="notificationcount" class="badge badge-pill badge-danger">{{ openActions }}</span>
+                                    {% else %}
+                                        <span id="notificationcount" class="badge badge-pill"></span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                    </th>
+                </tr>
+            </table>
+          </footer>
+        {% else %}
+          <footer class="text-center fixed-bottom" style="height: 28px;">
             <div class="small copyright">
                 &copy 2020 -
                 <script type="text/JavaScript">
@@ -172,8 +173,9 @@
                 </script>
                 / Steven Small / All Rights Reserved
             </div>
-            {% endif %}
-        </footer>
+          </footer>
+        {% endif %}
+
 
 
 

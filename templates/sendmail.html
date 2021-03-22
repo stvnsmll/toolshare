@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+
+{% block moreHead %}
+    <link href="/static/checkboxes.css" rel="stylesheet">
+{% endblock %}
+
+{% block title %}
+    Contact
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+
+{% block main %}
+<div class="scrolling_page no-x smalltopspace">
+  <div class="smalltopspace"></div>
+    <form action="/sendmail" method="post">
+      <h3>Ask for a Tool</h3>
+        <div class="form-group smalltopspace" style="text-align: left;">
+          <div>
+            <p>
+              If you can't find the tool you need for your next job, chances are a neighbor still has it. Most people don't have
+              all of their tools loaded into ToolShare. Go ahead and ask around if someone actually has a tool and can load it in
+              for you to borrow.<br>
+              Describe the tool you're looking for, or the job you're trying to get done.  Maybe if they don't have the exact tool
+              they may have something similar that can help get the job done.
+            </p>
+            <p>
+              All neighbors in the neighboroods that you select below will receive an email with your question (if they haven't opted
+              out of neighborhood emails). Pease respect their inbox and the use of this feature. A neighborhood admin can remove or
+              block you from the group if this is abused.
+            </p>
+          </div>
+          <h6>Please select at least one neighborhood:</h6>
+          <div class="selector_list ">
+            <ul class="list" style="overflow-y: scroll;">
+            {% for nbh in myneighborhoods %}
+              <li class="list-item">
+                <input type="checkbox" name="nbhChecks" value="{{ myneighborhoods[nbh]['neighborhoodid'] }}" class="hidden-box" id="{{ myneighborhoods[nbh]['neighborhoodid'] }}"/>
+                <label for="{{ myneighborhoods[nbh]['neighborhoodid'] }}" class="check--label">
+                  <span class="check--label-box"></span>
+                  <span class="check--label-text">{{ myneighborhoods[nbh]['neighborhood'] }}</span>
+                </label>
+              </li>
+            {% endfor %}
+            </ul>
+          </div>
+          <div class="smalltopspace"></div>
+          <div class="d-flex justify-content-start">
+            <label class="text-left" for="messsage"><strong>Tool and Project Details:</strong></label><br>
+          </div>
+          <textarea class="form-control" rows="5" id="messsage" name="messsage" style="width: 90%" placeholder="your message" maxlength="800"></textarea>
+
+          <div style="font-size: smaller">
+            <p>
+              You will also receive this email.
+              The other neighborhood members will have a link generated to respond to your request. This keeps your email address private.
+              If you wish to share your email address to enable quicker communication, please check the box below:
+            </p>
+            <div id="shareSelector" style="margin: 20px; padding: 10px; border: 1px dashed gray; border-radius: 3px; width: max-content;">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="shareChecks" value="firstname" id="firstname_check" checked disabled/>
+                <label class="form-check-label" for="firstname_check" style="padding-top: 3px;">
+                  Firstname: <span class="text-muted">{{ firstname }}</span>
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="shareChecks" value="username" id="username_check" checked disabled/>
+                <label class="form-check-label" for="username_check" style="padding-top: 3px;">
+                  Username: <span class="text-muted">{{ username }}</span>
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="shareChecks" value="email" id="email_check"/>
+                <label class="form-check-label" for="email_check" style="padding-top: 3px;">
+                  Email: <span class="text-muted">{{ email }}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="smalltopspace"></div>
+        <button class="btn btn-primary" id="sendMe" type="submit" style="width: 150px" data-toggle="modal" data-target="#spinnerCogModal">Send</button>
+        <div class="smalltopspace"></div>
+        <button class="btn btn-secondary" id="cancel" type="submit" style="width: 150px" data-toggle="modal" data-target="#spinnerModal">Cancel</button>
+        <div class="smalltopspace"></div>
+        <input id="hiddenInfoBox" name="returnedAction" value="" style="display: none;"></input>
+    </form>
+    <div class="deadspace"></div>
+</div>
+
+    <script>
+        var sendMe = document.getElementById("sendMe");
+        var cancelBtn = document.getElementById("cancel");
+
+        cancelBtn.onclick = function(){
+            hiddenInfoBox.value = "cancel";
+        };
+
+        sendMe.onclick = function(){
+            hiddenInfoBox.value = "sendMail";
+        };
+
+
+    </script>
+{% endblock %}
