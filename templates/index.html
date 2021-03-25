@@ -18,20 +18,20 @@
 
     <!-- Nav tabs -->
     <ul class="nav nav-tabs nav-justified tab_format container bottom_tabnav" role="tablist">
-        <li class="nav-item">
+        <li class="nav-item {% if session.theme == 'dark' %}nav_dark{% endif %}">
             <a class="{% if borrowedtools[0] != 'no-nbh' %} active {% endif %}" data-toggle="tab" href="#borrowed">Borrowed</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {% if session.theme == 'dark' %}nav_dark{% endif %}">
             <a class="{% if borrowedtools[0] == 'no-nbh' %} active {% endif %}" data-toggle="tab" href="#myTools">My Tools</a>
         </li>
     </ul>
 
     <!-- Tab panes -->
-    <div class="tab-content">
+    <div class="tab-content {% if session.theme == 'dark' %}dark{% endif %}">
         <div id="borrowed" name="borrowed" class="tab-pane {% if borrowedtools[0] != 'no-nbh' %} active {% else %} fade {% endif %}">
           <div class="search_header">
-            <div class="filters">
-                <input class="form-control top_search" id="search1" type="text" autocomplete="off" placeholder="Search borrowed...">
+            <div class="filters {% if session.theme == 'dark' %}dark{% endif %}">
+                <input class="form-control top_search {% if session.theme == 'dark' %}dark{% endif %}" id="search1" type="text" autocomplete="off" placeholder="Search borrowed...">
                 <button id="cancel1" class="btn bg-transparent btn-pos" style="margin-left: -40px; z-index: 100; visibility: hidden;">
                   <i class="fa fa-times"></i>
                 </button>
@@ -42,7 +42,7 @@
                       <!--<button type="button" class="btn btn-primary" data-toggle="dropdown">
                       Dropleft button
                       </button>-->
-                      <div class="dropdown-menu dropdown_formatsjs">
+                      <div class="dropdown-menu dropdown_formatsjs {% if session.theme == 'dark' %}dark{% endif %}">
                         <div class="dropdown-header">Tool Caterory Filter</div>
                         <div class="form-check padd_left">
                           <label class="form-check-label">
@@ -158,19 +158,19 @@
               <a href="\newtool" class="btn btn-success tab_button"  style="z-index: 7;"><i class="fa fa-plus"></i> &nbsp;&nbsp;Add a Tool</a>
             </div>
             <!-- Filter Div-->
-            <div class="filters">
-                <input class="form-control top_search" id="search2" type="text" autocomplete="off" placeholder="Search your tools...">
+            <div class="filters {% if session.theme == 'dark' %}dark{% endif %}">
+                <input class="form-control top_search {% if session.theme == 'dark' %}dark{% endif %}" id="search2" type="text" autocomplete="off" placeholder="Search your tools...">
                 <button id="cancel2" class="btn bg-transparent btn-pos" style="margin-left: -40px; z-index: 100; visibility: hidden;">
                   <i class="fa fa-times"></i>
                 </button>
-                <div class="filterIconBox dropdown dropleft float-right">
+                <div class="filterIconBox dropdown dropright float-right">
                       <button id="filter_btn2" class="filterIcon" data-toggle="dropdown">
                         <i class="fas fa-filter"></i>
                       </button>
                       <!--<button type="button" class="btn btn-primary" data-toggle="dropdown">
                       Dropleft button
                       </button>-->
-                      <div class="dropdown-menu dropdown_formatsjs">
+                      <div class="dropdown-menu dropdown_formatsjs {% if session.theme == 'dark' %}dark{% endif %}">
                         <div class="dropdown-header">Tool Caterory Filter</div>
                         <div class="form-check padd_left">
                           <label class="form-check-label">

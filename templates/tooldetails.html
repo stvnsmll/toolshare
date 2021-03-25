@@ -167,22 +167,22 @@
           <!-- The 'Delete Tool' Modal -->
           <div class="modal fade" id="deleteModal">
             <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
+              <div class="modal-content {% if session.theme == 'dark' %}nav_dark{% endif %}">
 
                 <!-- Modal Header -->
-                <div class="modal-header">
+                <div class="modal-header {% if session.theme == 'dark' %}nav_dark{% endif %}">
                   <h4 class="modal-title">Confirm Delete</h4>
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <button type="button" class="close {% if session.theme == 'dark' %}dark{% endif %}" data-dismiss="modal">&times;</button>
                 </div>
 
                 <!-- Modal body -->
-                <div class="modal-body text-left">
+                <div class="modal-body text-left {% if session.theme == 'dark' %}dark{% endif %}">
                     <div style="color: red; font-weight: bold;">WARNING</div>
                     <i>If you click Delete, this tool will be deleted.</i>
                 </div>
 
                 <!-- Modal footer -->
-                <div class="modal-footer">
+                <div class="modal-footer {% if session.theme == 'dark' %}nav_dark{% endif %}">
                   <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
                   <button type="submit" class="btn btn-danger" onclick="updateinfobox('deleteTool')" id="deleteButton">Delete</button>
                 </div>

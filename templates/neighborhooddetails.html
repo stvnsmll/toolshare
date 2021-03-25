@@ -41,7 +41,7 @@
     <form action="/neighborhood_details" method="post">
         {% if notmember %}
             {% if passwordYN == 'Yes' -%}
-                <input onkeyup="buttonShowCheck()" id="nbhpw" name="password" type="password" placeholder="password required" required></input><br><br>
+                <input class="form-control {% if session.theme == 'dark' %}dark{% endif %}" onkeyup="buttonShowCheck()" id="nbhpw" name="password" type="password" placeholder="password required" required></input><br><br>
             {%- endif %}
             <button class="btn btn-info" onclick="updateinfobox('join')" id="joinbtn" type="submit" style="width: 260px"
                 {% if passwordYN == 'Yes' -%}
@@ -66,45 +66,20 @@
                 <button type="button" class="btn btn-warning" onclick="window.location.reload();">Discard <i class="fa fa-times"></i></button>
               </div>
               <div class="selector_list ">
-                <ul class="list" style="overflow-y: scroll;">
+                <ul class="list {% if session.theme == 'dark' %}dark{% endif %}" style="overflow-y: scroll;">
 
                 {% for item in myTools %}
-                <li class="list-item">
+                <li class="list-item {% if session.theme == 'dark' %}dark{% endif %}">
                   <input type="checkbox" class="hidden-box" id="{{ myTools[item]['toolID'] }}" {{ 'checked' if myTools[item]['isVisible'] }}/>
                   <label for="{{ myTools[item]['toolID'] }}" class="check--label">
                     <span class="check--label-box"></span>
-                    <span class="check--label-text">{{ myTools[item]['toolName'] }}</span>
+                    <span class="check--label-text {% if session.theme == 'dark' %}dark" style="background-color: transparent;"{% endif %}>{{ myTools[item]['toolName'] }}</span>
                   </label>
                   <div class="list-link" onclick="gotosite('{{ myTools[item]['toolID'] }}')">
                     <i class="fa fa-link"></i>
                   </div>
                 </li>
                 {% endfor %}
-
-                <!-- Demo checkbox items
-                <li class="list-item">
-                  <input type="checkbox" class="hidden-box" id="first"/>
-                  <label for="first" class="check--label">
-                    <span class="check--label-box"></span>
-                    <span class="check--label-text">First Tool</span>
-                  </label>
-                </li>
-                <li class="list-item">
-                  <input type="checkbox" class="hidden-box" id="second"/>
-                  <label for="second" class="check--label">
-                    <span class="check--label-box"></span>
-                    <span class="check--label-text">Second Tool</span>
-                  </label>
-                </li>
-                <li class="list-item">
-                  <input type="checkbox" class="hidden-box" id="third" />
-                  <label for="third" class="check--label">
-                    <span class="check--label-box"></span>
-                    <span class="check--label-text">Third Tool</span>
-                  </label>
-                </li>
-                -->
-
 
               </ul>
               </div>
@@ -133,16 +108,16 @@
       <!-- The Modal -->
   <div class="modal fade" id="myModal">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+      <div class="modal-content {% if session.theme == 'dark' %}nav_dark{% endif %}">
 
         <!-- Modal Header -->
-        <div class="modal-header">
+        <div class="modal-header {% if session.theme == 'dark' %}nav_dark{% endif %}">
           <h4 class="modal-title">Tool Visibilities</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="close {% if session.theme == 'dark' %}dark{% endif %}" data-dismiss="modal">&times;</button>
         </div>
 
         <!-- Modal body -->
-        <div class="modal-body text-left">
+        <div class="modal-body text-left {% if session.theme == 'dark' %}dark{% endif %}">
           When a tool is <strong>checked</strong> in this list, it will be visible and available for borrowing to any member of this neighborhood.
           <br><br>
           You can <strong>uncheck</strong> a tool here to not allow this tool to be visible to this neighborhood. It will not impact the visibilities
@@ -154,7 +129,7 @@
         </div>
 
         <!-- Modal footer -->
-        <div class="modal-footer">
+        <div class="modal-footer {% if session.theme == 'dark' %}nav_dark{% endif %}">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
 

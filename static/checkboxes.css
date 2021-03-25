@@ -69,7 +69,7 @@
   border-left: 1px solid #ecf0f1;
 }
 .hidden-box:checked + .check--label {
-  background-color: #F9F9F9;
+  background-color: #f9f9f926;/*#F9F9F9;*/
   letter-spacing: 0.04em;
   font-weight: strong;
 }

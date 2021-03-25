@@ -35,13 +35,13 @@
           </div>
           <h6>Please select at least one neighborhood:</h6>
           <div class="selector_list ">
-            <ul class="list" style="overflow-y: scroll;">
+            <ul class="list {% if session.theme == 'dark' %}dark{% endif %}" style="overflow-y: scroll;">
             {% for nbh in myneighborhoods %}
-              <li class="list-item">
+              <li class="list-item {% if session.theme == 'dark' %}dark{% endif %}">
                 <input type="checkbox" name="nbhChecks" value="{{ myneighborhoods[nbh]['neighborhoodid'] }}" class="hidden-box" id="{{ myneighborhoods[nbh]['neighborhoodid'] }}"/>
                 <label for="{{ myneighborhoods[nbh]['neighborhoodid'] }}" class="check--label">
                   <span class="check--label-box"></span>
-                  <span class="check--label-text">{{ myneighborhoods[nbh]['neighborhood'] }}</span>
+                  <span class="check--label-text {% if session.theme == 'dark' %}dark" style="background-color: transparent;"{% endif %}>{{ myneighborhoods[nbh]['neighborhood'] }}</span>
                 </label>
               </li>
             {% endfor %}
@@ -51,7 +51,7 @@
           <div class="d-flex justify-content-start">
             <label class="text-left" for="messsage"><strong>Tool and Project Details:</strong></label><br>
           </div>
-          <textarea class="form-control" rows="5" id="messsage" name="messsage" style="width: 90%" placeholder="your message" maxlength="800"></textarea>
+          <textarea class="form-control {% if session.theme == 'dark' %}dark{% endif %}" rows="5" id="messsage" name="messsage" style="width: 90%" placeholder="your message" maxlength="800"></textarea>
 
           <div style="font-size: smaller">
             <p>

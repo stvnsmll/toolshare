@@ -22,12 +22,12 @@
           <a href="\newtool" type="button" class="btn btn-success tab_button"  style="z-index: 7;">Add a Tool</a>
         </div>-->
         <!-- Filter Div-->
-        <div class="filters {% if session.theme == 'dark' %}dark{% endif %}">
-            <input class="form-control top_search {% if session.theme == 'dark' %}dark{% endif %}" id="search2" type="text" autocomplete="off" placeholder="Search all...">
+        <div class="filters">
+            <input class="form-control top_search" id="search2" type="text" autocomplete="off" placeholder="Search all...">
             <button id="cancel2" class="btn bg-transparent btn-pos" style="margin-left: -40px; z-index: 100; visibility: hidden;">
               <i class="fa fa-times"></i>
             </button>
-            <div class="filterIconBox dropdown dropleft float-right {% if session.theme == 'dark' %}dark{% endif %}">
+            <div class="filterIconBox dropdown dropleft float-right">
                   <button id="filter_btn2" class="filterIcon" data-toggle="dropdown">
                     <i class="fas fa-filter"></i>
                   </button>
@@ -82,7 +82,7 @@
         Fastening: Þ
         Uncategorized: ‡
       -->
-      <div class="list_div {% if session.theme == 'dark' %}dark{% endif %} find_tool_list tab-content">
+      <div class="list_div find_tool_list tab-content">
         <ul class="list-group list-group-flush" id="myList2">
           {% for tool in alltools %}
             {% if 'borrowed' in alltools[tool]['state'] or 'overdue' in alltools[tool]['state'] %}

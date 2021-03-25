@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 
+{% block moreHead %}
+    <link href="/static/nighttoggle.css" rel="stylesheet">
+{% endblock %}
+
 {% block title %}
     Manage Account
 {% endblock %}
@@ -17,7 +21,16 @@
         <h5>Name: {{ firstname }}</h5>
         Username: {{ username }}
         <span class="text-muted small">(cannot change)</span><br>
-        Email: {{ email }}
+        Email: {{ email }}<br>
+        <div style="margin-top: 10px;">App Theme:</div>
+        <span class="nighttoggle" id="switch">
+          <input type="checkbox" class="checkbox" id="chk" {% if session.theme == "dark" %}checked{% endif %}/>
+          <label class="label" for="chk">
+              <i class="fas fa-sun"></i>
+              <i class="fas fa-moon"></i>
+              <div class="ball"></div>
+          </label>
+        </span>
     </div>
     <hr>
     <form action="/manageaccount" method="post">
@@ -91,6 +104,29 @@
         done.onclick = function(){
             hiddenInfoBox.value = "returnHome";
         };
+
+        const chk = document.getElementById('chk');
+        const topnavbar = document.getElementById('topnavbar');
+
+        chk.addEventListener('change', () => {
+        	document.body.classList.toggle('dark');
+          $('#spinnerCogModal').modal('show');
+          //pause for 1 second...
+          const form = document.createElement('form');
+          form.method = 'post';
+          form.action = "/manageaccount";
+
+          const hiddenField = document.createElement('input');
+          hiddenField.type = 'hidden';
+          hiddenField.name = "returnedAction";
+          hiddenField.value = "toggleTheme";
+
+          form.appendChild(hiddenField);
+
+          document.body.appendChild(form);
+          form.submit();
+        });
+
 
     </script>
 {% endblock %}

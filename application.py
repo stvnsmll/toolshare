@@ -1249,6 +1249,7 @@ def login():
         # Remember which user has logged in
         session["user_uuid"] = rows[0]["uuid"]
         session["firstname"] = rows[0]["firstname"]
+        session["theme"] = rows[0]["theme"]
 
         # See if the user is a member of any neighborhoods
         myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
@@ -1471,6 +1472,14 @@ def manageaccount():
             return redirect("/deleteaccount")
         elif formAction == "returnHome":
             return redirect("/")
+        elif formAction == "toggleTheme":
+            if session["theme"] == "light":
+                session["theme"] = "dark"
+            else:
+                session["theme"] = "light"
+            #set the preference for the user
+            db.execute("UPDATE users SET theme = :newTheme WHERE uuid = :userUUID;", userUUID=userUUID, newTheme=session["theme"])
+            return redirect("/manageaccount")
         else:
             return apology("Misc Error")
 

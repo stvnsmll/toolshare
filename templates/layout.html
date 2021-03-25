@@ -33,9 +33,9 @@
         <!-- {% block head %}{% endblock %} -->
     </head>
 
-    <body>
+    <body {% if session.theme == "dark" %} class="dark" {% endif %}>
 
-        <nav class="navbar navbar-expand-md navbar-light bg-light border fixed-top">
+        <nav class="navbar navbar-expand-md border fixed-top {% if session.theme == "dark" %}navbar-dark bg-dark nav_dark{% else %}navbar-light bg-light{% endif %}">
             <a class="navbar-brand" href="/">
               <span class="orange">
                 <i class='fas fa-tools2'></i>
@@ -123,13 +123,13 @@
       </body>
 
       {% if session.user_uuid %}
-          <footer class="text-center fixed-bottom">
+          <footer class="text-center fixed-bottom {% if session.theme == "dark" %}nav_dark{% endif %}">
             <!-- Only show this footer once the user is logged in -->
             <table class="footer_nav">
                 <tr>
-                    <th class="footercenter">
+                    <th class="footercenter {% if session.theme == "dark" %}nav_dark2{% endif %}">
                         <a href="/neighborhoods">
-                            <div id="tools_btn" class='footer_button {{ setActive3 }}'>
+                            <div id="tools_btn" class='footer_button {{ setActive3 }} {% if session.theme == "dark" %}nav_dark3{% endif %}'>
                                 <i class='fas fa-users'></i>
                                 <div class="badgeholder">
                                     <span class="badge badge-pill"></span>
@@ -137,9 +137,9 @@
                             </div>
                         </a>
                     </th>
-                    <th class="footercenter">
+                    <th class="footercenter {% if session.theme == "dark" %}nav_dark2{% endif %}">
                         <a href="/">
-                            <div id="tools_btn" class='footer_button {{ setActive1 }}'>
+                            <div id="tools_btn" class='footer_button {{ setActive1 }} {% if session.theme == "dark" %}nav_dark3{% endif %}'>
                                 <i class='fas fa-toolbox'></i>
                                 <div class="badgeholder">
                                     <span class="badge badge-pill"></span>
@@ -149,7 +149,7 @@
                     </th>
                     <th>
                         <a href="/actions">
-                            <div id="tools_btn" class='footer_button {{ setActive2 }}'>
+                            <div id="tools_btn" class='footer_button {{ setActive2 }} {% if session.theme == "dark" %}nav_dark3{% endif %}'>
                                 <i class='fas fa-envelope-open-text'></i>
                                 <div class="badgeholder">
                                     {% if openActions is number %}

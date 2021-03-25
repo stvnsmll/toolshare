@@ -17,10 +17,10 @@
     <!--<h4 class="smalltopspace">{{ firstname }}'s Actions</h4>-->
     <!-- Nav tabs -->
     <ul class="nav nav-tabs nav-justified tab_format container bottom_tabnav" role="tablist">
-        <li class="nav-item">
+        <li class="nav-item {% if session.theme == 'dark' %}nav_dark{% endif %}">
             <a class="active" data-toggle="tab" href="#approvals">Approvals</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {% if session.theme == 'dark' %}nav_dark{% endif %}">
             <a class="" data-toggle="tab" href="#requests">Notifications</a>
         </li>
         <!--  Unsure of how i'd use notifications...
@@ -31,14 +31,14 @@
     </ul>
 
     <!-- Tab panes -->
-    <div class="tab-content actionpage">
+    <div class="tab-content {% if session.theme == 'dark' %}dark{% endif %}">
         <div id="approvals" name="approvals" class="container tab-pane active list_div find_tool_list">
             <form action="/actions" method="post">
             {% for item in myapprovals %}
             <!-- When the user has NO image of the tool -->
-            <div class='actioncard collapsecard' style="height: auto;" id="{{ myapprovals[item]['actionid'] }}">
+            <div class='actioncard collapsecard {% if session.theme == "dark" %}nav_dark{% endif %}' style="height: auto;" id="{{ myapprovals[item]['actionid'] }}">
                 <div class='row align-items-center no-gutters'>
-                    <div class="col-sm-9 col-md-10" style="background-color: yellow1;">
+                    <div class="col-sm-9 col-md-10">
                         <div class="row align-items-center no-gutters">
                             <div class="col-auto mx-auto">
                                 <!-- If image exists, show thumbnail; else show a tool icon -->
@@ -60,12 +60,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-3 col-md-2" style="background-color: green1;">
-                        <div class="row mx-auto" style="max-width: 180px; background-color: pink1;">
-                            <div class="p-2 col" style="background-color: orange1; height: auto;">
+                    <div class="col-sm-3 col-md-2">
+                        <div class="row mx-auto" style="max-width: 180px;">
+                            <div class="p-2 col" style="height: auto;">
                                 <button class="btn btn-success badge-pill roundaction" style="margin-right: -5%;" onclick="hidethisdiv1({{ myapprovals[item]['actionid'] }}, 'approve')"><i class="fa fa-check fa-lg sha"></i></button>
                             </div>
-                            <div class="p-2 col" style="background-color: blue1; height: auto;">
+                            <div class="p-2 col" style="height: auto;">
                                 <button class="btn btn-danger badge-pill roundaction" onclick="hidethisdiv1({{ myapprovals[item]['actionid'] }}, 'reject')"><i class="fa fa-times fa-lg sha"></i></button>
                             </div>
                         </div>
@@ -91,192 +91,6 @@
             </div>
             {% endfor %}
 
-            <!-- Don't need to show these templates...
-            <br>
-            <hr>
-            ~~ Templates Below ~~
-            <br>
-
-
-
-
-
-            <!-- When the user has an image of the tool -- >
-            <div class='actioncard' style="height: auto;">
-                <div class='row align-items-center no-gutters'>
-                    <div class="col-sm-9 col-md-10" style="background-color: yellow1;">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col-sm-3">
-                                <!-- If image exists, show thumbnail; else show a tool icon -- >
-                                <img src="//placehold.it/200" alt="" style="max-height: 160px; margin: 5px; border-radius: 3px">
-                            </div>
-                            <div class="col">
-                                <div class="card-block px-2 text-left" style="flex-grow: 2; margin: 3px 3px 8px 10px;">
-                                    <h4 class="card-title">{ Tool Name }</h4>
-                                    <p class="card-text">
-                                        Requestor: <a href="#" data-toggle="popover" data-placement="top" title="{ username }" data-content="From { commonNeighborhoods }">{ firstname }</a>
-                                        <br>
-                                        Requested on: { requestDate }<br>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3 col-md-2" style="background-color: green1;">
-                        <div class="row mx-auto" style="max-width: 180px; background-color: pink1;">
-                            <div class="p-2 col" style="background-color: orange1; height: auto;">
-                                <button class="btn btn-success badge-pill roundaction" style="margin-right: -5%;" href="#"><i class="fa fa-check fa-lg sha"></i></button>
-                            </div>
-                            <div class="p-2 col" style="background-color: blue1; height: auto;">
-                                <button class="btn btn-danger badge-pill roundaction" href="#"><i class="fa fa-times fa-lg sha"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="expanddowncontainer">
-                    <div class="expanddown">
-                        <div id="expandrequestid1" onclick="expandfooter('footerrequestid1', 'expandrequestid1');"class="btn bg-transparent btn-pos spinme">
-                            <i class="fa fa-chevron-down"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer w-100 text-muted expandanimate" id="footerrequestid1" style='max-height: 0px; padding: 0px'>
-                    { Firstname }: "I will be needing it for at least 2 weeks." &nbsp;
-                    <button class="btn btn-warning badge-pill roundaction" onclick="toggleResponse('responseCommentContainerrequestid1')" href="#"><i class="fa fa-reply fa-lg"></i></button>
-                    <div id="responseCommentContainerrequestid1" style="max-height: 0px;" class="expandanimate">
-                        <br>
-                        <textarea class="form-control" rows="2" name="responseComment" id="responseComment1" style="width: 80%" placeholder="Response..."></textarea>
-                        <br>
-                        <div class="small text-muted">(To respond with a comment, leave this box open when you approve or deny)</div>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- When the user has NO image of the tool -- >
-            <div class='actioncard' style="height: auto;">
-                <div class='row align-items-center no-gutters'>
-                    <div class="col-sm-9 col-md-10" style="background-color: yellow1;">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col-auto">
-                                <!-- If image exists, show thumbnail; else show a tool icon -- >
-                                <div class="p-2 toolicon" style="margin-left: 20px;"><i class='fas fa-hammer'></i></div>
-                            </div>
-                            <div class="col">
-                                <div class="card-block px-2 text-left" style="flex-grow: 2; margin: 3px 3px 8px 10px;">
-                                    <h4 class="card-title">{ Tool Name }</h4>
-                                    <p class="card-text">
-                                        Requestor: <a href="#" data-toggle="popover" data-placement="top" title="{ username }" data-content="From { commonNeighborhoods }">{ firstname }</a>
-                                        <br>
-                                        Requested on: { requestDate }<br>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3 col-md-2" style="background-color: green1;">
-                        <div class="row mx-auto" style="max-width: 180px; background-color: pink1;">
-                            <div class="p-2 col" style="background-color: orange1; height: auto;">
-                                <button class="btn btn-success badge-pill roundaction" style="margin-right: -5%;" href="#"><i class="fa fa-check fa-lg sha"></i></button>
-                            </div>
-                            <div class="p-2 col" style="background-color: blue1; height: auto;">
-                                <button class="btn btn-danger badge-pill roundaction" href="#"><i class="fa fa-times fa-lg sha"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="expanddowncontainer">
-                    <div class="expanddown">
-                        <div id="expandrequestid2" onclick="expandfooter('footerrequestid2', 'expandrequestid2');" class="btn bg-transparent btn-pos spinme">
-                            <i class="fa fa-chevron-down"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer w-100 text-muted expandanimate" id="footerrequestid2" style='max-height: 0px; padding: 0px'>
-                    { firstname }: { messages } &nbsp;
-                    <button class="btn btn-warning badge-pill roundaction" onclick="toggleResponse('responseCommentContainerrequestid2')" href="#"><i class="fa fa-reply fa-lg"></i></button>
-                    <div id="responseCommentContainerrequestid2" style="max-height: 0px;" class="expandanimate">
-                        <br>
-                        <textarea class="form-control" rows="2" name="comment2" id="comment2" style="width: 80%;" placeholder="Response..."></textarea>
-                        <br>
-                        <div class="small text-muted">(To respond with a comment, leave this box open when you approve or deny)</div>
-                    </div>
-                </div>
-            </div>
-            -->
-
-
-            <!-- trials for how other cards would look...
-            <div class="card flex-row flex-wrap actioncard2" style="display: flex; align-items: center;">
-                <div class="d-flex">
-                    <div class="p-2">
-                        <div class="card-header border-0" style="flex-grow: 1;">
-                            <img src="//placehold.it/200" alt="">
-                        </div>
-                    </div>
-                    <div class="p-2 flex-grow-1">
-                        <div class="card-block px-2" style="border: 1px solid red; flex-grow: 2;">
-                            <h4 class="card-title">Tool Name</h4>
-                            <p class="card-text">
-                                Requestor: { Firstname } ({ username} )<br>
-                                Requested on: { requestDate }<br>
-
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-block px-2" style="border: 1px solid green; flex-grow: 1;">
-                    <div class='actionbuttons'>
-                        <a class="btn btn-success badge-pill roundaction" href="#"><i class="fa fa-check fa-lg sha"></i></a>
-                        <a class="btn btn-danger badge-pill roundaction" href="#"><i class="fa fa-times fa-lg sha"></i></a>
-                        <div class="btn btn-secondary badge-pill roundaction" href="#"><i class="fa fa-info-circle fa-lg"></i></div>
-                        <a href="#" class="btn btn-warning roundaction" style="width: auto;"><i class="fa fa-reply fa-lg" aria-hidden="true"></i> Reply</a>
-                    </div>
-                </div>
-                <div class="card-footer w-100 text-muted">
-                    { Firstname }: "I will be needing it for at least 2 weeks."
-                </div>
-            </div>
-
-            <div class='actioncard' tabindex="0">
-                <div class="d-flex">
-                    <div class="p-2">
-                        <div class='toolimage'><i class="far fa-file-image fa-3x" style="margin-top: 7px; color: gray;"></i></div>
-                    </div>
-                    <div class="p-2 flex-grow-1">
-                        <div class="card-block px-2" style="border: 1px solid red; flex-grow: 2;">
-                            <h4 class="card-title">Tool Name</h4>
-                            <p class="card-text">
-                                Borrow request from: { Firstname } ({ username} )<br>
-                                Requested on: { requestDate }<br>
-                            </p>
-                        </div>
-                    </div>
-                    <div class='p-2 actionbuttons'>
-                        <button class="btn btn-success badge-pill roundaction nospace" href="#"><i class="fa fa-check fa-lg sha"></i></button><br>
-                        <button class="btn btn-danger badge-pill roundaction nospace" href="#"><i class="fa fa-times fa-lg sha"></i></button>
-                    </div>
-                </div>
-
-                <div class='actionbuttons'>
-                    <a class="btn btn-success badge-pill roundaction" href="#"><i class="fa fa-check fa-lg sha"></i></a>
-                    <a class="btn btn-danger badge-pill roundaction" href="#"><i class="fa fa-times fa-lg sha"></i></a>
-                    <div class="btn btn-secondary badge-pill roundaction" href="#"><i class="fa fa-info-circle fa-lg"></i></div>
-                    <button href="#" class="btn btn-warning replybtn"><i class="fa fa-reply fa-lg"></i> Reply</button>
-                </div>
-            </div>
-
-            <div class='actioncard' tabindex="0">
-                <div class='toolimage'></div>
-                <div class='actionbuttons'>
-                    <a class="btn btn-success badge-pill roundaction" href="#"><i class="fa fa-check fa-lg sha"></i></a>
-                    <a class="btn btn-danger badge-pill roundaction" href="#"><i class="fa fa-times fa-lg sha"></i></a>
-                    <div class="btn btn-secondary badge-pill roundaction" href="#"><i class="fa fa-info-circle fa-lg"></i></div>
-                    <a href="#" class="btn btn-warning"><i class="fa fa-reply fa-lg" aria-hidden="true"></i> Reply</a>
-                </div>
-            </div>
-            -->
-
             <input id="hiddenInfoBox1" name="returnedAction" style="display: none;" value="fromMyApprovals"></input>
             <input id="returnedActionID1" name="returnedActionID" style="display: none;" value=""></input>
             <input id="approveOrReject1" name="approveOrReject" style="display: none;" value=""></input>
@@ -292,9 +106,9 @@
             <form action="/actions" method="post">
             {% for item in myrequests %}
             <!-- When the user has NO image of the tool -->
-            <div class='actioncard collapsecard' style="height: auto;" id="{{ myrequests[item]['actionid'] }}">
+            <div class='actioncard collapsecard {% if session.theme == "dark" %}nav_dark{% endif %}' style="height: auto;" id="{{ myrequests[item]['actionid'] }}">
                 <div class='row align-items-center no-gutters'>
-                    <div class="col-sm-8 col-md-9" style="background-color: yellow1;">
+                    <div class="col-sm-8 col-md-9">
                         <div class="row align-items-center no-gutters">
                             <div class="col-auto mx-auto">
                                 <!-- If image exists, show thumbnail; else show a tool icon -->
@@ -316,9 +130,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4 col-md-3" style="background-color: green1;">
-                        <div class="row mx-auto" style="max-width: 210px; background-color: pink1;">
-                            <div class="p-2 col" style="background-color: blue1; height: auto;">
+                    <div class="col-sm-4 col-md-3">
+                        <div class="row mx-auto" style="max-width: 210px;">
+                            <div class="p-2 col" style="height: auto;">
 
                                 <!-- this works, but I don't need it... {{ 'Cancel' if 'open' in myrequests[item]['state'] else 'Dismiss' }}-->
                                 {% if 'open' in myrequests[item]['state'] %}
@@ -338,84 +152,6 @@
                 </div>
             </div>
             {% endfor %}
-
-            <!-- Don't need to show these templates...
-            <br>
-            <hr>
-            ~~ Templates Below ~~
-            <br>
-
-            <!-- When the user has an image of the tool -- >
-            <div class='actioncard' style="height: auto;">
-                <div class='row align-items-center no-gutters'>
-                    <div class="col-sm-8 col-md-9" style="background-color: yellow1;">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col-sm-3">
-                                <!-- If image exists, show thumbnail; else show a tool icon -- >
-                                <img src="//placehold.it/200" alt="" style="max-height: 160px; margin: 5px; border-radius: 3px">
-                            </div>
-                            <div class="col">
-                                <div class="card-block px-2 text-left" style="flex-grow: 2; margin: 3px 3px 8px 10px;">
-                                    <h4 class="card-title">{ Tool Name }</h4>
-                                    <p class="card-text">
-                                        Tool Owner: <a href="#" data-toggle="popover" data-placement="top" title="{ username }" data-content="From { commonNeighborhoods }">{ firstname }</a>
-                                        <br>
-                                        Requested on: { requestDate }<br>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4 col-md-3" style="background-color: green1;">
-                        <div class="row mx-auto" style="max-width: 210px; background-color: pink1;">
-                            <div class="p-2 col" style="background-color: blue1; height: auto;">
-                                <button class="btn btn-danger badge-pill" href="#"><i class="fa fa-trash-alt sha"></i> Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-footer w-100 text-muted">
-                    { Firstname }: "I will [this is an example of an open request] be needing it for at least 2 weeks." &nbsp;
-                </div>
-            </div>
-
-
-            <!-- When the user has NO image of the tool -- >
-            <div class='actioncard' style="height: auto;">
-                <div class='row align-items-center no-gutters'>
-                    <div class="col-sm-8 col-md-9" style="background-color: yellow1;">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col-auto">
-                                <!-- If image exists, show thumbnail; else show a tool icon -- >
-                                <div class="p-2 toolicon" style="margin-left: 20px;"><i class='fas fa-hammer'></i></div>
-                            </div>
-                            <div class="col">
-                                <div class="card-block px-2 text-left" style="flex-grow: 2; margin: 3px 3px 8px 10px;">
-                                    <h4 class="card-title">{ Tool Name }</h4>
-                                    <p class="card-text">
-                                        Tool Owner: <a href="#" data-toggle="popover" data-placement="top" title="{ username }" data-content="From { commonNeighborhoods }">{ firstname }</a>
-                                        <br>
-                                        Requested on: { requestDate }<br>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4 col-md-3" style="background-color: green1;">
-                        <div class="row mx-auto" style="max-width: 210px; background-color: pink1;">
-                            <div class="p-2 col" style="background-color: blue1; height: auto;">
-                                <button class="btn btn-info badge-pill" href="#"><i class="fa fa-eye-slash sha"></i> Dismiss</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-footer w-100 text-muted">
-                    { Firstname }: "I will [this is an example of an approved or rejected request] be needing it for at least 2 weeks." &nbsp;
-                </div>
-            </div>
-            -->
 
 
             <input id="hiddenInfoBox2" name="returnedAction" style="display: none;" value="fromMyRequests"></input>

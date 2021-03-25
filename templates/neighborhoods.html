@@ -21,23 +21,23 @@
 <div role="tabpanel">
   <!-- Nav tabs -->
     <ul class="nav nav-tabs nav-justified tab_format container bottom_tabnav" role="tablist">
-        <li class="nav-item">
+        <li class="nav-item {% if session.theme == 'dark' %}nav_dark{% endif %}">
             <a class="active" data-toggle="tab" href="#mine">Mine</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {% if session.theme == 'dark' %}nav_dark{% endif %}">
             <a class="" data-toggle="tab" href="#join">Join</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {% if session.theme == 'dark' %}nav_dark{% endif %}">
             <a class="" data-toggle="tab" href="#create">Create</a>
         </li>
     </ul>
 
     <!-- Tab panes -->
-    <div class="tab-content"><!-- add/remove the cutoff class-->
+    <div class="tab-content {% if session.theme == 'dark' %}dark{% endif %}"><!-- add/remove the cutoff class-->
       <div class="tab-pane container active"id="mine">
         <div class="search_header">
-          <div class="filters">
-                <input class="form-control top_search" id="search1" type="text" autocomplete="off" style="width: 100% !important;" placeholder="Search...">
+          <div class="filters {% if session.theme == 'dark' %}dark{% endif %}">
+                <input class="form-control top_search {% if session.theme == 'dark' %}dark{% endif %}" id="search1" type="text" autocomplete="off" style="width: 100% !important;" placeholder="Search...">
                 <button id="cancel1" class="btn bg-transparent btn-pos" style="margin-left: -40px; z-index: 100; visibility: hidden;">
                   <i class="fa fa-times"></i>
                 </button>
@@ -66,8 +66,8 @@
 
       <div class="tab-pane container fade" id="join">
         <div class="search_header">
-          <div class="filters">
-                <input class="form-control top_search" id="search2" type="text" autocomplete="off" placeholder="Search...">
+          <div class="filters {% if session.theme == 'dark' %}dark{% endif %}">
+                <input class="form-control top_search {% if session.theme == 'dark' %}dark{% endif %}" id="search2" type="text" autocomplete="off" placeholder="Search...">
                 <button id="cancel2" class="btn bg-transparent btn-pos" style="margin-left: -40px; margin-top: -8px; z-index: 100; visibility: hidden;">
                   <i class="fa fa-times"></i>
                 </button>
@@ -105,21 +105,21 @@
               <form action="/neighborhoods" method="post">
                 <div class="input-group mb-3 long-input mx-auto">
                   <div class="input-group-prepend">
-                    <span class="input-group-text">
+                    <span class="input-group-text {% if session.theme == 'dark' %}inputtextdark{% endif %}">
                       <span class="redstar">*</span>
                       Neighborhood
                     </span>
                   </div>
-                  <input autofocus type="text" class="form-control" name="neighborhoodname" placeholder="unique name">
+                  <input autofocus type="text" class="form-control {% if session.theme == 'dark' %}dark{% endif %}" name="neighborhoodname" placeholder="unique name">
                 </div>
                 <div class="input-group mb-3 long-input mx-auto">
                   <div class="input-group-prepend">
-                    <span class="input-group-text">
+                    <span class="input-group-text {% if session.theme == 'dark' %}inputtextdark{% endif %}">
                       <span class="redstar">*</span>
                       Zip Code
                     </span>
                   </div>
-                  <input autofocus type="tel" maxlength=5 minlength=5 class="form-control" name="zipcode" placeholder="5-digit zip">
+                  <input autofocus type="tel" maxlength=5 minlength=5 class="form-control {% if session.theme == 'dark' %}dark{% endif %}" name="zipcode" placeholder="5-digit zip">
                 </div>
                 <div class="form-check">
                   <label class="form-check-label">
@@ -132,7 +132,7 @@
                   <div class="d-flex justify-content-start">
                     <label class="text-left" for="description">Description:</label><br>
                   </div>
-                  <textarea class="form-control" rows="4" id="features" name="features" style="width: 90%" placeholder="city / state / organization / neighborhood / rules / special instructions / etc"></textarea>
+                  <textarea class="form-control {% if session.theme == 'dark' %}dark{% endif %}" rows="4" id="features" name="features" style="width: 90%" placeholder="city / state / organization / neighborhood / rules / special instructions / etc"></textarea>
                   <br>
                 </div><br>
                 <p>You can add a password to help control the members.
@@ -140,7 +140,7 @@
                     <a href="#"><u>?</u></a>
                   </span>
                 </p>
-                <input autofocus class="form-control" id="nbhpassword" name="password" placeholder="(optional password)" type="password">
+                <input autofocus class="form-control {% if session.theme == 'dark' %}dark{% endif %}" id="nbhpassword" name="password" placeholder="(optional password)" type="password">
                 <br><br>
 
                 <button class="btn btn-success" type="submit" data-toggle="modal" data-target="#spinnerCogModal">Create Neighborhood</button>
@@ -161,16 +161,16 @@
       <!-- The Modal -->
   <div class="modal fade" id="myModal">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+      <div class="modal-content {% if session.theme == 'dark' %}nav_dark{% endif %}">
 
         <!-- Modal Header -->
-        <div class="modal-header">
+        <div class="modal-header {% if session.theme == 'dark' %}nav_dark{% endif %}">
           <h4 class="modal-title">Private Nieghborhoods</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="close {% if session.theme == 'dark' %}dark{% endif %}" data-dismiss="modal">&times;</button>
         </div>
 
         <!-- Modal body -->
-        <div class="modal-body text-left">
+        <div class="modal-body text-left {% if session.theme == 'dark' %}dark{% endif %}">
           Marking your neighborhood as private just means that it will not show up in the list that is visible to all users.
           To find a private neighborhood, you must search for the exact neighborhood name in the "Join" search field.
           <br>
@@ -178,7 +178,7 @@
         </div>
 
         <!-- Modal footer -->
-        <div class="modal-footer">
+        <div class="modal-footer {% if session.theme == 'dark' %}nav_dark{% endif %}">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
 
@@ -189,16 +189,16 @@
       <!-- The Modal (2) -->
   <div class="modal fade" id="myModal2">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+      <div class="modal-content {% if session.theme == 'dark' %}nav_dark{% endif %}">
 
         <!-- Modal Header -->
-        <div class="modal-header">
+        <div class="modal-header {% if session.theme == 'dark' %}nav_dark{% endif %}">
           <h4 class="modal-title">Nieghborhood Passwords</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="close {% if session.theme == 'dark' %}dark{% endif %}" data-dismiss="modal">&times;</button>
         </div>
 
         <!-- Modal body -->
-        <div class="modal-body text-left">
+        <div class="modal-body text-left {% if session.theme == 'dark' %}dark{% endif %}">
           If you choose to add a password to your neighborhood, the user must type the password to become a member of the nieghborhood.
           This can be used to help restrict access to friends/family.
           <br>
@@ -206,7 +206,7 @@
         </div>
 
         <!-- Modal footer -->
-        <div class="modal-footer">
+        <div class="modal-footer {% if session.theme == 'dark' %}nav_dark{% endif %}">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
 

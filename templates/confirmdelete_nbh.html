@@ -16,15 +16,15 @@
     <p>Are you sure you want to remove this neighborhood? Any  member who is only a part of this group will need to join
     or create a new one after this group is gone.</p>
     <br>
-    <p>
+    <div>
         <div style="color: red; font-weight: bold;">WARNING</div>
         <i>If you click Delete, the neighborhood will be permanently deleted.</i>
-    </p>
+    </div>
     <form action="/deleteneighborhood" method="post">
         <br>
         <p>Confirm <strong>your</strong> user password to delete this neighborhood.</p>
         <div class="form-group">
-            <input autofocus class="form-control" id="password" onkeyup="buttonShowCheck()" name="password" placeholder="confirm password" type="password">
+            <input autofocus class="form-control {% if session.theme == 'dark' %}dark{% endif %}" id="password" onkeyup="buttonShowCheck()" name="password" placeholder="confirm password" type="password">
         </div>
         <button class="btn btn-secondary" id="delete" type="submit" style="width: 190px" disabled>Delete</button><br><br><br>
         <button class="btn btn-primary" id="cancel" type="submit"style="width: 190px">Cancel</button>

@@ -28,12 +28,12 @@
         <div class="col-md-6 col-lg-4">
           <div class="input-group mb-3 long-input mx-auto">
             <div class="input-group-prepend">
-              <span class="input-group-text">
+              <span class="input-group-text {% if session.theme == 'dark' %}inputtextdark{% endif %}">
                 <span class="redstar">*</span>
                 Tool
               </span>
             </div>
-            <input id="tool_name" autofocus type="text" class="form-control" name="toolname" placeholder="tool name" value="{{ toolname }}" required>
+            <input id="tool_name" autofocus type="text" class="form-control {% if session.theme == 'dark' %}dark{% endif %}" name="toolname" placeholder="tool name" value="{{ toolname }}" required>
           </div>
           <!--
           <div class="form-check">
@@ -52,7 +52,7 @@
             </label>
             <br>
             -->
-            <div class="btn-group btn-group-sm">
+            <div class="btn-group btn-group-sm {% if session.theme == 'dark' %}inputtextdark{% endif %}">
               <button type="button" id="privatebtn" onclick=setVisibility('private') class={% if toolVis == 'private' %} 'btn btn-primary' {% else %} 'btn btn-light' {% endif %}>Private</button>
               <button type="button" id="publicbtn" onclick=setVisibility('public') class={% if toolVis == 'public' %} 'btn btn-primary' {% else %} 'btn btn-light' {% endif %}>Public</button>
               <button type="button" id="custombtn" onclick=setVisibility('custom') class={% if toolVis == 'custom' %} 'btn btn-primary' {% else %} 'btn btn-light' {% endif %}>
@@ -63,14 +63,14 @@
                 &nbsp; <a href="#"><u>?</u></a>
             </span>
             <div id="neighborhoodselector" class="selector_list expandanimate" style="max-height: 1px">
-              <ul class="list" style="overflow-y: scroll;">
+              <ul class="list {% if session.theme == 'dark' %}dark{% endif %}" style="overflow-y: scroll;">
 
                 {% for item in myNeighborhoods %}
-                <li class="list-item">
+                <li class="list-item {% if session.theme == 'dark' %}dark{% endif %}">
                   <input type="checkbox" class="hidden-box" id="{{ myNeighborhoods[item]['neighborhoodID'] }}" {{ 'checked' if myNeighborhoods[item]['isVisible'] }}/>
                   <label for="{{ myNeighborhoods[item]['neighborhoodID'] }}" class="check--label">
                     <span class="check--label-box"></span>
-                    <span class="check--label-text">{{ myNeighborhoods[item]['neighborhoodName'] }}</span>
+                    <span class="check--label-text {% if session.theme == 'dark' %}dark" style="background-color: transparent;"{% endif %}>{{ myNeighborhoods[item]['neighborhoodName'] }}</span>
                   </label>
                 </li>
                 {% endfor %}
@@ -107,7 +107,7 @@
               <span class="redstar">*</span>
               Select a tool category:
             </label><br>
-            <select class="form-control" id="sel1" name="category">
+            <select class="form-control {% if session.theme == 'dark' %}dark{% endif %}" id="sel1" name="category">
               <option value="hand" {{ 'selected' if category == 'hand' }}>Hand</option>
               <option value="power" {{ 'selected' if category == 'power' }}>Power</option>
               <option value="garden" {{ 'selected' if category == 'garden' }}>Garden</option>
@@ -124,7 +124,7 @@
 
               <img id="source_image" {% if photo %} src="{{ photo }}" class="makesquareimg" {% endif %} name="toolimage" alt=""><br>
               <div id="noimagetag" class="small copyright" {% if photo %} style="display: none;" {% endif %}><br>[ no image ]<br><br></div>
-      			  <label for="fileinput" class="custom-file-upload">
+      			  <label for="fileinput" class="custom-file-upload {% if session.theme == 'dark' %}dark" style="background-color: #cc5500;"{% endif %}>
                 <i class="fa fa-camera"></i> &nbsp; <span id="uploadtext">{% if photo %} Change Photo {% else %} Add a Photo {% endif %}</span> &nbsp; <i class="fa fa-upload"></i>
               </label>
               <input id="fileinput" type="file" accept="image/*">
@@ -148,19 +148,19 @@
             <span class="text-muted small">broken</span>
             <span class="text-muted small">brand new</span>
           </div>
-          <div class="form-control" style="width: 97%; border-style: none;">
+          <div class="form-control {% if session.theme == 'dark' %}dark{% endif %}" style="width: 97%; border-style: none;">
             <input type="range" id="healthbar" name="health" class="form-control-range" min="0" max="10" value="{{ health }}">
           </div>
           <br><br>
           <div class="d-flex justify-content-start">
             <label class="text-left" for="features">Features:</label><br>
           </div>
-          <textarea class="form-control" rows="5" id="features" name="features" style="width: 90%" placeholder="rules / fees / size / cordless / value / special instructions / etc">{{ description }}</textarea>
+          <textarea class="form-control {% if session.theme == 'dark' %}dark{% endif %}" rows="5" id="features" name="features" style="width: 90%" placeholder="rules / fees / size / cordless / value / special instructions / etc">{{ description }}</textarea>
           <br><br>
           <div class="d-flex justify-content-start">
             <label class="text-left" for="notes">Private Notes:</label><br>
           </div>
-          <textarea class="form-control" rows="6" id="notes" name="notes" style="width: 90%" placeholder="value / who (not?) to trust / other private notes ">{{ notes }}</textarea>
+          <textarea class="form-control {% if session.theme == 'dark' %}dark{% endif %}" rows="6" id="notes" name="notes" style="width: 90%" placeholder="value / who (not?) to trust / other private notes ">{{ notes }}</textarea>
 
           <br>
         </div>
@@ -196,16 +196,16 @@
       <!-- The Modal -->
   <div class="modal fade" id="myModal">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+      <div class="modal-content {% if session.theme == 'dark' %}nav_dark{% endif %}">
 
         <!-- Modal Header -->
-        <div class="modal-header">
+        <div class="modal-header {% if session.theme == 'dark' %}nav_dark{% endif %}">
           <h4 class="modal-title">Tool Visibility</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="close {% if session.theme == 'dark' %}dark{% endif %}" data-dismiss="modal">&times;</button>
         </div>
 
         <!-- Modal body -->
-        <div class="modal-body text-left">
+        <div class="modal-body text-left {% if session.theme == 'dark' %}dark{% endif %}">
           When a tool is marked as <strong>Public</strong>, it will be visible and available for borrowing to anyone in any of your neighborhoods.
           <br><br>
           You can use <strong>Private</strong> tools to manage your tools without them being available or visible to others.
@@ -216,7 +216,7 @@
         </div>
 
         <!-- Modal footer -->
-        <div class="modal-footer">
+        <div class="modal-footer {% if session.theme == 'dark' %}nav_dark{% endif %}">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
 

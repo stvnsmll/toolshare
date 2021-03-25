@@ -7,6 +7,28 @@ body {
     /*background-color: #292929;*/
 }
 
+.dark {
+  background-color: #272727;
+  color: #ffffff;
+  border-color: #3d4246!important;
+}
+
+.nav_dark {
+  background-color: #343a40!important;
+  border-color: #3d4246!important;
+}
+
+.dark .form-control:focus {
+  color: inherit;
+  background-color: inherit;
+}
+
+.inputtextdark {
+  background-color: #45494e;
+  color: #fff;
+  border-color: #3d4246;
+}
+
 /* hide all link formattings*/
 ul a {
     color: inherit; /* blue colors for links too */
@@ -133,7 +155,6 @@ main img
 .filters {
     display: block;
     border-bottom: 1px solid #dee2e6;
-    background-color: white;
     padding: 6px;
     height: 50px;
 }
@@ -179,6 +200,11 @@ main img
     z-index: 6;
 }
 
+.dark .filterIcon i {
+    background-color: #cecbcb4a;
+    border: 1px solid #343a40;
+}
+
 .redstar {
     color: red;
 }
@@ -186,6 +212,10 @@ main img
 .filterIcon i:hover {
     background-color: #e1e6ea;
     cursor: pointer;
+}
+
+.dark .filterIcon i:hover {
+    background-color: #272727;
 }
 
 .padd_left {
@@ -221,10 +251,6 @@ main img
     /*height: calc(100vh - 360px);*/
     height: 100vh;
     border-bottom: 1px solid #dee2e6;
-}
-
-.search_header {
-    background-color: green;
 }
 
 .list_div {
@@ -277,16 +303,17 @@ main img
     align-items: center;
     white-space: nowrap;
     overflow: hidden;
+    background-color: inherit;
 }
 
 .list-group-item:hover {
-    background-color: #f8f9fa;
+    background-color: #cecbcb7a;
     cursor: pointer;
 }
 
 .greyedout {
     color: #b3b3b3;
-    background-color: #f2f2f2;
+    background-color: #cecbcb4a;
 }
 
 .redout {
@@ -318,8 +345,14 @@ footer {
 
 .footercenter {
     border-right: 2px solid #ccced0;
-    border-top: 5px solid #e2e5e8;
-    border-bottom: 8px solid #e2e5e8;
+    border-top: 5px solid transparent;
+    border-bottom: 8px solid transparent
+}
+.nav_dark2 {
+  border-top-color: #343a40!important;
+  border-bottom-color: #343a40!important;
+  border-right-color: #565656!important;
+  background-color: #343a40!important;
 }
 
 .footer_button {
@@ -348,6 +381,10 @@ footer {
 .footer_button.active {
     color: black;
     border-bottom: 2px solid #cc5500;
+}
+
+.nav_dark3.active{
+  color: #c5c5c5;
 }
 
 .footer_button:active {
