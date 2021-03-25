@@ -16,7 +16,7 @@
     <p>from {{ oldEmail }} to:</p><br>
     <form action="/updateemail" method="post">
         <div class="form-group">
-            <input autofocus autocomplete="off" class="form-control" id="newEmail" onkeyup="buttonShowCheck()" name="newEmail" placeholder="new email" type="email">
+            <input autofocus autocomplete="off" class="form-control {% if session.theme == 'dark' %}dark{% endif %}" id="newEmail" onkeyup="buttonShowCheck()" name="newEmail" placeholder="new email" type="email">
         </div>
 
         <br><br>

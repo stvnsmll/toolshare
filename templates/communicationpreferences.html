@@ -56,7 +56,7 @@
             <span class="check--label-text" style="border: 0; font-size: 0.9em; padding: 0.1em;">Share my phone number with others when I lend or borrow a tool.</span>
           </label>
           <div id="phonenumber_div" style="padding-left: 15px; font-size: 0.9em; {% if phonepref == 'none' -%} display: none {%- endif %};">
-            <input id="phone_number" type="text" class="form-control" name="phone_number" placeholder="12E-4S6-7eight90" maxlength="70" value="{{ phonenumber }}">
+            <input id="phone_number" type="text" class="form-control {% if session.theme == 'dark' %}dark{% endif %}" name="phone_number" placeholder="12E-4S6-7eight90" maxlength="70" value="{{ phonenumber }}">
             <div style="font-size: 0.6em; color: grey;">
               You do not need to format it with numbers and dashes, you can use plain-text like "eight" or "E" to replace 8 or 3. Some
               examples are: (70 character maximum)<br>

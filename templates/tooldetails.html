@@ -122,7 +122,7 @@
             <!-- current user is NOT the owner of the tool -->
             {% if isavailable %}
                 <!-- Request the Tool Section -->
-                <div id="requestCommentContainer" style="display: none;"><textarea class="form-control" rows="3" name="requestComment" id="requestComment" style="width: 60%" placeholder="estimated duration / project / location / etc"></textarea><br>
+                <div id="requestCommentContainer" style="display: none;"><textarea class="form-control {% if session.theme == 'dark' %}dark{% endif %}" rows="3" name="requestComment" id="requestComment" style="width: 60%" placeholder="estimated duration / project / location / etc"></textarea><br>
                 <div class="small text-muted">(To place your request with a comment, leave this box open when you click Request)</div><br></div>
 
                 <div class="btn-group">

@@ -31,7 +31,7 @@
           <div class="d-flex justify-content-start">
             <label class="text-left" for="messsage"><strong>Questions or Feedback:</strong></label><br>
           </div>
-          <textarea class="form-control" rows="5" id="messsage" name="messsage" style="width: 90%" placeholder="your message" maxlength="800"></textarea>
+          <textarea class="form-control {% if session.theme == 'dark' %}dark{% endif %}" rows="5" id="messsage" name="messsage" style="width: 90%" placeholder="your message" maxlength="800"></textarea>
 
         <br>
         <br>

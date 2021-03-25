@@ -18,17 +18,17 @@
 
     <!-- Nav tabs -->
     <ul class="nav nav-tabs nav-justified container tab_format bottom_tabnav" role="tablist">
-        <li class="nav-item">
+        <li class="nav-item {% if session.theme == 'dark' %}nav_dark{% endif %}">
             <a class="active" data-toggle="tab" href="#toolhistory">Tool</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {% if session.theme == 'dark' %}nav_dark{% endif %}">
             <a class="" data-toggle="tab" href="#nbhhistory">Neighborhood</a>
         </li>
 
     </ul>
 
     <!-- Tab panes -->
-    <div class="tab-content actionpage">
+    <div class="tab-content {% if session.theme == 'dark' %}dark{% endif %}">
         <div id="toolhistory" name="toolhistory" class="tab-pane active">
           <div class="list-div">
             <table class="table table-sm" style="margin-bottom: 0; background-color: #994000; color: white;">
@@ -46,9 +46,9 @@
                 <tbody>
                   {% for item in toolhistory %}
                   <tr onclick="showInfoModal('{{ toolhistory[item]['toolname'] }}', '{{ toolhistory[item]['timestamp'] }}', '{{ toolhistory[item]['comment'] }}');">
-                    <th scope="row" style="width: 15%; white-space: nowrap; vertical-align: middle">{{ toolhistory[item]['date'] }}</th>
-                    <td style="width: 30%; vertical-align: middle">{{ toolhistory[item]['toolname'] }}</td>
-                    <td style="vertical-align: middle; padding-right: 0;">
+                    <th {% if session.theme == 'dark' %}class="dark"{% endif %} scope="row" style="width: 15%; white-space: nowrap; vertical-align: middle">{{ toolhistory[item]['date'] }}</th>
+                    <td {% if session.theme == 'dark' %}class="dark"{% endif %} style="width: 30%; vertical-align: middle">{{ toolhistory[item]['toolname'] }}</td>
+                    <td {% if session.theme == 'dark' %}class="dark"{% endif %} style="vertical-align: middle; padding-right: 0;">
                       <div style="">
                         {{ toolhistory[item]['comment'] }}
                       </div>
@@ -103,16 +103,16 @@
   <!-- The INFO Modal -->
   <div class="modal fade" id="myInfoModal">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+      <div class="modal-content {% if session.theme == 'dark' %}nav_dark{% endif %}">
 
         <!-- Modal Header -->
-        <div class="modal-header">
+        <div class="modal-header {% if session.theme == 'dark' %}nav_dark{% endif %}">
           <h4 class="modal-title">History Details</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="close {% if session.theme == 'dark' %}dark{% endif %}" data-dismiss="modal">&times;</button>
         </div>
 
         <!-- Modal body -->
-        <div class="modal-body text-left">
+        <div class="modal-body text-left {% if session.theme == 'dark' %}dark{% endif %}">
           <strong>Tool Name: </strong><span id="toolnamehere">defaultname</span>
           <br>
           <strong>Timestamp:</strong> <span id="timestamp">defaulttimestamp</span>
@@ -121,7 +121,7 @@
         </div>
 
         <!-- Modal footer -->
-        <div class="modal-footer">
+        <div class="modal-footer {% if session.theme == 'dark' %}nav_dark{% endif %}">
           <button type="button" class="btn btn-info" data-dismiss="modal">OK</button>
         </div>
 

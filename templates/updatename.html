@@ -15,7 +15,7 @@
     <h5>Update your name from {{ firstname }} to:</h5><br>
     <form action="/changename" method="post">
         <div class="form-group">
-            <input autofocus autocomplete="off" class="form-control" id="newName" onkeyup="buttonShowCheck()" name="newName" placeholder="new name" type="text">
+            <input autofocus autocomplete="off" class="form-control {% if session.theme == 'dark' %}dark{% endif %}" id="newName" onkeyup="buttonShowCheck()" name="newName" placeholder="new name" type="text">
         </div>
 
         <br><br>

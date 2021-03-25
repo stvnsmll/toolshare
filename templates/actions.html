@@ -83,7 +83,7 @@
                     <div class="btn btn-warning badge-pill roundaction" onclick="toggleResponse('responseCommentContainerrequestid{{ myapprovals[item]['actionid'] }}')"><i class="fa fa-reply fa-lg"></i></div>
                     <div id="responseCommentContainerrequestid{{ myapprovals[item]['actionid'] }}" style="max-height: 0px;" class="expandanimate">
                         <br>
-                        <textarea class="form-control" rows="2" name="responseComment{{ myapprovals[item]['actionid'] }}" id="responseComment{{ myapprovals[item]['actionid'] }}" style="width: 80%;" placeholder="Response..."></textarea>
+                        <textarea class="form-control {% if session.theme == 'dark' %}dark{% endif %}" rows="2" name="responseComment{{ myapprovals[item]['actionid'] }}" id="responseComment{{ myapprovals[item]['actionid'] }}" style="width: 80%;" placeholder="Response..."></textarea>
                         <br>
                         <div class="small text-muted">(To respond with a comment, leave this box open when you approve or deny)</div>
                     </div>
