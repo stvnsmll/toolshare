@@ -13,8 +13,9 @@
 {% endblock %}
 
 {% block main %}
-<div class="scrolling_page">
-    <br>
+<div class="scrolling_page" id="scrollme">
+    <div class="smalltopspace" id="mainstart"></div>
+    <div class="smalltopspace"></div>
     <h3>Manage Your Account</h3>
     <div class="smalltopspace"></div>
     <div style="text-align: left; width: max-content; margin: auto;">
@@ -57,13 +58,15 @@
         <a href="/ContactUs">Feedback or Contact Us</a><br>
         <a href="/TermsAndConditions" target="_blank" rel="noopener noreferrer">Terms and Conditions</a><br>
         <a href="/PrivacyPolicy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-        <input id="hiddenInfoBox" name="returnedAction" value=""></input>
+        <input id="hiddenInfoBox" style="display: none;" name="returnedAction" value=""></input>
         <div class="smalltopspace"></div>
     </form>
     <div class="deadspace"></div>
 </div>
 
     <script>
+
+      document.getElementById('scrollme').scrollBy(0, {{ scrollPos }});
 
         var hiddenInfoBox = document.getElementById("hiddenInfoBox");
 
@@ -74,8 +77,6 @@
         var viewHistory = document.getElementById("viewHistory");
         var deleteAccount = document.getElementById("deleteAccount");
         var done = document.getElementById("done");
-
-        hiddenInfoBox.style.display = 'none';
 
         changeName.onclick = function(){
             hiddenInfoBox.value = "changeName";
@@ -106,12 +107,15 @@
         };
 
         const chk = document.getElementById('chk');
-        const topnavbar = document.getElementById('topnavbar');
+
 
         chk.addEventListener('change', () => {
+          var rect = document.getElementById('mainstart').getBoundingClientRect();
+          pagepos = -1 * (rect.top - 56);
+
         	document.body.classList.toggle('dark');
           $('#spinnerCogModal').modal('show');
-          //pause for 1 second...
+          //pause for 1 second...?
           const form = document.createElement('form');
           form.method = 'post';
           form.action = "/manageaccount";
@@ -120,12 +124,18 @@
           hiddenField.type = 'hidden';
           hiddenField.name = "returnedAction";
           hiddenField.value = "toggleTheme";
+          const hiddenField2 = document.createElement('input');
+          hiddenField2.type = 'hidden';
+          hiddenField2.name = "pageoffset";
+          hiddenField2.value = pagepos;
 
+          form.appendChild(hiddenField2);
           form.appendChild(hiddenField);
-
           document.body.appendChild(form);
           form.submit();
         });
+
+
 
 
     </script>

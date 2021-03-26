@@ -93,16 +93,16 @@
 <!-- The Modal -->
 <div class="modal fade" id="myModal">
 <div class="modal-dialog modal-dialog-centered">
-<div class="modal-content">
+<div class="modal-content {% if session.theme == 'dark' %}nav_dark{% endif %}">
 
   <!-- Modal Header -->
-  <div class="modal-header">
+  <div class="modal-header {% if session.theme == 'dark' %}nav_dark{% endif %}">
     <h4 class="modal-title">Email Usage</h4>
-    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <button type="button" class="close {% if session.theme == 'dark' %}dark{% endif %}" data-dismiss="modal">&times;</button>
   </div>
 
   <!-- Modal body -->
-  <div class="modal-body text-left">
+  <div class="modal-body text-left {% if session.theme == 'dark' %}dark{% endif %}">
     <p>
       We only use your email for communication regarding your tools. You will get notified by email when
       someone wants to borrow a tool or when your request to borrow a tool gets approved or rejected.
@@ -125,7 +125,7 @@
   </div>
 
   <!-- Modal footer -->
-  <div class="modal-footer">
+  <div class="modal-footer {% if session.theme == 'dark' %}nav_dark{% endif %}">
     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
   </div>
 

@@ -1454,8 +1454,9 @@ def manageaccount():
     firstname = miscInfo["firstname"]
     username = miscInfo["username"]
     email = miscInfo["email"]
+    scrollPos = 0
     if request.method == "GET":
-        return render_template("manageaccount.html", openActions=countActions(), firstname=firstname, username=username, email=email)
+        return render_template("manageaccount.html", openActions=countActions(), firstname=firstname, username=username, email=email, scrollPos=scrollPos)
     else:
         formAction = request.form.get("returnedAction")
         if formAction == "changeName":
@@ -1479,7 +1480,8 @@ def manageaccount():
                 session["theme"] = "light"
             #set the preference for the user
             db.execute("UPDATE users SET theme = :newTheme WHERE uuid = :userUUID;", userUUID=userUUID, newTheme=session["theme"])
-            return redirect("/manageaccount")
+            scrollPos = request.form.get("pageoffset")
+            return render_template("manageaccount.html", openActions=countActions(), firstname=firstname, username=username, email=email, scrollPos=scrollPos)
         else:
             return apology("Misc Error")
 

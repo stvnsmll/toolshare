@@ -18,6 +18,9 @@
         <div class="form-group">
             <input autofocus autocomplete="off" class="form-control {% if session.theme == 'dark' %}dark{% endif %}" id="newEmail" onkeyup="buttonShowCheck()" name="newEmail" placeholder="new email" type="email">
         </div>
+        <div class="text-muted" style="font-size: smaller;">
+          You will be required to validate this email address with a code that will be sent in an email to the new address.
+        </div>
 
         <br><br>
         <button class="btn btn-primary" id="emailChange" type="submit" style="width: auto" data-toggle="modal" data-target="#spinnerCogModal" disabled>Change Email Address</button>

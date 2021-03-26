@@ -29,7 +29,7 @@
         </p>
 
         <div class="form-group">
-            <input autofocus class="form-control" id="authcode" name="authcode" placeholder="* * * * * *" type="text" style="text-transform:uppercase; font-size: 1.3em; color: #cc5500; font-weight: bold; width: 6em; text-align: center;" maxlength="6">
+            <input autofocus class="form-control {% if session.theme == 'dark' %}dark{% endif %}" id="authcode" name="authcode" placeholder="* * * * * *" type="text" style="text-transform:uppercase; font-size: 1.3em; color: #cc5500; font-weight: bold; width: 6em; text-align: center;" maxlength="6">
         </div>
         <button class="btn btn-primary" id="confirmAccount" type="submit" style="width: 220px" disabled>Confirm</button><br><br>
         <button class="btn btn-outline-info btn-sm" id="resendCode" type="submit"style="width: 200px">Send me a new code</button>

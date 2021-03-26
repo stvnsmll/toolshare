@@ -29,7 +29,7 @@
                 Tool
               </span>
             </div>
-            <input id="tool_name" autofocus type="text" class="form-control" name="toolname" placeholder="tool name" autocomplete="off" required>
+            <input id="tool_name" autofocus type="text" class="form-control {% if session.theme == 'dark' %}dark{% endif %}" name="toolname" placeholder="tool name" autocomplete="off" required>
           </div>
           <div class="form-check">
             <!--
@@ -91,7 +91,7 @@
               <span class="redstar">*</span>
               Select a tool category:
             </label><br>
-            <select class="form-control" id="sel1" name="category">
+            <select class="form-control {% if session.theme == 'dark' %}dark{% endif %}" id="sel1" name="category">
               <option value="hand">Hand</option>
               <option value="power">Power</option>
               <option value="garden">Garden</option>
@@ -128,19 +128,19 @@
             <span class="text-muted small">broken</span>
             <span class="text-muted small">brand new</span>
           </div>
-          <div class="form-control" style="width: 97%; border-style: none;">
+          <div class="form-control {% if session.theme == 'dark' %}dark{% endif %}" style="width: 97%; border-style: none;">
             <input type="range" id="healthbar" name="health" class="form-control-range" min="0" max="10" value="8">
           </div>
           <br><br>
           <div class="d-flex justify-content-start">
             <label class="text-left" for="features">Features:</label><br>
           </div>
-          <textarea class="form-control" rows="5" id="features" name="features" style="width: 90%" placeholder="rules / fees / size / cordless / special instructions / etc"></textarea>
+          <textarea class="form-control {% if session.theme == 'dark' %}dark{% endif %}" rows="5" id="features" name="features" style="width: 90%" placeholder="rules / fees / size / cordless / special instructions / etc"></textarea>
           <br><br>
           <div class="d-flex justify-content-start">
             <label class="text-left" for="notes">Private Notes:</label><br>
           </div>
-          <textarea class="form-control" rows="6" id="notes" name="notes" style="width: 90%" placeholder="value / who (not?) to trust / other private notes "></textarea>
+          <textarea class="form-control {% if session.theme == 'dark' %}dark{% endif %}" rows="6" id="notes" name="notes" style="width: 90%" placeholder="value / who (not?) to trust / other private notes "></textarea>
 
           <br>
         </div>
@@ -171,16 +171,16 @@
       <!-- The Modal -->
   <div class="modal fade" id="myModal">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+      <div class="modal-content {% if session.theme == 'dark' %}nav_dark{% endif %}">
 
         <!-- Modal Header -->
-        <div class="modal-header">
+        <div class="modal-header {% if session.theme == 'dark' %}nav_dark{% endif %}">
           <h4 class="modal-title">Tool Visibility</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="close {% if session.theme == 'dark' %}dark{% endif %}" data-dismiss="modal">&times;</button>
         </div>
 
         <!-- Modal body -->
-        <div class="modal-body text-left">
+        <div class="modal-body text-left {% if session.theme == 'dark' %}dark{% endif %}">
           When a tool is marked as <strong>Public</strong>, it will be visible and available for borrowing to anyone in any of your neighborhoods.
           <br><br>
           You can use <strong>Private</strong> tools to manage your tools without them being available or visible to others.
@@ -191,7 +191,7 @@
         </div>
 
         <!-- Modal footer -->
-        <div class="modal-footer">
+        <div class="modal-footer {% if session.theme == 'dark' %}nav_dark{% endif %}">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
 
