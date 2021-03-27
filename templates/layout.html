@@ -115,7 +115,7 @@
 
         {% if get_flashed_messages() %}
             <header>
-                <div id="flashed_message" class="alert alert-primary border text-center col-md-8 offset-md-2" role="alert">
+                <div id="flashed_message" class="alert border text-center col-md-8 offset-md-2 {% if session.theme == 'dark' %}alert-dark{% else %}alert-primary{% endif %}" role="alert">
                     {{ get_flashed_messages() | join(" ") }}
                 </div>
             </header>

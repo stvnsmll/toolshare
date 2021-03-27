@@ -2142,6 +2142,9 @@ def privacypolicy():
 def format_tools(databasepull):
     formattedtools = {}
     for tool in databasepull:
+        owner = "someoneelse"
+        if tool["owneruuid"] == session.get("user_uuid"):
+            owner = "mine"
         if tool["category"] == "hand":
             category = "æ"
         elif tool["category"] == "power":
@@ -2156,7 +2159,7 @@ def format_tools(databasepull):
             photo = ""
         else:
             photo = get_image_s3(tool["toolid"] + "_thumb.png")
-        info = {'toolname': tool["toolname"], 'toolid': tool["toolid"], 'state': tool["state"], 'category': category, 'private': tool["private"], 'photo': photo}
+        info = {'toolname': tool["toolname"], 'toolid': tool["toolid"], 'state': tool["state"], 'category': category, 'private': tool["private"], 'photo': photo, 'owner': owner}
         formattedtools[tool["toolid"]] = info
     '''Tool Category Symobls:
          Hand: æ

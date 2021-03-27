@@ -72,13 +72,13 @@
     <button class="btn btn-info" data-toggle="collapse" data-target="#demo">View Tool History</button>
 
     <div id="demo" class="collapse">
-        <div class="history_tool container">
+        <div class="history_tool container {% if session.theme == 'dark' %}dark{% endif %}">
             <table class="table table-sm table-hover">
                 <tbody>
                   {% for item in toolhistory %}
                   <tr>
-                    <th scope="row" style="white-space: nowrap;">{{ toolhistory[item]['date'] }}</th>
-                    <td style="height: 32px; overflow-x: scroll;">
+                    <th {% if session.theme == 'dark' %}class="dark"{% endif %} scope="row" style="white-space: nowrap;">{{ toolhistory[item]['date'] }}</th>
+                    <td {% if session.theme == 'dark' %}class="dark"{% endif %} scope="row" style="height: 32px; overflow-x: scroll;">
                       <div style="height: 24px;">
                         {{ toolhistory[item]['comment'] }}
                       </div>
