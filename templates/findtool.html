@@ -171,6 +171,7 @@
       var value = search2.value;
       if (value == '') {
         cancel2.style.visibility = 'hidden';
+        setfilters2();
       } else {
         cancel2.style.visibility = 'visible';
       }
@@ -179,6 +180,7 @@
 
     $(document).on('click', '#cancel2', function(){
         $("#search2").val('').trigger("keyup").focus();
+        setfilters2();
     });
 
 

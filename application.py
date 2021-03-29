@@ -994,8 +994,9 @@ def neighborhood_details():
         elif formAction == "edit":
             return redirect("/editneighborhood?neighborhoodid=" + neighborhoodid)
         elif formAction == "managemembers":
-            # TODO
-            return apology("todo")
+            # # TODO:
+            # ensure that the current user is an admin
+            return redirect("/managemembers?neighborhoodid=" + neighborhoodid)
         elif formAction == "delete":
             #deleteneighborhood(neighborhoodid,neighborhoodid)
             return redirect("/deleteneighborhood?neighborhoodid=" + neighborhoodid)
@@ -1058,6 +1059,62 @@ def neighborhood_details():
 
         elif formAction == "cancel":
             return redirect(url_for('neighborhoods') + '#mine')
+        else:
+            return apology("Misc Error")
+
+
+@app.route("/managemembers", methods=["GET", "POST"])
+@login_required
+@neighborhood_required
+def managemembers():
+    """Show user neighborhood details page"""
+    userUUID = session.get("user_uuid")
+    firstname = session.get("firstname")
+
+    if request.method == "GET":
+        # Use: to get the info from the URL /neighborhood_details?neighborhoodid=3
+        neighborhoodid = request.args.get("neighborhoodid")
+        if not neighborhoodid:
+            return apology("Must provide a neighborhood id")
+        else:
+            neighborhooddeetz = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid = :neighborhoodid AND deleted = 0;", neighborhoodid=neighborhoodid)
+            if len(neighborhooddeetz) == 0:
+                # search by name
+                neighborhoodfind = db.execute("SELECT * FROM neighborhoods WHERE neighborhood = :neighborhood;", neighborhood=neighborhoodid)
+                if len(neighborhoodfind) == 0:
+                    return apology("Could not find that neighborhood")
+                else:
+                    neighborhooddeetz = db.execute("SELECT * FROM neighborhoods WHERE neighborhood = :neighborhood;", neighborhood=neighborhoodid)
+            neighborhooddeetz = neighborhooddeetz[0]
+            neighborhoodid = neighborhooddeetz["neighborhoodid"]
+            neighborhoodname = neighborhooddeetz["neighborhood"]
+            # todo: ensure the user is an admin of the neighborhood
+            memberlist_db = db.execute("SELECT DISTINCT useruuid FROM memberships WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)
+            membercount = len(memberlist_db)
+            allMembers = {}
+            for i in range(len(memberlist_db)):
+                memberinfo = db.execute("SELECT * FROM users WHERE uuid = :uuid;", uuid=memberlist_db[i]['useruuid'])[0]
+                info = {"uuid": memberlist_db[i]['useruuid'],
+                        "username": memberinfo['username'],
+                        "firstname": memberinfo['firstname']}
+                allMembers[memberlist_db[i]['useruuid']] = info
+
+            return render_template("managemembers.html", openActions=countActions(), firstname=firstname, neighborhoodname=neighborhoodname, membercount=membercount, neighborhoodid=neighborhoodid, allMembers=allMembers)
+    else:
+        formAction = request.form.get("returnedAction")
+        if formAction == "sendMail":
+            nbhChecks = request.form.getlist("nbhChecks")
+            shareChecks = request.form.getlist("shareChecks")
+            if len(nbhChecks) == 0:
+                flash("You must pick at least one neighborhood.")
+                return apology("one neighborhood", "you must pick at least one")
+            if "email" in shareChecks:
+                print("YES: share the email address")
+            else:
+                print("NO: don't share the email address")
+            return apology("todo")
+        elif formAction == "cancel":
+            return redirect("/findtool")
         else:
             return apology("Misc Error")
 

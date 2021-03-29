@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block title %}
-    Neighborhood Details
+    Manage Members
 {% endblock %}
 
 {% block firstname %}
@@ -14,75 +14,86 @@
 
 
 {% block main %}
-<div class="scrolling_page">
+<div class="scrolling_page p-3">
     <br>
-    <h3>Neighborhood Details</h3>
+    <h3>Management of Members</h3>
     <h4>{{ neighborhoodname }}</h4>
     <hr>
-    <p>
-        Zip Code: {{ zipcode }}
+    <div style="text-align: left; max-width: 600px; margin: auto;">
+        As an admin of the neighborhood, you have extra responsibility to oversee the group along with extra permissions for
+        managing the neighborhood members.<br>
+        There must always be an admin for each neighborhood. If no admin remains, the neighborhood will be permanently deleted.<br>
         <br>
-        Members: {{ membercount }}<br><br>
-    </p>
-    <h5>Description:</h5>
-    {% autoescape false %}
-    <p>
-        <i>{% for line in description %}{{ line }}<br />{% endfor %}</i><br><br>
-    </p>
-    {% endautoescape %}
-    <h5>Privacy Settings</h5>
-    <p>
-        Private Group: {{ privateYN }} <br>
-        Password Required: {{ passwordYN }}
-    </p>
+        As an admin you may perform the following additional member actions:<br>
+        <table style="margin-left: 5vw;">
+          <tr>
+            <td><i class="fa fa-plus"></td>
+            <td style="text-align: left; padding-left: 10px;">Add a new member by username or email address</td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-minus"></td>
+            <td style="text-align: left; padding-left: 10px;">Remove a member</td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-ban"></td>
+            <td style="text-align: left; padding-left: 10px;">Block/ban a member</td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-id-badge"></td>
+            <td style="text-align: left; padding-left: 10px;">Grant a member admin access</td>
+          </tr>
+        </table>
+    </div>
+    <div class="smalltopspace"></div>
+    <div class="smalltopspace"></div>
 
-    <hr>
+    <h5>Members</h5>
+    <form action="/managemembers" method="post">
+      <div class="container p-4" style="max-width: 500px; margin: auto; padding-top: 0!important; padding-bottom: 0!important;">
+        <div style="border-bottom: 1px solid #ecf0f1; padding: 0;">
+          {% for member in allMembers %}
+          <div class="flex-container" style="flex-direction: row; display: flex; border: 1px solid #ecf0f1; border-bottom: 0; padding: 9px">
+            <div style="flex-grow: 8; text-align: left; padding-left: 15px;">{{ allMembers[member]['firstname'] }}</div>
+            <div class="memberaction"><i class="fa fa-minus"></i></div>
+            <div class="memberaction"><i class="fa fa-ban"></i></div>
+            <div class="memberaction"><i class="fa fa-id-badge"></i></div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
 
-    <form action="/neighborhood_details" method="post">
-      {% if notmember %}
-        {% if passwordYN == 'Yes' -%}
-          <input class="form-control {% if session.theme == 'dark' %}dark{% endif %}" onkeyup="buttonShowCheck()" id="nbhpw" name="password" type="password" placeholder="password required" required></input><br><br>
-        {%- endif %}
-        <button class="btn btn-info" onclick="updateinfobox('join')" id="joinbtn" type="submit" style="width: 260px" {% if passwordYN == 'Yes' -%}disabled{%- endif %}>Join Neighborhood</button><br><br>
-      {% else %}
-        <div class="form-check">
-          <button type="button" id="toolvisbutton" onclick=setVisibility() class='btn btn-info'>Modify Shared Tools List&nbsp;&nbsp;<i id="chevron1" class="fa fa-chevron-down spinme" style="color: #f2f2f2; font-size: 10px"></i></button>
-          <span class="text-muted" data-toggle="modal" data-target="#myModal">
-            &nbsp; <a href="#"><u>?</u></a>
-          </span>
-          <div id="toolselector" class="expandanimate" style="max-height: 0px">
-            <div class="btn-group btn-group-sm" style="margin-top: 5px">
-              <button class="btn btn-success" onclick="updateinfobox('updatetoolvis')" type="submit">Save <i class="fa fa-check"></i></button>
-              <button type="button" class="btn btn-warning" onclick="window.location.reload();">Discard <i class="fa fa-times"></i></button>
-            </div>
-            <div class="selector_list ">
-              <ul class="list {% if session.theme == 'dark' %}dark{% endif %}" style="overflow-y: scroll;">
-                {% for item in myTools %}
-                <li class="list-item {% if session.theme == 'dark' %}dark{% endif %}">
-                  <input type="checkbox" class="hidden-box" id="{{ myTools[item]['toolID'] }}" {{ 'checked' if myTools[item]['isVisible'] }}/>
-                  <label for="{{ myTools[item]['toolID'] }}" class="check--label">
-                    <span class="check--label-box"></span>
-                    <span class="check--label-text {% if session.theme == 'dark' %}dark" style="background-color: transparent;"{% else %}"{% endif %}>{{ myTools[item]['toolName'] }}</span>
-                  </label>
-                  <div class="list-link" onclick="gotosite('{{ myTools[item]['toolID'] }}')">
-                    <i class="fa fa-link"></i>
-                  </div>
-                </li>
-                {% endfor %}
-              </ul>
-            </div>
+      <button class="btn btn-outline-info" onclick="updateinfobox('newMember')" type="submit" style="width: 260px; margin-top: 5px;"><i class="fa fa-plus"></i> Add a Member</button><br>
+      <div class="smalltopspace"></div>
+      <div class="smalltopspace"></div>
+      <div class="form-check" style="padding-left: 0;">
+        <button type="button" id="toolvisbutton" onclick=setVisibility() class='btn btn-secondary'>Banned User List&nbsp;&nbsp;<i id="chevron1" class="fa fa-chevron-down spinme" style="color: #f2f2f2; font-size: 10px"></i></button>
+        <div id="toolselector" class="expandanimate" style="max-height: 0px">
+          <div class="btn-group btn-group-sm" style="margin-top: 5px">
+            <button class="btn btn-success" onclick="updateinfobox('updatetoolvis')" type="submit">Apply <i class="fa fa-check"></i></button>
+            <button type="button" class="btn btn-warning" onclick="window.location.reload();">Discard <i class="fa fa-times"></i></button>
+          </div>
+          <div style="font-size: 0.8em; color: grey;">Check a user to un-ban them</div>
+          <div class="selector_list ">
+            <ul class="list {% if session.theme == 'dark' %}dark{% endif %}" style="overflow-y: scroll;">
+
+            {% for item in myTools %}
+            <li class="list-item {% if session.theme == 'dark' %}dark{% endif %}">
+              <input type="checkbox" class="hidden-box" id="{{ myTools[item]['toolID'] }}" {{ 'checked' if myTools[item]['isVisible'] }}/>
+              <label for="{{ myTools[item]['toolID'] }}" class="check--label">
+                <span class="check--label-box"></span>
+                <span class="check--label-text {% if session.theme == 'dark' %}dark" style="background-color: transparent;"{% endif %}>{{ myTools[item]['toolName'] }}</span>
+              </label>
+              <div class="list-link" onclick="gotosite('{{ myTools[item]['toolID'] }}')">
+                <i class="fa fa-link"></i>
+              </div>
+            </li>
+            {% endfor %}
+
+          </ul>
           </div>
         </div>
-        <br>
-        {% if yesadmin %}
-            <button class="btn btn-secondary" onclick="updateinfobox('edit')" type="submit" style="width: 260px">Edit Details</button><br><br>
-            <button class="btn btn-secondary" onclick="updateinfobox('managemembers')" type="submit" style="width: 260px">Manage Members</button><br><br>
-            <button class="btn btn-danger" onclick="updateinfobox('delete')" type="submit" style="width: 260px">Delete Neighborhood</button><br><br>
-        {% endif %}
-
-        <button class="btn btn-warning" onclick="updateinfobox('leave')" type="submit" style="width: 260px">Leave Neighborhood</button><br><br>
-
-        {% endif %}
+      </div>
+      <div class="smalltopspace"></div>
 
         <a class="btn btn-primary" onclick="window.history.go(-1); return false;" style="width: 190px; color: white;">Cancel</a>
         <br><input id="hiddenInfoBox" style="display: none;" name="returnedAction" value=""></input>
