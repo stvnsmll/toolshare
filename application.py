@@ -1099,7 +1099,16 @@ def managemembers():
                         "firstname": memberinfo['firstname']}
                 allMembers[memberlist_db[i]['useruuid']] = info
 
-            return render_template("managemembers.html", openActions=countActions(), firstname=firstname, neighborhoodname=neighborhoodname, membercount=membercount, neighborhoodid=neighborhoodid, allMembers=allMembers)
+            bannedlist_db = db.execute("SELECT DISTINCT useruuid FROM membershipbans WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)
+            bannedUsers = {}
+            for i in range(len(bannedlist_db)):
+                banneduserinfo = db.execute("SELECT * FROM users WHERE uuid = :uuid;", uuid=bannedlist_db[i]['useruuid'])[0]
+                info = {"uuid": bannedlist_db[i]['useruuid'],
+                        "username": banneduserinfo['username'],
+                        "firstname": banneduserinfo['firstname']}
+                bannedUsers[bannedlist_db[i]['useruuid']] = info
+
+            return render_template("managemembers.html", openActions=countActions(), firstname=firstname, neighborhoodname=neighborhoodname, membercount=membercount, neighborhoodid=neighborhoodid, allMembers=allMembers, bannedUsers=bannedUsers)
     else:
         formAction = request.form.get("returnedAction")
         if formAction == "sendMail":

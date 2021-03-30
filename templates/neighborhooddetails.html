@@ -62,7 +62,7 @@
                   <input type="checkbox" class="hidden-box" id="{{ myTools[item]['toolID'] }}" {{ 'checked' if myTools[item]['isVisible'] }}/>
                   <label for="{{ myTools[item]['toolID'] }}" class="check--label">
                     <span class="check--label-box"></span>
-                    <span class="check--label-text {% if session.theme == 'dark' %}dark" style="background-color: transparent;"{% else %}"{% endif %}>{{ myTools[item]['toolName'] }}</span>
+                    <span class="check--label-text {% if session.theme == 'dark' %}dark{% endif %}">{{ myTools[item]['toolName'] }}</span>
                   </label>
                   <div class="list-link" onclick="gotosite('{{ myTools[item]['toolID'] }}')">
                     <i class="fa fa-link"></i>

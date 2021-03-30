@@ -28,7 +28,12 @@
         <table style="margin-left: 5vw;">
           <tr>
             <td><i class="fa fa-plus"></td>
-            <td style="text-align: left; padding-left: 10px;">Add a new member by username or email address</td>
+            <td style="text-align: left; padding-left: 10px;">
+              Add a new member by username or email address
+              <span class="text-muted" data-toggle="modal" data-target="#addMemberModal" style="cursor: pointer; font-size: 0.8em;">
+                &nbsp; <i class="fa fa-info-circle"></i>
+              </span>
+            </td>
           </tr>
           <tr>
             <td><i class="fa fa-minus"></td>
@@ -50,62 +55,106 @@
     <h5>Members</h5>
     <form action="/managemembers" method="post">
       <div class="container p-4" style="max-width: 500px; margin: auto; padding-top: 0!important; padding-bottom: 0!important;">
-        <div style="border-bottom: 1px solid #ecf0f1; padding: 0;">
+        <div class="membercontainer {% if session.theme == 'dark' %}dark{% endif %}">
           {% for member in allMembers %}
-          <div class="flex-container" style="flex-direction: row; display: flex; border: 1px solid #ecf0f1; border-bottom: 0; padding: 9px">
-            <div style="flex-grow: 8; text-align: left; padding-left: 15px;">{{ allMembers[member]['firstname'] }}</div>
-            <div class="memberaction"><i class="fa fa-minus"></i></div>
-            <div class="memberaction"><i class="fa fa-ban"></i></div>
-            <div class="memberaction"><i class="fa fa-id-badge"></i></div>
+          <div class="flex-container memberlist {% if session.theme == 'dark' %}dark{% endif %}">
+            <div style="flex-grow: 8; text-align: left; padding-left: 15px;" title="{{ allMembers[member]['username'] }}">{{ allMembers[member]['firstname'] }}</div>
+            <div class="memberaction" title="remove user"><i class="fa fa-minus"></i></div>
+            <div class="memberaction" title="ban user"><i class="fa fa-ban"></i></div>
+            <div class="memberaction" title="make user an admin"><i class="fa fa-id-badge"></i></div>
           </div>
           {% endfor %}
+          <div id="new_member_field" class="flex-container memberlist {% if session.theme == 'dark' %}dark{% endif %}" style="background-color: #ffc772d9; display: none;">
+            <div style="flex-grow: 1; text-align: left;" title="add ther new name here">
+              <input id="new_member" type="text" class="form-control {% if session.theme == 'dark' %}dark{% endif %}" name="new_member" placeholder="username or email" maxlength="70" value="" autocomplete="off">
+            </div>
+            <div class="memberaction" title="info" style="color: #a5a5a5; font-size: 1.2em;" data-toggle="modal" data-target="#addMemberModal"><i class="fa fa-info-circle"></i></div>
+            <div class="memberaction" title="save" style="color: green; font-size: 1.2em;"><i class="fa fa-check"></i></div>
+            <div class="memberaction" title="cancel" onclick="hide_new_member_field()" style="color: red; font-size: 1.2em;"><i class="fa fa-times"></i></div>
+          </div>
         </div>
       </div>
 
-      <button class="btn btn-outline-info" onclick="updateinfobox('newMember')" type="submit" style="width: 260px; margin-top: 5px;"><i class="fa fa-plus"></i> Add a Member</button><br>
+      <button id="new_member_button" class="btn btn-outline-info" onclick="show_new_member_field()" type="button" style="width: 260px; margin-top: 5px;"><i class="fa fa-plus"></i> Add a Member</button><br>
       <div class="smalltopspace"></div>
-      <div class="smalltopspace"></div>
+
+      {% if bannedUsers %}
       <div class="form-check" style="padding-left: 0;">
-        <button type="button" id="toolvisbutton" onclick=setVisibility() class='btn btn-secondary'>Banned User List&nbsp;&nbsp;<i id="chevron1" class="fa fa-chevron-down spinme" style="color: #f2f2f2; font-size: 10px"></i></button>
+        <button type="button" id="toolvisbutton" onclick=setVisibility() class='btn btn-warning'>Banned User List&nbsp;&nbsp;<i id="chevron1" class="fa fa-chevron-down spinme" style="color: #252525; font-size: 10px"></i></button>
         <div id="toolselector" class="expandanimate" style="max-height: 0px">
           <div class="btn-group btn-group-sm" style="margin-top: 5px">
-            <button class="btn btn-success" onclick="updateinfobox('updatetoolvis')" type="submit">Apply <i class="fa fa-check"></i></button>
-            <button type="button" class="btn btn-warning" onclick="window.location.reload();">Discard <i class="fa fa-times"></i></button>
+            <button class="btn btn-success" onclick="updateinfobox('updatetoolvis')" type="submit">Un-Ban <i class="fa fa-check"></i></button>
+            <button type="button" class="btn btn-warning" onclick="hideBanList();">Discard <i class="fa fa-times"></i></button>
           </div>
           <div style="font-size: 0.8em; color: grey;">Check a user to un-ban them</div>
           <div class="selector_list ">
             <ul class="list {% if session.theme == 'dark' %}dark{% endif %}" style="overflow-y: scroll;">
 
-            {% for item in myTools %}
+            {% for user in bannedUsers %}
             <li class="list-item {% if session.theme == 'dark' %}dark{% endif %}">
-              <input type="checkbox" class="hidden-box" id="{{ myTools[item]['toolID'] }}" {{ 'checked' if myTools[item]['isVisible'] }}/>
-              <label for="{{ myTools[item]['toolID'] }}" class="check--label">
+              <input type="checkbox" class="hidden-box" id="{{ bannedUsers[user]['uuid'] }}"/>
+              <label for="{{ bannedUsers[user]['uuid'] }}" class="check--label">
                 <span class="check--label-box"></span>
-                <span class="check--label-text {% if session.theme == 'dark' %}dark" style="background-color: transparent;"{% endif %}>{{ myTools[item]['toolName'] }}</span>
+                <span class="check--label-text {% if session.theme == 'dark' %}dark{% endif %}" title="{{ bannedUsers[user]['username'] }}">{{ bannedUsers[user]['firstname'] }}</span>
               </label>
-              <div class="list-link" onclick="gotosite('{{ myTools[item]['toolID'] }}')">
-                <i class="fa fa-link"></i>
-              </div>
             </li>
             {% endfor %}
+            {% if not bannedUsers -%}
+            <li class="list-item {% if session.theme == 'dark' %}dark{% endif %}">
+              <input type="checkbox" class="hidden-box" id="emptybanlist" disabled/>
+              <label for="emptybanlist" class="check--label" style="justify-content: center; cursor: default">
+                <span class="check--label-text {% if session.theme == 'dark' %}dark{% endif %}" style="border: 0; cursor: default;"> -- no one banned --</span>
+              </label>
+            </li>
+            {%- endif %}
 
           </ul>
           </div>
         </div>
       </div>
+      {% endif %}
+      <div class="smalltopspace"></div>
       <div class="smalltopspace"></div>
 
-        <a class="btn btn-primary" onclick="window.history.go(-1); return false;" style="width: 190px; color: white;">Cancel</a>
-        <br><input id="hiddenInfoBox" style="display: none;" name="returnedAction" value=""></input>
-        <br><input id="hiddenInfoBox2" style="display: none;" name="nbhid" value="{{ neighborhoodid }}"></input>
-        <input id="toolvis" name="toolvis" style="display: none;" value="{{ toolVis }}"></input>
-        <br><br>
+      <a class="btn btn-primary" style="width: 230px; color: white;">Email the Neighborhood</a>
+      <div class="smalltopspace"></div>
+      <a class="btn btn-secondary" onclick="window.history.go(-1); return false;" style="width: 190px; color: white;">Cancel</a>
+      <br><input id="hiddenInfoBox" style="display: none;" name="returnedAction" value=""></input>
+      <br><input id="hiddenInfoBox2" style="display: none;" name="nbhid" value="{{ neighborhoodid }}"></input>
+      <br><br>
     </form>
-    <div class="deadspace"></div>
     <div class="deadspace"></div>
 </div>
 
-      <!-- The Modal -->
+  <!-- The Modal -->
+  <div class="modal fade" id="addMemberModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content {% if session.theme == 'dark' %}nav_dark{% endif %}">
+
+        <!-- Modal Header -->
+        <div class="modal-header {% if session.theme == 'dark' %}nav_dark{% endif %}">
+          <h4 class="modal-title">Adding a Member</h4>
+          <button type="button" class="close {% if session.theme == 'dark' %}dark{% endif %}" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-left {% if session.theme == 'dark' %}dark{% endif %}">
+          When you manually add a user by email address or username, if there is an existing user that matches those details they will
+          be sent an invite email to directly join the neighborhood through a link.  This will bypass any password or visibility of your
+          neighborhood.<br><br>
+          The direct link will only work for that person, and will not expire.
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer {% if session.theme == 'dark' %}nav_dark{% endif %}">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- The Modal -->
   <div class="modal fade" id="myModal">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content {% if session.theme == 'dark' %}nav_dark{% endif %}">
@@ -169,23 +218,31 @@
           var toolselector = document.getElementById("toolselector");
 
             /*$("#toolselector").collapse('toggle');*/
-            if (chevron1.style.color == 'white') {
+            if (chevron1.style.color == 'black') {
               chevron1.style.transform = "rotateX(0deg)";
-              chevron1.style.color = "#f2f2f2";
+              chevron1.style.color = "#252525";
               toolselector.style.maxHeight = '0px';
             } else {
               chevron1.style.transform = "rotateX(180deg)";
-              chevron1.style.color = "white";
+              chevron1.style.color = "black";
               toolselector.style.maxHeight = '1042px';
             }
 
+        }
+
+        function hideBanList() {
+          var chevron1 = document.getElementById('chevron1');
+          var toolselector = document.getElementById("toolselector");
+          chevron1.style.transform = "rotateX(0deg)";
+          chevron1.style.color = "#252525";
+          toolselector.style.maxHeight = '0px';
         }
 
         function gotosite(siteid){
           window.location.href = "/tool_details?toolid=" + siteid;
         }
 
-  function getToolList() {
+      function getToolList() {
         // get reference to element containing toppings checkboxes
         var el = document.getElementById('toolselector');
 
@@ -216,6 +273,17 @@
 
         document.getElementById("toolvis").value = finalList2;
 
+      }
+
+      function show_new_member_field() {
+        document.getElementById('new_member_field').style.display = "flex";
+        document.getElementById('new_member_button').disabled = true;
+      }
+
+      function hide_new_member_field() {
+        document.getElementById('new_member_field').style.display = "none";
+        document.getElementById('new_member').value = "";
+        document.getElementById('new_member_button').disabled = false;
       }
 
     </script>
