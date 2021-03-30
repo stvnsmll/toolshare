@@ -34,7 +34,7 @@ import uuid
 import SQL
 import config
 import boto3, botocore
-from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
+from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for, send_from_directory, make_response
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
@@ -119,7 +119,15 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory('static/manifest', 'manifest.json')
 
+@app.route('/sw.js')
+def service_worker():
+    response = make_response(send_from_directory('static', 'sw.js'))
+    response.headers['Cache-Control'] = 'no-cache'
+    return response
 
 
 ################################################################
