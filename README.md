@@ -1,5 +1,5 @@
 # ToolShare
-This repository started as a place to document my CS50 final project, but has developed into the source code for deploying the web app on Heroku at [toolshare.tk](https://sharetools.tk).
+This repository started as a place to document my CS50 final project, but has developed into the source code for deploying the web app on Heroku at [sharetools.tk](https://sharetools.tk).
 
 If you wish to fork this and host your own tool-share instance, you will need the following resources (and if you use my same ones it can be completely free!):
   1. Hosting/deployment service

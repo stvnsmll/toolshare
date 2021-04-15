@@ -116,7 +116,7 @@
       <div class="smalltopspace"></div>
       <div class="smalltopspace"></div>
 
-      <a class="btn btn-primary" style="width: 230px; color: white;">Email the Neighborhood</a>
+      <button class="btn btn-primary" type="submit" style="width: 230px; color: white;" id="sendEmail">Email the Neighborhood</button>
       <div class="smalltopspace"></div>
       <a class="btn btn-secondary" onclick="window.history.go(-1); return false;" style="width: 190px; color: white;">Cancel</a>
       <br><input id="hiddenInfoBox" style="display: none;" name="returnedAction" value=""></input>
@@ -187,6 +187,11 @@
   </div>
 
     <script>
+        var sendEmail = document.getElementById("sendEmail");
+
+        sendEmail.onclick = function(){
+            hiddenInfoBox.value = "sendMail";
+        };
 
         var hiddenInfoBox = document.getElementById("hiddenInfoBox");
         //var hiddenInfoBox2 = document.getElementById("hiddenInfoBox2");

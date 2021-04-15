@@ -17,6 +17,7 @@
 <div class="scrolling_page no-x smalltopspace">
   <div class="smalltopspace"></div>
     <form action="/sendmail" method="post">
+      {% if askall %}
       <h3>Ask for a Tool</h3>
         <div class="form-group smalltopspace" style="text-align: left;">
           <div>
@@ -51,13 +52,25 @@
           <div class="d-flex justify-content-start">
             <label class="text-left" for="messsage"><strong>Tool and Project Details:</strong></label><br>
           </div>
+        </div>
+        {% else %}
+        <div class="d-flex justify-content-start">
+          <label class="text-left" for="messsage"><strong>Your message to {{ neighborhoodName }}:</strong></label><br>
+        </div>
+        {% endif %}
+        <div class="form-group" style="text-align: left;">
           <textarea class="form-control {% if session.theme == 'dark' %}dark{% endif %}" rows="5" id="messsage" name="messsage" style="width: 90%" placeholder="your message" maxlength="800"></textarea>
 
           <div style="font-size: smaller">
             <p>
-              You will also receive this email.
-              The other neighborhood members will have a link generated to respond to your request. This keeps your email address private.
-              If you wish to share your email address to enable quicker communication, please check the box below:
+                You will also receive this email.
+              {% if askall %}
+                The other neighborhood members will have a link generated to respond to your request. This keeps your email address private.
+                If you wish to share your email address to enable quicker communication, please check the box below:
+              {% else %}
+                The other neighborhood members will have a link generated to respond.
+                If you wish to keep your email address private, please uncheck the box below:
+              {% endif %}
             </p>
             <div id="shareSelector" style="margin: 20px; padding: 10px; border: 1px dashed gray; border-radius: 3px; width: max-content;">
               <div class="form-check">
@@ -73,7 +86,7 @@
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="shareChecks" value="email" id="email_check"/>
+                <input class="form-check-input" type="checkbox" name="shareChecks" value="email" id="email_check" {% if not askall %}checked{% endif %}/>
                 <label class="form-check-label" for="email_check" style="padding-top: 3px;">
                   Email: <span class="text-muted">{{ email }}</span>
                 </label>
@@ -88,6 +101,7 @@
         <button class="btn btn-secondary" id="cancel" type="submit" style="width: 150px" data-toggle="modal" data-target="#spinnerModal">Cancel</button>
         <div class="smalltopspace"></div>
         <input id="hiddenInfoBox" name="returnedAction" value="" style="display: none;"></input>
+        <input id="neighborhood" name="neighborhood_send_list" value="{{ neighborhood_send_list }}" style="display: none;"></input>
     </form>
     <div class="deadspace"></div>
 </div>

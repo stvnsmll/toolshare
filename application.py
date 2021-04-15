@@ -130,6 +130,8 @@ def service_worker():
     return response
 
 
+
+
 ################################################################
 # ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~-- #
 # |    [3]   MAIN FEATURES: TOOLS & ACTIONS                  | #
@@ -1120,16 +1122,9 @@ def managemembers():
     else:
         formAction = request.form.get("returnedAction")
         if formAction == "sendMail":
-            nbhChecks = request.form.getlist("nbhChecks")
-            shareChecks = request.form.getlist("shareChecks")
-            if len(nbhChecks) == 0:
-                flash("You must pick at least one neighborhood.")
-                return apology("one neighborhood", "you must pick at least one")
-            if "email" in shareChecks:
-                print("YES: share the email address")
-            else:
-                print("NO: don't share the email address")
-            return apology("todo")
+            neighborhoodid = request.form.get("nbhid")
+            #todo: ensure user is an admin
+            return redirect(f"/sendmail?neighborhoodid={neighborhoodid}")
         elif formAction == "cancel":
             return redirect("/findtool")
         else:
@@ -1241,6 +1236,16 @@ def sendmail():
     userUUID = session.get("user_uuid")
     firstname = session.get("firstname")
     if request.method == "GET":
+        neighborhoodid = request.args.get("neighborhoodid")
+        if neighborhoodid:
+            #todo: ensure user is an admin
+            neighborhooddeetz = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)[0]
+            neighborhoodName = neighborhooddeetz['neighborhood']
+            userdeetz = db.execute("SELECT * FROM users WHERE uuid = :userUUID", userUUID=userUUID)[0]
+            username = userdeetz['username']
+            email = userdeetz['email']
+            return render_template("sendmail.html", openActions=countActions(), firstname=firstname, username=username, email=email, neighborhoodName=neighborhoodName, askall=False, neighborhood_send_list=neighborhoodid)
+
         mynbhlist = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID) AND deleted = 0;", userUUID=userUUID)
         myneighborhoods = {}
         for row in mynbhlist:
@@ -1249,15 +1254,24 @@ def sendmail():
         userdeetz = db.execute("SELECT * FROM users WHERE uuid = :userUUID", userUUID=userUUID)[0]
         username = userdeetz['username']
         email = userdeetz['email']
-        return render_template("sendmail.html", openActions=countActions(), firstname=firstname, myneighborhoods=myneighborhoods, username=username, email=email)
+        return render_template("sendmail.html", openActions=countActions(), firstname=firstname, myneighborhoods=myneighborhoods, username=username, email=email, askall=True)
     else:
         formAction = request.form.get("returnedAction")
         if formAction == "sendMail":
             nbhChecks = request.form.getlist("nbhChecks")
             shareChecks = request.form.getlist("shareChecks")
             if len(nbhChecks) == 0:
-                flash("You must pick at least one neighborhood.")
-                return apology("one neighborhood", "you must pick at least one")
+                neighborhood_send_list = request.form.get("neighborhood_send_list")
+                if neighborhood_send_list == "":
+                    flash("You must pick at least one neighborhood.")
+                    return apology("one neighborhood", "you must pick at least one")
+
+                #send the email to the one preloaded into the form (admin mail)
+                #todo: ensure user is an admin
+                print("Admin email to: " + neighborhood_send_list)
+            else:
+                ## TODO: for each NBH, ensure the user is a member
+                print("Asking these neighborhoods: " + str(nbhChecks))
             if "email" in shareChecks:
                 print("YES: share the email address")
             else:
