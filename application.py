@@ -1265,7 +1265,6 @@ def sendmail():
                 if neighborhood_send_list == "":
                     flash("You must pick at least one neighborhood.")
                     return apology("one neighborhood", "you must pick at least one")
-
                 #send the email to the one preloaded into the form (admin mail)
                 #todo: ensure user is an admin
                 print("Admin email to: " + neighborhood_send_list)

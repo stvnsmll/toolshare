@@ -42,7 +42,7 @@
                 <input type="checkbox" name="nbhChecks" value="{{ myneighborhoods[nbh]['neighborhoodid'] }}" class="hidden-box" id="{{ myneighborhoods[nbh]['neighborhoodid'] }}"/>
                 <label for="{{ myneighborhoods[nbh]['neighborhoodid'] }}" class="check--label">
                   <span class="check--label-box"></span>
-                  <span class="check--label-text {% if session.theme == 'dark' %}dark" style="background-color: transparent;"{% endif %}>{{ myneighborhoods[nbh]['neighborhood'] }}</span>
+                  <span class="check--label-text {% if session.theme == 'dark' %}dark{% endif %}">{{ myneighborhoods[nbh]['neighborhood'] }}</span>
                 </label>
               </li>
             {% endfor %}
