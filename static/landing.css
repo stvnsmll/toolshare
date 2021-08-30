@@ -3,7 +3,8 @@
     overflow-x: scroll;
     /*background-color: #292929;*/
     height: 100vh;
-    margin-top: 18px;
+    margin-top: 9px;
+    padding-top: 9px;
 }
 
 a {
