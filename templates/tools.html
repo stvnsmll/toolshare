@@ -1,0 +1,523 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Tools
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+{% block heading %}
+    Toolbox
+{% endblock %}
+
+{% block main %}
+<div class="container p-2">
+    <!--<h4 class="smalltopspace">Toolbox</h4>-->
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs nav-justified tab_format container bottom_tabnav" role="tablist">
+        <li class="nav-item {% if session.theme == 'dark' %}nav_dark{% endif %}">
+            <a class="{% if borrowedtools[0] != 'no-nbh' %} active {% endif %}" data-toggle="tab" href="#borrowed">Borrowed</a>
+        </li>
+        <li class="nav-item {% if session.theme == 'dark' %}nav_dark{% endif %}">
+            <a class="{% if borrowedtools[0] == 'no-nbh' %} active {% endif %}" data-toggle="tab" href="#myTools">My Tools</a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content {% if session.theme == 'dark' %}dark{% endif %}">
+        <div id="borrowed" name="borrowed" class="tab-pane {% if borrowedtools[0] != 'no-nbh' %} active {% else %} fade {% endif %}">
+          <div class="search_header">
+            <div class="filters {% if session.theme == 'dark' %}dark{% endif %}">
+                <input class="form-control top_search {% if session.theme == 'dark' %}dark{% endif %}" id="search1" type="text" autocomplete="off" placeholder="Search borrowed...">
+                <button id="cancel1" class="btn bg-transparent btn-pos" style="margin-left: -40px; z-index: 100; visibility: hidden;">
+                  <i class="fa fa-times"></i>
+                </button>
+                <div class="filterIconBox dropdown dropright float-right">
+                      <button id="filter_btn1" class="filterIcon" data-toggle="dropdown">
+                        <i class="fas fa-filter"></i>
+                      </button>
+                      <!--<button type="button" class="btn btn-primary" data-toggle="dropdown">
+                      Dropleft button
+                      </button>-->
+                      <div class="dropdown-menu dropdown_formatsjs {% if session.theme == 'dark' %}dark{% endif %}">
+                        <div class="dropdown-header">Tool Caterory Filter</div>
+                        <div class="form-check padd_left">
+                          <label class="form-check-label">
+                            <input id="selectall1" type="checkbox" class="form-check-input" value="all" onclick="filterboxesall1();" checked>(Select all/none)
+                          </label>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="form-check padd_left">
+                          <label class="form-check-label">
+                            <input id="hand1" type="checkbox" class="form-check-input" value="æ" onclick="filterboxes1();" checked>Hand
+                          </label>
+                        </div>
+                        <div class="form-check padd_left">
+                          <label class="form-check-label">
+                            <input id="power1" type="checkbox" class="form-check-input" value="‰" onclick="filterboxes1();" checked>Power
+                          </label>
+                        </div>
+                        <div class="form-check padd_left">
+                          <label class="form-check-label">
+                            <input id="garden1" type="checkbox" class="form-check-input" value="»" onclick="filterboxes1();" checked>Garden
+                          </label>
+                        </div>
+                        <div class="form-check padd_left">
+                          <label class="form-check-label">
+                            <input id="fastening1" type="checkbox" class="form-check-input" value="Þ" onclick="filterboxes1();" checked>Fastening
+                          </label>
+                        </div>
+                        <div class="form-check padd_left">
+                          <label class="form-check-label">
+                            <input id="uncategorized1" type="checkbox" class="form-check-input" value="‡" onclick="filterboxes1();" checked>Uncategorized
+                          </label>
+                        </div>
+                      </div>
+                </div>
+                <!--<div class="filterIconBox">
+                    <div id="select_btn" class="filterIcon"><i class="fas fa-check-square"></i></div>
+                </div>-->
+            </div>
+          </div>
+        {% if borrowedtools[0] == 'no-nbh' %}
+          <div class="list_div">
+            <!-- Join a neighborhood to borrow tools from other people -->
+            <br>
+            <div style="width: 80%; margin: auto;">
+              <p>You must first join a neighborhood to be able to browse and borrow tools from others.</p>
+              <p>Click the link below to start borrowing and sharing!</p>
+              <i class="fa fa-angle-double-down fa-lg"></i>
+            </div>
+            <div class="tab_actions text-center">
+              <a href="\neighborhoods" type="button" class="btn btn-success tab_button"  style="z-index: 7;"><i class="fa fa-user-plus"></i> &nbsp;&nbsp;Join a Group</a>
+            </div>
+          </div>
+        {% else %}
+            <div class="tab_actions text-center">
+              <a href="\findtool" class="btn btn-toolshare tab_button" style="z-index: 8;"><i class="fa fa-search"></i> &nbsp;&nbsp;Find a Tool</a>
+            </div>
+          <div class="list_div">
+            <ul class="list-group list-group-flush" id="myList1">
+              {% for tool in borrowedtools %}
+
+                {% if 'requested' in borrowedtools[tool]['state'] %}
+                  <li class="list-group-item greyedout" onclick="gotosite('{{ borrowedtools[tool]['toolid'] }}')">
+                    <div class="card_image-list">
+                      {% if borrowedtools[tool]['photo'] %}<img class="thumbnail" src="{{ borrowedtools[tool]['photo'] }}" alt="">
+                      {% else %}<i class="fas fa-wrench"></i>
+                      {% endif %}
+                    </div>
+                    <span id="tool_name" style="padding-left: 10px;">{{ borrowedtools[tool]["toolname"] }}</span>
+                    <span id="category" class="hiddencategory">{{ borrowedtools[tool]["category"] }}</span>
+                    <div class="tool_badges">
+                      <span class="badge badge-pill badge-success" style="float: right">requested</span>
+                    </div>
+                  </li>
+                {% elif 'overdue' in borrowedtools[tool]['state'] %}
+                  <li class="list-group-item redout" onclick="gotosite('{{ borrowedtools[tool]['toolid'] }}')">
+                    <div class="card_image-list">
+                      {% if borrowedtools[tool]['photo'] %}<img class="thumbnail" src="{{ borrowedtools[tool]['photo'] }}" alt="">
+                      {% else %}<i class="fas fa-wrench"></i>
+                      {% endif %}
+                    </div>
+                    <span id="tool_name" style="padding-left: 10px;">{{ borrowedtools[tool]["toolname"] }}</span>
+                    <span id="category" class="hiddencategory">{{ borrowedtools[tool]["category"] }}</span>
+                    <div class="tool_badges">
+                      <span class="badge badge-pill badge-danger" style="float: right">overdue</span>
+                    </div>
+                  </li>
+                {% else %}
+                  <li class="list-group-item" onclick="gotosite('{{ borrowedtools[tool]['toolid'] }}')">
+                    <div class="card_image-list">
+                      {% if borrowedtools[tool]['photo'] %}<img class="thumbnail" src="{{ borrowedtools[tool]['photo'] }}" alt="">
+                      {% else %}<i class="fas fa-wrench"></i>
+                      {% endif %}
+                    </div>
+                    <span id="tool_name" style="padding-left: 10px;">{{ borrowedtools[tool]["toolname"] }}</span>
+                    <span id="category" class="hiddencategory">{{ borrowedtools[tool]["category"] }}</span>
+                  </li>
+              {% endif %}
+
+
+              {% endfor %}
+            </ul>
+            <div class="deadspace"></div>
+            <div class="deadspace"></div>
+            <div class="deadspace"></div>
+          </div>
+        {% endif %}
+        </div>
+
+        <!--  Second Tab Contents -->
+        <div id="myTools" name="myTools" class="tab-pane {% if borrowedtools[0] == 'no-nbh' %} active {% else %} fade {% endif %}"><!-- maybe get rid of the "container" class-->
+          <div class="search_header">
+            <div class="tab_actions text-center">
+              <a href="\newtool" class="btn btn-success tab_button"  style="z-index: 7;"><i class="fa fa-plus"></i> &nbsp;&nbsp;Add a Tool</a>
+            </div>
+            <!-- Filter Div-->
+            <div class="filters {% if session.theme == 'dark' %}dark{% endif %}">
+                <input class="form-control top_search {% if session.theme == 'dark' %}dark{% endif %}" id="search2" type="text" autocomplete="off" placeholder="Search your tools...">
+                <button id="cancel2" class="btn bg-transparent btn-pos" style="margin-left: -40px; z-index: 100; visibility: hidden;">
+                  <i class="fa fa-times"></i>
+                </button>
+                <div class="filterIconBox dropdown dropright float-right">
+                      <button id="filter_btn2" class="filterIcon" data-toggle="dropdown">
+                        <i class="fas fa-filter"></i>
+                      </button>
+                      <!--<button type="button" class="btn btn-primary" data-toggle="dropdown">
+                      Dropleft button
+                      </button>-->
+                      <div class="dropdown-menu dropdown_formatsjs {% if session.theme == 'dark' %}dark{% endif %}">
+                        <div class="dropdown-header">Tool Caterory Filter</div>
+                        <div class="form-check padd_left">
+                          <label class="form-check-label">
+                            <input id="selectall2" type="checkbox" class="form-check-input" value="all" onclick="filterboxesall2();" checked>(Select all/none)
+                          </label>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="form-check padd_left">
+                          <label class="form-check-label">
+                            <input id="hand2" type="checkbox" class="form-check-input" value="æ"  onclick="filterboxes2();" checked>Hand
+                          </label>
+                        </div>
+                        <div class="form-check padd_left">
+                          <label class="form-check-label">
+                            <input id="power2" type="checkbox" class="form-check-input" value="‰"  onclick="filterboxes2();" checked>Power
+                          </label>
+                        </div>
+                        <div class="form-check padd_left">
+                          <label class="form-check-label">
+                            <input id="garden2" type="checkbox" class="form-check-input" value="»"  onclick="filterboxes2();" checked>Garden
+                          </label>
+                        </div>
+                        <div class="form-check padd_left">
+                          <label class="form-check-label">
+                            <input id="fastening2" type="checkbox" class="form-check-input" value="Þ"  onclick="filterboxes2();" checked>Fastening
+                          </label>
+                        </div>
+                        <div class="form-check padd_left">
+                          <label class="form-check-label">
+                            <input id="uncategorized2" type="checkbox" class="form-check-input" value="‡"  onclick="filterboxes2();" checked>Uncategorized
+                          </label>
+                        </div>
+                      </div>
+                </div>
+                <!--<div class="filterIconBox">
+                    <div id="select_btn" class="filterIcon"><i class="fas fa-check-square"></i></div>
+                </div>-->
+            </div>
+          </div>
+          <!--
+          Category Symobls:
+            Hand: æ
+            Power: ‰
+            Garden: »
+            Fastening: Þ
+            Uncategorized: ‡
+          -->
+          <div class="list_div">
+            <ul class="list-group list-group-flush" id="myList2">
+              {% for tool in mytools %}
+
+                {% if 'borrowed' in mytools[tool]['state'] %}
+                  <li class="list-group-item greyedout" onclick="gotosite('{{ mytools[tool]['toolid'] }}')" data-toggle="modal" data-target="#spinnerModal">
+                    <div class="card_image-list">
+                      {% if mytools[tool]['photo'] %}<img class="thumbnail" src="{{ mytools[tool]['photo'] }}" alt="">
+                      {% else %}<i class="fas fa-wrench"></i>
+                      {% endif %}
+                    </div>
+                    <span id="tool_name" style="padding-left: 10px;">{{ mytools[tool]["toolname"] }}</span>
+                    <span id="category" class="hiddencategory">{{ mytools[tool]["category"] }}</span>
+                    <div class="tool_badges">
+                      <span class="badge badge-pill badge-secondary" style="float: right">borrowed</span>
+                      {% if mytools[tool]['private'] == 1 %}
+                        <span class="badge badge-pill badge-dark" style="float: right">private</span>
+                      {% endif %}
+                    </div>
+                  </li>
+                {% elif 'requested' in mytools[tool]['state'] %}
+                  <li class="list-group-item" onclick="gotosite('{{ mytools[tool]['toolid'] }}')" data-toggle="modal" data-target="#spinnerModal">
+                    <div class="card_image-list">
+                      {% if mytools[tool]['photo'] %}<img class="thumbnail" src="{{ mytools[tool]['photo'] }}" alt="">
+                      {% else %}<i class="fas fa-wrench"></i>
+                      {% endif %}
+                    </div>
+                    <span id="tool_name" style="padding-left: 10px;">{{ mytools[tool]["toolname"] }}</span>
+                    <span id="category" class="hiddencategory">{{ mytools[tool]["category"] }}</span>
+                    <div class="tool_badges">
+                      <span class="badge badge-pill badge-warning" style="float: right">requested</span>
+                      {% if mytools[tool]['private'] == 1 %}
+                        <span class="badge badge-pill badge-dark" style="float: right">private</span>
+                      {% endif %}
+                    </div>
+                  </li>
+                {% elif 'overdue' in mytools[tool]['state'] %}
+                  <li class="list-group-item greyedout" onclick="gotosite('{{ mytools[tool]['toolid'] }}')" data-toggle="modal" data-target="#spinnerModal">
+                    <div class="card_image-list">
+                      {% if mytools[tool]['photo'] %}<img class="thumbnail" src="{{ mytools[tool]['photo'] }}" alt="">
+                      {% else %}<i class="fas fa-wrench"></i>
+                      {% endif %}
+                    </div>
+                    <span id="tool_name" style="padding-left: 10px;">{{ mytools[tool]["toolname"] }}</span>
+                    <span id="category" class="hiddencategory">{{ mytools[tool]["category"] }}</span>
+                    <div class="tool_badges">
+                    <span class="badge badge-pill badge-danger" style="float: right">overdue</span>
+                      {% if mytools[tool]['private'] == 1 %}
+                        <span class="badge badge-pill badge-dark" style="float: right">private</span>
+                      {% endif %}
+                    </div>
+                  </li>
+                {% else %}
+                  <li class="list-group-item" onclick="gotosite('{{ mytools[tool]['toolid'] }}')" data-toggle="modal" data-target="#spinnerModal">
+                    <div class="card_image-list">
+                      {% if mytools[tool]['photo'] %}<img class="thumbnail" src="{{ mytools[tool]['photo'] }}" alt="">
+                      {% else %}<i class="fas fa-wrench"></i>
+                      {% endif %}
+                    </div>
+                    <span id="tool_name" style="padding-left: 10px;">{{ mytools[tool]["toolname"] }}</span>
+                    <div class="tool_badges">
+                      <span id="category" class="hiddencategory">{{ mytools[tool]["category"] }}</span>
+                      {% if mytools[tool]['private'] == 1 %}
+                        <span class="badge badge-pill badge-dark" style="float: right">private</span>
+                      {% endif %}
+                    </div>
+                  </li>
+                {% endif %}
+
+              {% endfor %}
+
+            </ul>
+            <div class="deadspace"></div>
+            <div class="deadspace"></div>
+            <div class="deadspace"></div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+
+<script>
+
+    // Javascript to enable link to tab
+    var url = document.location.toString();
+    if (url.match('#')) {
+        $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
+    }
+
+    // Change hash for page-reload
+    $('.nav-tabs a').on('shown.bs.tab', function (e) {
+        window.location.hash = e.target.hash;
+    });
+
+
+    $(document).ready(function(){
+      $("#search1").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myList1 li").filter(function() {
+          $(this).toggle($(this).children('#tool_name').text().toLowerCase().indexOf(value) > -1);
+        });
+      });
+    });
+
+    $(document).ready(function(){
+      $("#search2").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myList2 li").filter(function() {
+          $(this).toggle($(this).children('#tool_name').text().toLowerCase().indexOf(value) > -1);
+        });
+      });
+    });
+
+
+    var search1 = document.getElementById("search1");
+    var cancel1 = document.getElementById("cancel1");
+    var search2 = document.getElementById("search2");
+    var cancel2 = document.getElementById("cancel2");
+
+
+    search1.onkeyup = function() {
+      var value = search1.value;
+      if (value == '') {
+        cancel1.style.visibility = 'hidden';
+      } else {
+        cancel1.style.visibility = 'visible';
+      }
+    };
+
+    search2.onkeyup = function() {
+      var value = search2.value;
+      if (value == '') {
+        cancel2.style.visibility = 'hidden';
+      } else {
+        cancel2.style.visibility = 'visible';
+      }
+    };
+
+    $(document).on('click', '#cancel1', function(){
+        $("#search1").val('').trigger("keyup").focus();
+    });
+
+    $(document).on('click', '#cancel2', function(){
+        $("#search2").val('').trigger("keyup").focus();
+    });
+
+
+    /* Dropdown Checkboxes (1)*/
+    var selectall1 = document.getElementById("selectall1");
+    var hand1 = document.getElementById("hand1");
+    var power1 = document.getElementById("power1");
+    var garden1 = document.getElementById("garden1");
+    var fastening1 = document.getElementById("fastening1");
+    var uncategorized1 = document.getElementById("uncategorized1");
+
+    function filterboxesall1()
+    {
+      if (selectall1.checked)
+      {
+          /*alert("checked");*/
+          hand1.checked = true;
+          power1.checked = true;
+          garden1.checked = true;
+          fastening1.checked = true;
+          uncategorized1.checked = true;
+      } else {
+          /*alert("not checked");*/
+          hand1.checked = false;
+          power1.checked = false;
+          garden1.checked = false;
+          fastening1.checked = false;
+          uncategorized1.checked = false;
+      }
+    setfilters1();
+    }
+
+    function filterboxes1()
+    {
+      if (hand1.checked && power1.checked && garden1.checked && fastening1.checked && uncategorized1.checked)
+      {
+          /*alert("all are checked");*/
+          selectall1.checked = true;
+      } else {
+          /*alert("at least one is not checked");*/
+          selectall1.checked = false;
+      }
+    setfilters1();
+    }
+
+    /* Dropdown Checkboxes (2)*/
+    var selectall2 = document.getElementById("selectall2");
+    var hand2 = document.getElementById("hand2");
+    var power2 = document.getElementById("power2");
+    var garden2 = document.getElementById("garden2");
+    var fastening2 = document.getElementById("fastening2");
+    var uncategorized2 = document.getElementById("uncategorized2");
+
+    function filterboxesall2()
+    {
+      if (selectall2.checked)
+      {
+          /*alert("checked");*/
+          hand2.checked = true;
+          power2.checked = true;
+          garden2.checked = true;
+          fastening2.checked = true;
+          uncategorized2.checked = true;
+      } else {
+          /*alert("not checked");*/
+          hand2.checked = false;
+          power2.checked = false;
+          garden2.checked = false;
+          fastening2.checked = false;
+          uncategorized2.checked = false;
+      }
+      setfilters2();
+    }
+
+    function filterboxes2()
+    {
+      if (hand2.checked && power2.checked && garden2.checked && fastening2.checked && uncategorized2.checked)
+      {
+          /*alert("all are checked");*/
+          selectall2.checked = true;
+      } else {
+          /*alert("at least one is not checked");*/
+          selectall2.checked = false;
+      }
+      setfilters2();
+    }
+
+    /* Apply the Checkbox filters */
+          /*
+          Category Symobls:
+            Hand: æ
+            Power: ‰
+            Garden: »
+            Fastening: Þ
+            Uncategorized: ‡
+          */
+    function setfilters1() {
+      var handfilter1 = "";
+      var powerfilter1 = "";
+      var gardenfilter1 = "";
+      var fasteningfilter1 = "";
+      var uncategoriedfilter1 = "";
+
+      if (!hand1.checked) handfilter1 = hand1.value + "";
+      if (!power1.checked) powerfilter1 = power1.value + "";
+      if (!garden1.checked) gardenfilter1 = garden1.value + "";
+      if (!document.getElementById("fastening1").checked) fasteningfilter1 = (document.getElementById("fastening1").value) + "";
+      if (!document.getElementById("uncategorized1").checked) uncategoriedfilter1 = (document.getElementById("uncategorized1").value) + "";
+
+      //alert(handfilter1 + powerfilter1 + gardenfilter1 + fasteningfilter1 + uncategoriedfilter1);
+      applyfilter1(handfilter1 + powerfilter1 + gardenfilter1 + fasteningfilter1 + uncategoriedfilter1);
+    }
+
+    function applyfilter1($param) {
+        var value = $param;
+        var re = RegExp(`.*${value.split('').join('.*')}.*`);
+        re = RegExp(`.*[${value}].*$`);
+        //alert(re);
+        $("#myList1 li").filter(function() {
+          $(this).toggle($(this).children('#category').text().match(re) > -1);
+        });
+    }
+
+    function setfilters2() {
+      var handfilter2 = "";
+      var powerfilter2 = "";
+      var gardenfilter2 = "";
+      var fasteningfilter2 = "";
+      var uncategoriedfilter2 = "";
+
+      if (!hand2.checked) handfilter2 = hand2.value + "";
+      if (!power2.checked) powerfilter2 = power2.value + "";
+      if (!garden2.checked) gardenfilter2 = garden2.value + "";
+      if (!document.getElementById("fastening2").checked) fasteningfilter2 = (document.getElementById("fastening2").value) + "";
+      if (!document.getElementById("uncategorized2").checked) uncategoriedfilter2 = (document.getElementById("uncategorized2").value) + "";
+
+      //alert(handfilter2 + powerfilter2 + gardenfilter2 + fasteningfilter2 + uncategoriedfilter2);
+      applyfilter2(handfilter2 + powerfilter2 + gardenfilter2 + fasteningfilter2 + uncategoriedfilter2);
+    }
+
+    function applyfilter2($param) {
+        var value = $param;
+        var re = RegExp(`.*${value.split('').join('.*')}.*`);
+        re = RegExp(`.*[${value}].*$`);
+        //alert(re);
+        $("#myList2 li").filter(function() {
+          $(this).toggle($(this).children('#category').text().match(re) > -1);
+        });
+    }
+
+    // Javascript to enable link to tab
+
+
+    function gotosite(siteid){
+      window.location.href = "/tool_details?toolid=" + siteid;
+    }
+    </script>
+
+{% endblock %}

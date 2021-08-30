@@ -138,9 +138,17 @@ def service_worker():
 # ~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~--~-- #
 ################################################################
 
+#Join - landing page
 @app.route("/")
-@login_required
 def index():
+    firstname = session.get("firstname")
+    if firstname == "":
+        firstname == "Log In"
+    return render_template("index.html", firstname=firstname)
+
+@app.route("/tools")
+@login_required
+def tools():
     """Show tool management page"""
     userUUID = session.get("user_uuid")
     firstname = session.get("firstname")
@@ -156,19 +164,19 @@ def index():
         borrowedlist = db.execute("SELECT * FROM tools WHERE activeuseruuid = :userUUID AND deleted = 0 ORDER BY toolname;", userUUID=userUUID)#removed ' COLLATE NOCASE' for postgreSQL
         borrowedtools = format_tools(borrowedlist)
     # render the template
-    return render_template("index.html", setActive1="active", openActions=countActions(), firstname=firstname, mytools=mytools, borrowedtools=borrowedtools)
+    return render_template("tools.html", setActive1="active", openActions=countActions(), firstname=firstname, mytools=mytools, borrowedtools=borrowedtools)
 
 
 @app.route('/myTools')
 @login_required
 def my_redirect1():
-    return redirect(url_for('index') + '#myTools')
+    return redirect(url_for('tools') + '#myTools')
 
 
 @app.route('/borrowed')
 @login_required
 def my_redirect2():
-    return redirect(url_for('index') + '#borrowed')
+    return redirect(url_for('tools') + '#borrowed')
 
 
 @app.route("/actions", methods=["GET", "POST"])
@@ -306,7 +314,7 @@ def findtool():
     else:
         # get data from the form
         flash("do nothing???")
-        return redirect(url_for('index') + '#borrowed')
+        return redirect(url_for('tools') + '#borrowed')
 
 
 @app.route("/newtool", methods=["GET", "POST"])
@@ -400,7 +408,7 @@ def newtool():
         logHistory("tool", "createtool", "", new_tool_uuid, "", "")
 
         flash("Successfully added the tool")
-        return redirect(url_for('index') + '#myTools')
+        return redirect(url_for('tools') + '#myTools')
 
 
 @app.route("/tool_details", methods=["GET", "POST"])
@@ -538,7 +546,7 @@ def tool_details():
         formAction = request.form.get("returnedAction")
         toolid = request.form.get("toolid")
         if formAction == "returnHome":
-            return redirect(url_for('index') + '#myTools')
+            return redirect(url_for('tools') + '#myTools')
         elif formAction == "requestBorrow":
             requestComment_raw = request.form.get("requestComment")
             if requestComment_raw == "":
@@ -554,14 +562,14 @@ def tool_details():
             #send_email_toolaction(toolid, othername, actionmsg)
             #send_email_toolaction(toolid, firstname, "requested")
             flash('Tool Requested')
-            return redirect(url_for('index') + '#borrowed')
+            return redirect(url_for('tools') + '#borrowed')
         elif formAction == "markBorrowed":
             db.execute("INSERT INTO actions (type, state, originuuid, targetuuid, toolid, messages, timestamp_open, timestamp_close) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", "toolrequest", "dismissed", userUUID, userUUID, toolid, "self borrow", datetime.datetime.now(), datetime.datetime.now())
             db.execute("UPDATE tools SET state = 'borrowed', activeuseruuid = :userUUID WHERE toolid = :toolid;", toolid=toolid, userUUID=userUUID)
             #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("tool", "borrow", "", toolid, "", "self-borrowed")
             flash('Tool marked as Borrowed')
-            return redirect(url_for('index') + '#borrowed')
+            return redirect(url_for('tools') + '#borrowed')
         elif formAction == "returnTool":
             toolownerUUID = db.execute("SELECT * FROM tools WHERE toolid = :toolid AND deleted = 0;", toolid=toolid)[0]["owneruuid"]
             if userUUID == toolownerUUID:
@@ -579,7 +587,7 @@ def tool_details():
                 seconduuid = toolownerUUID
             logHistory("tool", "return", seconduuid, toolid, "", message)
             flash('Tool returned')
-            return redirect(url_for('index') + '#borrowed')
+            return redirect(url_for('tools') + '#borrowed')
         elif formAction == "cancelRequest":
             actionid = db.execute("SELECT actionid FROM actions WHERE toolid = :toolid AND state = 'open' AND originuuid = :userUUID;", toolid=toolid, userUUID=userUUID)[0]['actionid']
             db.execute("UPDATE actions SET state = 'dismissed', timestamp_close = :timeclose WHERE actionid = :actionid;", timeclose=datetime.datetime.now(), actionid=actionid)
@@ -588,7 +596,7 @@ def tool_details():
             toolownerUUID = db.execute("SELECT * FROM tools WHERE toolid = :toolid AND deleted = 0;", toolid=toolid)[0]["owneruuid"]
             logHistory("tool", "cancel", toolownerUUID, toolid, "", "")
             flash('Cancelled the tool request')
-            return redirect(url_for('index') + '#borrowed')
+            return redirect(url_for('tools') + '#borrowed')
         elif formAction == "approveRequest":
             actiondetails = db.execute("SELECT * FROM actions WHERE toolid = :toolid AND type = 'toolrequest' AND state = 'open' AND targetuuid = :userUUID;", toolid=toolid, userUUID=userUUID)[0]
             actionid = actiondetails['actionid']
@@ -640,7 +648,7 @@ def tool_details():
             #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("tool", "deletetool", "", toolid, "", "")
             flash('Tool deleted')
-            return redirect(url_for('index') + '#myTools')
+            return redirect(url_for('tools') + '#myTools')
         else:
             return apology("Misc error")
 
@@ -1223,6 +1231,7 @@ def deleteneighborhood():
             return redirect(url_for('neighborhoods') + '#mine')
         elif formAction == "cancel":
             return render_template("swipepage.html")
+            #!!!! TODO fix to below!
             #return redirect("/neighborhood_details?neighborhoodid=" + neighborhoodid)
         else:
             return apology("Misc Error")
@@ -1352,7 +1361,7 @@ def login():
         flash('You were successfully logged in.')
         if next_url:
             return redirect(next_url)
-        return redirect("/")
+        return redirect("/tools")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
@@ -1370,7 +1379,7 @@ def logout():
     session.clear()
     # Redirect user to login form
     flash('You were successfully logged out.')
-    return redirect("/")
+    return redirect("/tools")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -1423,7 +1432,7 @@ def validateemail():
     code_timeout_limit = 2#minutes
     if session.get("user_uuid") is not None:
         flash("Already logged in...")
-        return redirect("/")
+        return redirect("/tools")
     if request.method == "GET":
         new_email = request.args.get("email")
         error = request.args.get("error")
@@ -1434,7 +1443,7 @@ def validateemail():
             return apology("No user found")
         elif new_user[0]['validateemail'] == "":
             flash("Email already validated")
-            return redirect("/")
+            return redirect("/tools")
         #get the user's autorization code:
         fullcodedetails = new_user[0]['validateemail'].split(";")
         valid_code = fullcodedetails[1]
@@ -1459,9 +1468,9 @@ def validateemail():
                 session["firstname"] = new_user[0]["firstname"]
                 session["neighborhood_check"] = "0"
                 logHistory("other", "email_validated", "", "", "", "")
-                # redirect back to the index (root) page
+                # redirect back to the tools (root) page
                 flash(new_user[0]["firstname"] + ", your email has been validated.")
-                return redirect("/")
+                return redirect("/tools")
             else:
                 error = "incorrect"
                 return redirect(f"/validateemail?email={new_email}&error={error}")
@@ -1485,7 +1494,7 @@ def validateemail():
                 return apology("Error: No user found")
             elif new_user[0]['validateemail'] == "":
                 flash("Email already validated")
-                return redirect("/")
+                return redirect("/tools")
             # resend new user confirmation
             # get a new authcode (and set it in the db and send email)
             authcode = generate_new_authcode(new_email)
@@ -1499,7 +1508,7 @@ def validateemail():
                 return apology("Error: No user found")
             elif new_user[0]['validateemail'] == "":
                 flash("Email already validated")
-                return redirect("/")
+                return redirect("/tools")
             #get the user's autorization code:
             fullcodedetails = new_user[0]['validateemail'].split(";")
             valid_code = fullcodedetails[1]
@@ -1521,9 +1530,9 @@ def validateemail():
                 session["firstname"] = new_user[0]["firstname"]
                 session["neighborhood_check"] = "0"
                 logHistory("other", "email_validated", "", "", "", "")
-                # redirect back to the index (root) page
+                # redirect back to the tools (root) page
                 flash(new_user[0]["firstname"] + ", your email has been validated.")
-                return redirect("/")
+                return redirect("/tools")
             else:
                 error = "incorrect"
                 return redirect(f"/validateemail?email={new_email}&error={error}")
@@ -1559,7 +1568,7 @@ def manageaccount():
         elif formAction == "deleteAccount":
             return redirect("/deleteaccount")
         elif formAction == "returnHome":
-            return redirect("/")
+            return redirect("/tools")
         elif formAction == "toggleTheme":
             if session["theme"] == "light":
                 session["theme"] = "dark"
@@ -1618,7 +1627,7 @@ def communication():
                             return redirect("/login")
                 else:
                     #user does not exist...
-                    return redirect("/")
+                    return redirect("/tools")
         #email or optouttoken not provided
         if session.get("user_uuid") is not None:
             userUUID = session.get("user_uuid")
@@ -1718,10 +1727,10 @@ def changepassword():
             if ((email != None) or (recoverytoken != None)):
                 flash("Already logged in, no password reset needed.")
                 db.execute("UPDATE users SET recoverykey = '' WHERE uuid = :userUUID;", userUUID=userUUID)
-                return redirect("/")
+                return redirect("/tools")
             return render_template("updatepwd.html", openActions=countActions(), verb=verb, firstname=firstname)
     else:
-        #todo add in the recovery key check and if valid, change password, login the user (set session), reset recoverykey, redirecto to "/"
+        #todo add in the recovery key check and if valid, change password, login the user (set session), reset recoverykey, redirecto to "/tools"
         formAction = request.form.get("returnedAction")
         if formAction == "returnHome":
             return redirect("/manageaccount")
@@ -1763,7 +1772,7 @@ def changepassword():
                 #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
                 logHistory("other", "recoveredpassword", "", "", "", "")
                 flash('Your password was reset.')
-                return redirect("/")
+                return redirect("/tools")
 
             #ELSE, the user was just changing their password
             if session.get("user_uuid") is None:
@@ -2040,7 +2049,7 @@ def validatePWchange():
     code_timeout_limit = 2#minutes
     if session.get("user_uuid") is not None:
         flash("Already logged in...")
-        return redirect("/")
+        return redirect("/tools")
     if request.method == "GET":
         new_email = request.args.get("email")
         error = request.args.get("error")
@@ -2051,7 +2060,7 @@ def validatePWchange():
             return apology("No user found")
         elif new_user[0]['validateemail'] == "":
             flash("Email already validated")
-            return redirect("/")
+            return redirect("/tools")
         #get the user's autorization code:
         fullcodedetails = new_user[0]['validateemail'].split(";")
         valid_code = fullcodedetails[1]
@@ -2076,9 +2085,9 @@ def validatePWchange():
                 session["firstname"] = new_user[0]["firstname"]
                 session["neighborhood_check"] = "0"
                 logHistory("other", "email_validated", "", "", "", "")
-                # redirect back to the index (root) page
+                # redirect back to the tools (root) page
                 flash(new_user[0]["firstname"] + ", your email has been validated.")
-                return redirect("/")
+                return redirect("/tools")
             else:
                 error = "incorrect"
                 return redirect(f"/validateemail?email={new_email}&error={error}")
@@ -2102,7 +2111,7 @@ def validatePWchange():
                 return apology("Error: No user found")
             elif new_user[0]['validateemail'] == "":
                 flash("Email already validated")
-                return redirect("/")
+                return redirect("/tools")
             # resend new user confirmation
             # get a new authcode (and set it in the db and send email)
             authcode = generate_new_authcode(new_email)
@@ -2116,7 +2125,7 @@ def validatePWchange():
                 return apology("Error: No user found")
             elif new_user[0]['validateemail'] == "":
                 flash("Email already validated")
-                return redirect("/")
+                return redirect("/tools")
             #get the user's autorization code:
             fullcodedetails = new_user[0]['validateemail'].split(";")
             valid_code = fullcodedetails[1]
@@ -2138,9 +2147,9 @@ def validatePWchange():
                 session["firstname"] = new_user[0]["firstname"]
                 session["neighborhood_check"] = "0"
                 logHistory("other", "email_validated", "", "", "", "")
-                # redirect back to the index (root) page
+                # redirect back to the tools (root) page
                 flash(new_user[0]["firstname"] + ", your email has been validated.")
-                return redirect("/")
+                return redirect("/tools")
             else:
                 error = "incorrect"
                 return redirect(f"/validateemail?email={new_email}&error={error}")

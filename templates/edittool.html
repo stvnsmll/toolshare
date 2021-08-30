@@ -25,7 +25,7 @@
     <form action="/edittool" method="post" enctype="multipart/form-data" id="newtoolform" name="newtoolform" target="_blank">
 
       <div class="row">
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-6">
           <div class="input-group mb-3 long-input mx-auto">
             <div class="input-group-prepend">
               <span class="input-group-text {% if session.theme == 'dark' %}inputtextdark{% endif %}">
@@ -115,8 +115,22 @@
               <option value="uncategorized" {{ 'selected' if category == 'uncategorized' }}>Uncategorized</option>
             </select>
           </div>
+          <br>
+          <label for="health">
+            <span class="redstar">*</span>
+            Tool Condition:
+            <span id="healthbox" style="font-weight: bold; color: #cc5500;" ></span>
+          </label>
+          <div class="d-flex justify-content-between" style="width: 100%;">
+            <span class="text-muted small">broken</span>
+            <span class="text-muted small">brand new</span>
+          </div>
+          <div class="form-control {% if session.theme == 'dark' %}dark{% endif %}" style="width: 97%; border-style: none;">
+            <input type="range" id="healthbar" name="health" class="form-control-range" min="0" max="10" value="{{ health }}">
+          </div>
+          <br>
         </div>
-        <div class="col-md-6 col-lg-8">
+        <div class="col-md-6 col-lg-6">
             <br>
               <div id="image_loading" style="display: none; width: 50%; margin: auto;" >
                 <i class="fa fa-hammer fa-spin" style="margin-top: 40px; font-size: 40px; color: gray;"></i>
@@ -139,19 +153,6 @@
         <br>
         <hr>
         <div class="form-group">
-          <label for="health">
-            <span class="redstar">*</span>
-            Tool Condition:
-            <span id="healthbox" style="font-weight: bold; color: #cc5500;" ></span>
-          </label>
-          <div class="d-flex justify-content-between" style="width: 100%;">
-            <span class="text-muted small">broken</span>
-            <span class="text-muted small">brand new</span>
-          </div>
-          <div class="form-control {% if session.theme == 'dark' %}dark{% endif %}" style="width: 97%; border-style: none;">
-            <input type="range" id="healthbar" name="health" class="form-control-range" min="0" max="10" value="{{ health }}">
-          </div>
-          <br><br>
           <div class="d-flex justify-content-start">
             <label class="text-left" for="features">Features:</label><br>
           </div>

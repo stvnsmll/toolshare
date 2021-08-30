@@ -420,6 +420,23 @@ footer {
   font-size: 1.2em;
 }
 
+.btn-toolshare {
+  color: #fff!important;
+  background-color: #cc5500;
+  border-color: #cc5500;
+}
+
+.btn-toolshare:hover {
+  color: #fff;
+  background-color: #ab4801;
+  border-color: #ab4801;
+}
+
+.btn-toolshare:focus, .btn-toolshare:active {
+  box-shadow: 0 0 0 3px rgba(204,85,0,0.4);
+}
+
+
 .brandname_big {
   display: block;
   position: fixed;
@@ -497,18 +514,20 @@ footer {
   margin-left: -1px;
 }
 
-.tab_actions .btn-info {
-    background-color: #cc5500;
-    border-color: #cc5500;
+.btn-toolshare {
+  color: #fff;
+  background-color: #cc5500;
+  border-color: #cc5500;
 }
 
-.tab_actions .btn-info:active {
-    background-color: #994000;
-    border-color: #994000;
+.btn-toolshare:hover {
+  color: #fff;
+  background-color: #ab4801;
+  border-color: #ab4801;
 }
-.tab_actions .btn-info:focus {
-    background-color: #994000;
-    border-color: #994000;
+
+.btn-toolshare:focus, .btn-toolshare:active {
+  box-shadow: 0 0 0 3px rgba(204,85,0,0.4);
 }
 
 .nbh_pwd {

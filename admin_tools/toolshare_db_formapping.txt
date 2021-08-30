@@ -1,4 +1,5 @@
 //Paste this into here: https://dbdiagram.io/d
+// (2)
 
 Table users {
     id INTEGER // PRIMARY KEY AUTOINCREMENT NOT NULL
@@ -9,6 +10,12 @@ Table users {
     hash TEXT // NOT NULL
     deleted INTEGER // NOT NULL DEFAULT 0
     theme TEXT // NOT NULL DEFAULT "light"
+    recoverykey TEXT // DEFAULT '',
+		validateemail TEXT // DEFAULT '',
+		phonenumber TEXT // DEFAULT '',
+		phonepref TEXT // DEFAULT 'none',
+		emaillevel TEXT // DEFAULT 'nbh,optin',
+		email_optout TEXT // DEFAULT ''
 }
 
 //CREATE TABLE sqlite_sequence(name,seq)
@@ -36,6 +43,11 @@ Table memberships {
     admin INTEGER // NOT NULL DEFAULT 0
 }
 
+Table membershipbans {
+    membershipbanid INTEGER // PRIMARY KEY AUTOINCREMENT NOT NULL
+    useruuid TEXT // NOT NULL
+    neighborhoodid TEXT // NOT NULL
+}
 
 Table tools {
     tool_simpleID INTEGER // PRIMARY KEY AUTOINCREMENT NOT NULL
@@ -72,8 +84,10 @@ Table history {
     historyid INTEGER // PRIMARY KEY AUTOINCREMENT NOT NULL
     action TEXT // NOT NULL
     useruuid TEXT // NOT NULL
+    seconduuid TEXT // NOT NULL
     toolid INTEGER //
     neighborhoodid INTEGER //
+    comment TEXT //
     timestamp TEXT // NOT NULL
 }
 
@@ -102,3 +116,7 @@ Ref: "neighborhoods"."neighborhoodid" < "memberships"."neighborhoodid"
 Ref: "tools"."toolid" < "toolvisibility"."toolid"
 
 Ref: "neighborhoods"."neighborhoodid" < "toolvisibility"."neighborhoodid"
+
+Ref: "users"."uuid" < "membershipbans"."useruuid"
+
+Ref: "membershipbans"."neighborhoodid" < "neighborhoods"."neighborhoodid"

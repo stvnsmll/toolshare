@@ -59,9 +59,9 @@
           {% for member in allMembers %}
           <div class="flex-container memberlist {% if session.theme == 'dark' %}dark{% endif %}">
             <div style="flex-grow: 8; text-align: left; padding-left: 15px;" title="{{ allMembers[member]['username'] }}">{{ allMembers[member]['firstname'] }}</div>
-            <div class="memberaction" title="remove user"><i class="fa fa-minus"></i></div>
-            <div class="memberaction" title="ban user"><i class="fa fa-ban"></i></div>
-            <div class="memberaction" title="make user an admin"><i class="fa fa-id-badge"></i></div>
+            <div class="memberaction" title="remove user" onclick="confirmationModal('removed from', '{{ allMembers[member]['username'] }}', '{{ allMembers[member]['firstname'] }}');"><i class="fa fa-minus"></i></div>
+            <div class="memberaction" title="ban user" onclick="confirmationModal('banned from', '{{ allMembers[member]['username'] }}', '{{ allMembers[member]['firstname'] }}');"><i class="fa fa-ban"></i></div>
+            <div class="memberaction" title="make user an admin" onclick="confirmationModal('granded admin privilages to', '{{ allMembers[member]['username'] }}', '{{ allMembers[member]['firstname'] }}');"><i class="fa fa-id-badge"></i></div>
           </div>
           {% endfor %}
           <div id="new_member_field" class="flex-container memberlist {% if session.theme == 'dark' %}dark{% endif %}" style="background-color: #ffc772d9; display: none;">
@@ -155,85 +155,58 @@
   </div>
 
   <!-- The Modal -->
-  <div class="modal fade" id="myModal">
+  <div class="modal fade" id="actionModal">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content {% if session.theme == 'dark' %}nav_dark{% endif %}">
 
         <!-- Modal Header -->
         <div class="modal-header {% if session.theme == 'dark' %}nav_dark{% endif %}">
-          <h4 class="modal-title">Tool Visibilities</h4>
+          <h4 class="modal-title">Confirm Action</h4>
           <button type="button" class="close {% if session.theme == 'dark' %}dark{% endif %}" data-dismiss="modal">&times;</button>
         </div>
 
         <!-- Modal body -->
         <div class="modal-body text-left {% if session.theme == 'dark' %}dark{% endif %}">
-          When a tool is <strong>checked</strong> in this list, it will be visible and available for borrowing to any member of this neighborhood.
-          <br><br>
-          You can <strong>uncheck</strong> a tool here to not allow this tool to be visible to this neighborhood. It will not impact the visibilities
-          that this tool will have to any of your other neighborhoods.
-          <br><br>
-          Be sure to click <strong>save</strong> if you want your selections to be updated.
-          <br><br>
-          <small>To modify tool visibility by tool instead of by neighborhood, navigate to the tool in your toolbox and modify its visibilities there.</small>
+          Are you sure you would like <span id="thefirstname">userfirstname</span> (<span id="theusername">userusername</span>) to be <span id="theaction">defaultaction</span> this neighborhood?
         </div>
 
         <!-- Modal footer -->
         <div class="modal-footer {% if session.theme == 'dark' %}nav_dark{% endif %}">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+          <span style="margin-left: 23px">
+            <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Cancel</button>
+          </span>
         </div>
 
       </div>
     </div>
   </div>
 
-    <script>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+  <script>
+      var showInfoModal;
+      $().ready(function(){
+        //jQuery function
+        confirmationModal = function(theaction, theusername, thefirstname)
+        {
+          jQuery.noConflict();
+          var myInfoModal = $('#actionModal');
+          myInfoModal.find('#theaction').text(theaction);
+          myInfoModal.find('#theusername').text(theusername);
+          myInfoModal.find('#thefirstname').text(thefirstname);
+          myInfoModal.modal('show');
+        };
+      });
+
         var sendEmail = document.getElementById("sendEmail");
+        var hiddenInfoBox = document.getElementById("hiddenInfoBox");
 
         sendEmail.onclick = function(){
             hiddenInfoBox.value = "sendMail";
         };
 
-        var hiddenInfoBox = document.getElementById("hiddenInfoBox");
-        //var hiddenInfoBox2 = document.getElementById("hiddenInfoBox2");
-        var neighborhoodpassword = document.getElementById("nbhpw");
-        var joinbtn = document.getElementById("joinbtn");
-
-        //hiddenInfoBox.style.display = 'none';
-        //hiddenInfoBox2.style.display = 'none';
-
-        function updateinfobox(newtext) {
-            if (newtext == 'updatetoolvis') {
-              getToolList();
-            }
-            hiddenInfoBox.value = newtext;
-        }
-
-        function buttonShowCheck() {
-            if (neighborhoodpassword.value != "") {
-                joinbtn.disabled = false;
-            } else {
-                joinbtn.disabled = true;
-            }
-        }
-
-        function setVisibility() {
-          var toolvis = document.getElementById("toolvis");
-          var toolvisbutton = document.getElementById("toolvisbutton");
-          var chevron1 = document.getElementById('chevron1');
-          var toolselector = document.getElementById("toolselector");
-
-            /*$("#toolselector").collapse('toggle');*/
-            if (chevron1.style.color == 'black') {
-              chevron1.style.transform = "rotateX(0deg)";
-              chevron1.style.color = "#252525";
-              toolselector.style.maxHeight = '0px';
-            } else {
-              chevron1.style.transform = "rotateX(180deg)";
-              chevron1.style.color = "black";
-              toolselector.style.maxHeight = '1042px';
-            }
-
-        }
 
         function hideBanList() {
           var chevron1 = document.getElementById('chevron1');
@@ -243,42 +216,6 @@
           toolselector.style.maxHeight = '0px';
         }
 
-        function gotosite(siteid){
-          window.location.href = "/tool_details?toolid=" + siteid;
-        }
-
-      function getToolList() {
-        // get reference to element containing toppings checkboxes
-        var el = document.getElementById('toolselector');
-
-        // get reference to input elements in toppings container element
-        var tools = el.getElementsByTagName('input');
-
-        var finalList;
-        var finalList2;
-        finalList = "";
-
-        // assign function to onclick property of each checkbox
-        for (var i=0, len=tools.length; i<len; i++) {
-            if ( tools[i].type === 'checkbox' ) {
-                if (tools[i].checked) {
-                  //window.alert(tools[i].id + ' is checked');
-                  finalList += (tools[i].id + ',');
-                } //else {
-                //  window.alert(tools[i].id + ' is not checked');
-                //}
-            }
-        }
-
-        if (finalList != "") {
-          finalList2 = finalList.slice(0, -1);
-        } else {
-          finalList2 = finalList;
-        }
-
-        document.getElementById("toolvis").value = finalList2;
-
-      }
 
       function show_new_member_field() {
         document.getElementById('new_member_field').style.display = "flex";
