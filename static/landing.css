@@ -79,6 +79,11 @@ a:hover {
   /*height: 325.02px;*/
 }
 
+.screeney-img {
+  object-fit: contain;
+  padding: 50px;
+}
+
 
 .border-top {
   border-top: 1px solid #d2d2d2;
@@ -103,6 +108,10 @@ a:hover {
 }
 
 
+.rhombus {
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
 
 #rhombus {
   width: 18px;
