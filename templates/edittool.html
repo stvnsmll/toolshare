@@ -70,34 +70,11 @@
                   <input type="checkbox" class="hidden-box" id="{{ myNeighborhoods[item]['neighborhoodID'] }}" {{ 'checked' if myNeighborhoods[item]['isVisible'] }}/>
                   <label for="{{ myNeighborhoods[item]['neighborhoodID'] }}" class="check--label">
                     <span class="check--label-box"></span>
-                    <span class="check--label-text {% if session.theme == 'dark' %}dark" style="background-color: transparent;"{% endif %}>{{ myNeighborhoods[item]['neighborhoodName'] }}</span>
+                    <span class="check--label-text {% if session.theme == 'dark' %}dark{% endif %}" style="background-color: transparent;">{{ myNeighborhoods[item]['neighborhoodName'] }}</span>
+                    <!-- TODO check if this --^ is how I did the other ones like it... !!!  -->
                   </label>
                 </li>
                 {% endfor %}
-
-                <!-- Demo checkbox items
-                <li class="list-item">
-                  <input type="checkbox" class="hidden-box" id="first"/>
-                  <label for="first" class="check--label">
-                    <span class="check--label-box"></span>
-                    <span class="check--label-text">First Neighborhood</span>
-                  </label>
-                </li>
-                <li class="list-item">
-                  <input type="checkbox" class="hidden-box" id="second"/>
-                  <label for="second" class="check--label">
-                    <span class="check--label-box"></span>
-                    <span class="check--label-text">Second Neighborhood</span>
-                  </label>
-                </li>
-                <li class="list-item">
-                  <input type="checkbox" class="hidden-box" id="third" />
-                  <label for="third" class="check--label">
-                    <span class="check--label-box"></span>
-                    <span class="check--label-text">Third Neighborhood</span>
-                  </label>
-                </li>
-                -->
 
               </ul>
             </div>
