@@ -159,3 +159,7 @@ a:hover {
   margin-top: -15px;
   margin-left: 75%;
 }
+
+.nighttoggle .label {
+  transform: translate(10px, -5px);
+}

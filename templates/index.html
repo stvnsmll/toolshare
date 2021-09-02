@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block moreHead %}
+<link href="/static/nighttoggle.css" rel="stylesheet">
 <link href="/static/landing.css" rel="stylesheet">
 {% endblock %}
 
@@ -184,6 +185,9 @@
     </div>
 
     <div class="row no-gutters">
+      <div class="col-sm-8 card-body-column">
+        <img src="/static/LandingMedia/EditTool.png" class="screeney-img" alt="edit tool">
+      </div>
       <div class="col-sm-4 card-body-column">
         <div class="card-body">
           <div class="rhombus" id="rhombus"></div>
@@ -196,31 +200,35 @@
           </p>
         </div>
       </div>
-      <div class="col-sm-8 card-body-column">
-        <img src="/static/LandingMedia/EditTool.png" class="screeney-img" alt="find a tool">
-      </div>
     </div>
 
-    <div id="rhombus"></div>
     <div class="row no-gutters">
-      <div class="col-sm-5 card-body-column">
-        <img src="/static/LandingMedia/FindTool.png" class="screeney-img" alt="find a tool">
+      <div class="col-sm-8 card-body-column">
+        <img id="darkswap" src="/static/LandingMedia/ActionsLight.png" class="screeney-img" alt="find a tool">
       </div>
-      <div class="col-sm-7 card-body-column">
+      <div class="col-sm-4 card-body-column">
         <div class="card-body">
+          <div class="rhombus" id="rhombus"></div>
           <p class="card-text">
-            <ul>
-              <li>Manage your tools, aprove or reject requests</li><br>
-              <li>See other notifications</li>
-            </ul>
+            Approve or reject peoples requests to borrow your tools. View notifications for actions, messages, and
+            other items.
+            <br><br>
+            Switch between light and dark mode in your account settings.
           </p>
+          <span class="nighttoggle" id="switch">
+            <input type="checkbox" class="checkbox" id="chk"/>
+            <label class="label" for="chk">
+                <i class="fas fa-sun"></i>
+                <i class="fas fa-moon"></i>
+                <div class="ball"></div>
+            </label>
+          </span>
         </div>
       </div>
     </div>
   </div>
 
 
-Screenshots, Dark mode
 
   <div class="smalltopspace"></div>
   <div class="smalltopspace"></div>
@@ -374,6 +382,19 @@ Screenshots, Dark mode
 
 
 </div>
+
+<script>
+  const chk = document.getElementById('chk');
+  const darkswap = document.getElementById('darkswap');
+
+  chk.addEventListener('change', () => {
+    if (chk.checked) {
+      darkswap.src="/static/LandingMedia/ActionsDark.png";
+    } else {
+      darkswap.src="/static/LandingMedia/ActionsLight.png";
+    }
+  });
+</script>
 
 
 {% endblock %}
