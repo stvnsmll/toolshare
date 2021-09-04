@@ -163,3 +163,16 @@ a:hover {
 .nighttoggle .label {
   transform: translate(10px, -5px);
 }
+
+
+
+footer {
+    height: 50px;
+    background-color: #4c4c4c;
+    font-size: 1px;
+    z-index: 1;
+    /*position: fixed;
+    bottom: 0;
+    width: 100%;*/
+    border-top: 1px solid #dee2e6;
+}
