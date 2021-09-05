@@ -169,10 +169,11 @@ a:hover {
 footer {
     height: 50px;
     background-color: #4c4c4c;
-    font-size: 1px;
+    font-size: 1em;
     z-index: 1;
-    /*position: fixed;
-    bottom: 0;
-    width: 100%;*/
     border-top: 1px solid #dee2e6;
+}
+
+.copyright {
+  font-size: 0.8em;
 }
