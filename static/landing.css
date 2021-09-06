@@ -109,8 +109,10 @@ a:hover {
 
 
 .rhombus {
-  margin-left: 20px;
+  margin-right: 10%;
   margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 #rhombus {
