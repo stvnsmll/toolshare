@@ -183,6 +183,13 @@ a:hover {
   background: gray;
 }
 
+.savings {
+  font-weight: 300;
+  color: green;
+  font-size: 3.2em;
+  text-shadow: 4px 2px 6px #0000005e;
+}
+
 
 footer {
     height: 50px;

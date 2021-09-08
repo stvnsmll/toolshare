@@ -54,6 +54,7 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
         <link href="/static/nighttoggle.css" rel="stylesheet">
+        <link href="/static/checkboxes.css" rel="stylesheet">
         <link href="/static/landing.css" rel="stylesheet">
 
         <title>Tool Share</title>
@@ -308,17 +309,17 @@
 
             <h3>Savings Calculator</h3>
 
-            <div class="row">
+            <div class="row m-0">
               <div class="col-sm-6 p-3 mb-3">
                 <label for="ProjCount">
                   Number of projects per year:
                   <span id="ProjCountbox" style="font-weight: bold; color: #cc5500;" ></span>
                 </label>
-                <div class="d-flex justify-content-between" style="width: 90%; margin: auto;">
+                <div class="d-flex justify-content-between">
                   <span class="text-muted small">0</span>
                   <span class="text-muted small">20</span>
                 </div>
-                <div class="form-control" style="width: 97%; border-style: none;">
+                <div class="form-control border-0" style="width: inherit;">
                   <input type="range" id="ProjCountbar" name="ProjCount" class="form-control-range custom-range slider track" min="0" max="20" value="6">
                 </div>
               </div>
@@ -327,23 +328,82 @@
                   Average (tool) costs per project:
                   <span style="font-weight: bold; color: #cc5500;">$</span><span id="ProjCostbox" style="font-weight: bold; color: #cc5500;"></span>
                 </label>
-                <div class="d-flex justify-content-between" style="width: 90%; margin: auto;">
+                <div class="d-flex justify-content-between">
                   <span class="text-muted small">$10</span>
                   <span class="text-muted small">$300</span>
                 </div>
-                <div class="form-control" style="width: 97%; border-style: none;">
+                <div class="form-control border-0" style="width: inherit;">
                   <input type="range" id="ProjCostbar" name="ProjCost" class="form-control-range custom-range slider track" min="10" max="300" value="73">
                 </div>
               </div>
             </div>
-            Average cost per project (in tools) slider 10- 200, avg $73<br>
-            No of tools you own, slider 10-100, avg 23<br>
+
+            <div class="row m-0">
+              <div class="col-sm-6 p-3 mb-3">
+                <label for="ToolCount">
+                  Number of tools you own:
+                  <span id="ToolCountbox" style="font-weight: bold; color: #cc5500;" ></span>
+                </label>
+                <div class="d-flex justify-content-between">
+                  <span class="text-muted small">10</span>
+                  <span class="text-muted small">150</span>
+                </div>
+                <div class="form-control border-0" style="width: inherit;">
+                  <input type="range" id="ToolCountbar" name="ToolCount" class="form-control-range custom-range slider track" min="10" max="150" value="23">
+                </div>
+              </div>
+              <div class="col-sm-6 p-3 mb-3">
+                <label for="Homeowner">
+                  Are you a homeonwer?
+                  <span id="Homeownerbox" style="font-weight: bold; color: #cc5500;"></span>
+                </label>
+                <div class="d-flex justify-content-center">
+                  <ul class="list" id="Homeowner">
+                    <li class="list-item">
+                      <input type="checkbox" class="hidden-box" id="name123" checked/>
+                      <label for="name123" class="check--label">
+                        <span class="check--label-box"></span>
+                        <span class="check--label-text">I'm a homeowner</span>
+                      </label>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <h5>Total estimated yearly savings: <br>
+                <span id="savings"  class="savings">$430</span>
+              </h5>
+            </div>
+
+            <button class="btn btn-outline-secondary btn-sm m3">Reset to Defaults</button><br>
+            <button class="btn btn-info m-3" data-toggle="collapse" data-target="#morecontrols">More Controls</button>
+
+            <div id="morecontrols" class="collapse">
+                <div class="history_tool container {% if session.theme == 'dark' %}dark{% endif %}">
+                    <table class="table table-sm table-hover">
+                        <tbody>
+                          <tr>
+                            <th scope="row" style="white-space: nowrap;">Something here</th>
+                            <td scope="row" style="height: 32px; overflow-x: scroll;">
+                              <div style="height: 24px;">
+                                Item in here
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br>
+
+
             Tool upkeep cost 15%<br>
-            I'm a homeowner Checkbox, default checked (1 or 0.15) <br>
             Yearly home upkeep (tools), slider 40-120, def $67<br>
 
             Calc<br>
-            (ProjCount * ProjCost)/(0.12*ToolsOwned) + (OwnerFactor * HouseUpkeep)/(0.2 * ToolsOwned) + (ToolsOwned * ToolUpkeep)
+            (ProjCount * ProjCost)/(0.12*ToolCount) + (OwnerFactor * HouseUpkeep)/(0.2 * ToolCount) + (ToolCount * ToolUpkeep)
 
 
             <div class="deadspace"></div>
@@ -546,6 +606,13 @@
     output2.innerHTML = slider2.value; // Display the default slider value
     slider2.oninput = function() {
       output2.innerHTML = this.value;
+    }
+
+    var slider3 = document.getElementById("ToolCountbar");
+    var output3 = document.getElementById("ToolCountbox");
+    output3.innerHTML = slider3.value; // Display the default slider value
+    slider3.oninput = function() {
+      output3.innerHTML = this.value;
     }
   </script>
 

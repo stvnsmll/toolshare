@@ -69,9 +69,9 @@
         <i>{% for line in notes %}{{ line }}<br />{% endfor %}</i>
     </p>
 
-    <button class="btn btn-info" data-toggle="collapse" data-target="#demo">View Tool History</button>
+    <button class="btn btn-info" data-toggle="collapse" data-target="#historyview">View Tool History</button>
 
-    <div id="demo" class="collapse">
+    <div id="historyview" class="collapse">
         <div class="history_tool container {% if session.theme == 'dark' %}dark{% endif %}">
             <table class="table table-sm table-hover">
                 <tbody>
