@@ -308,7 +308,43 @@
 
             <h3>Savings Calculator</h3>
 
-            
+            <div class="row">
+              <div class="col-sm-6 p-3 mb-3">
+                <label for="ProjCount">
+                  Number of projects per year:
+                  <span id="ProjCountbox" style="font-weight: bold; color: #cc5500;" ></span>
+                </label>
+                <div class="d-flex justify-content-between" style="width: 90%; margin: auto;">
+                  <span class="text-muted small">0</span>
+                  <span class="text-muted small">20</span>
+                </div>
+                <div class="form-control" style="width: 97%; border-style: none;">
+                  <input type="range" id="ProjCountbar" name="ProjCount" class="form-control-range custom-range slider track" min="0" max="20" value="6">
+                </div>
+              </div>
+              <div class="col-sm-6 p-3 mb-3">
+                <label for="ProjCost">
+                  Average (tool) costs per project:
+                  <span style="font-weight: bold; color: #cc5500;">$</span><span id="ProjCostbox" style="font-weight: bold; color: #cc5500;"></span>
+                </label>
+                <div class="d-flex justify-content-between" style="width: 90%; margin: auto;">
+                  <span class="text-muted small">$10</span>
+                  <span class="text-muted small">$300</span>
+                </div>
+                <div class="form-control" style="width: 97%; border-style: none;">
+                  <input type="range" id="ProjCostbar" name="ProjCost" class="form-control-range custom-range slider track" min="10" max="300" value="73">
+                </div>
+              </div>
+            </div>
+            Average cost per project (in tools) slider 10- 200, avg $73<br>
+            No of tools you own, slider 10-100, avg 23<br>
+            Tool upkeep cost 15%<br>
+            I'm a homeowner Checkbox, default checked (1 or 0.15) <br>
+            Yearly home upkeep (tools), slider 40-120, def $67<br>
+
+            Calc<br>
+            (ProjCount * ProjCost)/(0.12*ToolsOwned) + (OwnerFactor * HouseUpkeep)/(0.2 * ToolsOwned) + (ToolsOwned * ToolUpkeep)
+
 
             <div class="deadspace"></div>
 
@@ -328,7 +364,7 @@
                                         <li><strong>5</strong> tools</li>
                                         <li><strong>1</strong> neighborhood</li>
                                         <li>No tech support</li>
-                                    </ul> <button type="button" class="btn btn-block btn-outline-info">Sign up for free</button>
+                                    </ul> <button type="button" class="btn btn-block btn-outline-info">Get Started</button>
                                 </div>
                             </div>
                         </div>
@@ -346,7 +382,7 @@
                                         <li><strong>30</strong> tools</li>
                                         <li><strong>5</strong> neighborhoods</li>
                                         <li>No tech support</li>
-                                      </ul> <button type="button" class="btn btn-block btn-success">Get Started</button>
+                                      </ul> <button type="button" class="btn btn-block btn-toolshare" style="padding: 6px 12px; font-size: 1rem;">Get Started</button>
                                   </div>
                                 </div>
                                 <div class="layer2-landing">
@@ -496,6 +532,21 @@
         darkswap.src="/static/LandingMedia/ActionsLight.png";
       }
     });
+
+
+    var slider1 = document.getElementById("ProjCountbar");
+    var output1 = document.getElementById("ProjCountbox");
+    output1.innerHTML = slider1.value; // Display the default slider value
+    slider1.oninput = function() {
+      output1.innerHTML = this.value;
+    }
+
+    var slider2 = document.getElementById("ProjCostbar");
+    var output2 = document.getElementById("ProjCostbox");
+    output2.innerHTML = slider2.value; // Display the default slider value
+    slider2.oninput = function() {
+      output2.innerHTML = this.value;
+    }
   </script>
 
 </html>

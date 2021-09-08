@@ -167,6 +167,22 @@ a:hover {
 }
 
 
+.slider .track {
+    -fx-background-color: linear-gradient(to right, red 0%, red 50%, -fx-base 50%, -fx-base 100%);
+}
+
+.custom-range::-webkit-slider-thumb {
+  background: gray;
+}
+
+.custom-range::-moz-range-thumb {
+  background: gray;
+}
+
+.custom-range::-ms-thumb {
+  background: gray;
+}
+
 
 footer {
     height: 50px;
