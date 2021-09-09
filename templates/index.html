@@ -320,20 +320,20 @@
                   <span class="text-muted small">20</span>
                 </div>
                 <div class="form-control border-0" style="width: inherit;">
-                  <input type="range" id="ProjCountbar" name="ProjCount" class="form-control-range custom-range slider track" min="0" max="20" value="6">
+                  <input type="range" id="ProjCountbar" name="ProjCount" class="form-control-range custom-range slider track" min="0" max="20" value="4">
                 </div>
               </div>
               <div class="col-sm-6 p-3 mb-3">
-                <label for="ProjCost">
-                  Average (tool) costs per project:
-                  <span style="font-weight: bold; color: #cc5500;">$</span><span id="ProjCostbox" style="font-weight: bold; color: #cc5500;"></span>
+                <label for="AvgToolCost">
+                  Average tool cost:
+                  <span style="font-weight: bold; color: #cc5500;">$</span><span id="AvgToolCostbox" style="font-weight: bold; color: #cc5500;" ></span>
                 </label>
                 <div class="d-flex justify-content-between">
-                  <span class="text-muted small">$10</span>
-                  <span class="text-muted small">$300</span>
+                  <span class="text-muted small">$2</span>
+                  <span class="text-muted small">$150</span>
                 </div>
                 <div class="form-control border-0" style="width: inherit;">
-                  <input type="range" id="ProjCostbar" name="ProjCost" class="form-control-range custom-range slider track" min="10" max="300" value="73">
+                  <input type="range" id="AvgToolCostbar" name="AvgToolCost" class="form-control-range custom-range slider track" min="2" max="150" value="35">
                 </div>
               </div>
             </div>
@@ -349,7 +349,7 @@
                   <span class="text-muted small">150</span>
                 </div>
                 <div class="form-control border-0" style="width: inherit;">
-                  <input type="range" id="ToolCountbar" name="ToolCount" class="form-control-range custom-range slider track" min="10" max="150" value="23">
+                  <input type="range" id="ToolCountbar" name="ToolCount" class="form-control-range custom-range slider track" min="10" max="150" value="36">
                 </div>
               </div>
               <div class="col-sm-6 p-3 mb-3">
@@ -409,26 +409,11 @@
                   </div>
                 </div>
               </div>
-              <div class="row m-0">
-                <div class="col-sm-6 p-3 mb-3">
-                  <label for="AvgToolCost">
-                    Average tool cost:
-                    <span style="font-weight: bold; color: #cc5500;">$</span><span id="AvgToolCostbox" style="font-weight: bold; color: #cc5500;" ></span>
-                  </label>
-                  <div class="d-flex justify-content-between">
-                    <span class="text-muted small">$5</span>
-                    <span class="text-muted small">$1500</span>
-                  </div>
-                  <div class="form-control border-0" style="width: inherit;">
-                    <input type="range" id="AvgToolCostbar" name="AvgToolCost" class="form-control-range custom-range slider track" min="5" max="1500" value="85">
-                  </div>
-                </div>
-              </div>
 
             </div>
 
             <div>
-              <button class="btn btn-outline-secondary btn-sm m3">Reset to Defaults</button>
+              <button class="btn btn-outline-secondary btn-sm m3" onclick="resetDefaults();">Reset to Defaults</button>
             </div>
 
 
@@ -630,10 +615,10 @@
       recalcSavings();
     }
 
-    var ProjCost = document.getElementById("ProjCostbar");
-    var output2 = document.getElementById("ProjCostbox");
-    output2.innerHTML = ProjCost.value; // Display the default slider value
-    ProjCost.oninput = function() {
+    var AvgToolCost = document.getElementById("AvgToolCostbar");
+    var output2 = document.getElementById("AvgToolCostbox");
+    output2.innerHTML = AvgToolCost.value; // Display the default slider value
+    AvgToolCost.oninput = function() {
       output2.innerHTML = this.value;
       recalcSavings();
     }
@@ -654,28 +639,65 @@
       recalcSavings();
     }
 
-    var AvgToolCost = document.getElementById("AvgToolCostbar");
-    var output5 = document.getElementById("AvgToolCostbox");
-    output5.innerHTML = AvgToolCost.value; // Display the default slider value
-    AvgToolCost.oninput = function() {
-      output5.innerHTML = this.value;
-      recalcSavings();
-    }
+
 
     var homeownervalue = 1;
     var savings_tmp = 0;
     var ToolUpkeep = document.getElementById("ToolUpkeep");
+    var ToolsNeeded = 0;
+    var NewToolSavings = 0;
+    var NewToolUpkeepAvoidance = 0;
+    var ExistingToolUpkeep = 0;
+    var HomeUpkeepTools = 0;
 
-    function recalcSavings() {
+    HomeownerChk.addEventListener('change', () => {
       if (HomeownerChk.checked) {
         homeownervalue = 1;
       } else {
         homeownervalue = 0.15;
       }
-      savings_tmp = Math.round(((ProjCount.value * ProjCost.value) / (0.12 * ToolCount.value)) + ((homeownervalue * HouseUpkeep.value) / (0.2 * ToolCount.value)) - (ToolCount.value * AvgToolCost.value * ToolUpkeep.value))
+      recalcSavings();
+    });
+
+    ToolUpkeep.addEventListener('change', () => {
+      recalcSavings();
+    });
+
+    function recalcSavings() {
+
+      // 4 tools needed for each project, 10% chance you'll have an existing tool for the job
+      ToolsNeeded = ((ProjCount.value * 4) - (0.1 * ToolCount.value));
+      NewToolSavings = (ToolsNeeded * AvgToolCost.value);
+      //$45 tool storage fee
+      NewToolUpkeepAvoidance = (ToolsNeeded * AvgToolCost.value * (ToolUpkeep.value / 100));
+      ExistingToolUpkeep = (ToolCount.value * AvgToolCost.value * (ToolUpkeep.value / 100));
+      //if a homeonwer, the factor is 1, if not it is 0.15
+      // 80% of the time, you may need to buy the new tool
+      HomeUpkeepTools = homeownervalue * HouseUpkeep.value * 0.8;
+
+      savings_tmp = Math.round(NewToolSavings + NewToolUpkeepAvoidance - ExistingToolUpkeep + HomeUpkeepTools)
+
+      if (savings_tmp < 0) {
+        savings_tmp = 0;
+      }
+
       savingsTotal.innerHTML = "$" + savings_tmp;
 
-        //(ProjCount * ProjCost)/(0.12*ToolCount) + (OwnerFactor * HouseUpkeep)/(0.2 * ToolCount) + (ToolCount * ToolUpkeep)
+    }
+
+    function resetDefaults() {
+      ProjCount.value = 4;
+      AvgToolCost.value = 35;
+      ToolCount.value = 36;
+      HomeownerChk.checked = true;
+      ToolUpkeep.value = 7;
+      HouseUpkeep.value = 67;
+      if (HomeownerChk.checked) {
+        homeownervalue = 1;
+      } else {
+        homeownervalue = 0.15;
+      }
+      recalcSavings();
     }
 
 
@@ -685,6 +707,7 @@
             trigger: 'focus',
             html: true
         });
+        recalcSavings();
     });
 
   </script>
