@@ -377,7 +377,7 @@
               </h5>
             </div>
 
-            <button class="btn btn-info m-3" data-toggle="collapse" data-target="#morecontrols">More Controls</button>
+            <button id="moreControls" class="btn btn-info m-3" data-toggle="collapse" data-target="#morecontrols" onclick="toggleControls();">More Controls</button>
 
             <div id="morecontrols" class="collapse">
               <div class="row m-0">
@@ -601,7 +601,7 @@
         darkswap.src="/static/LandingMedia/ActionsDark.png";
       } else {
         darkswap.src="/static/LandingMedia/ActionsLight.png";
-      }
+      };
     });
 
     var savingsTotal = document.getElementById("savings");
@@ -613,7 +613,7 @@
     ProjCount.oninput = function() {
       output1.innerHTML = this.value;
       recalcSavings();
-    }
+    };
 
     var AvgToolCost = document.getElementById("AvgToolCostbar");
     var output2 = document.getElementById("AvgToolCostbox");
@@ -621,7 +621,7 @@
     AvgToolCost.oninput = function() {
       output2.innerHTML = this.value;
       recalcSavings();
-    }
+    };
 
     var ToolCount = document.getElementById("ToolCountbar");
     var output3 = document.getElementById("ToolCountbox");
@@ -629,7 +629,7 @@
     ToolCount.oninput = function() {
       output3.innerHTML = this.value;
       recalcSavings();
-    }
+    };
 
     var HouseUpkeep = document.getElementById("HouseUpkeepbar");
     var output4 = document.getElementById("HouseUpkeepbox");
@@ -637,7 +637,7 @@
     HouseUpkeep.oninput = function() {
       output4.innerHTML = this.value;
       recalcSavings();
-    }
+    };
 
 
 
@@ -655,7 +655,7 @@
         homeownervalue = 1;
       } else {
         homeownervalue = 0.15;
-      }
+      };
       recalcSavings();
     });
 
@@ -679,25 +679,38 @@
 
       if (savings_tmp < 0) {
         savings_tmp = 0;
-      }
+      };
 
       savingsTotal.innerHTML = "$" + savings_tmp;
 
-    }
+    };
 
     function resetDefaults() {
       ProjCount.value = 4;
+      output1.innerHTML = 4;
       AvgToolCost.value = 35;
+      output2.innerHTML = 35;
       ToolCount.value = 36;
-      HomeownerChk.checked = true;
+      output3.innerHTML = 36;
       ToolUpkeep.value = 7;
       HouseUpkeep.value = 67;
+      output4.innerHTML = 67;
+      HomeownerChk.checked = true;
       if (HomeownerChk.checked) {
         homeownervalue = 1;
       } else {
         homeownervalue = 0.15;
-      }
+      };
       recalcSavings();
+    };
+
+    var moreControlsButton = document.getElementById("moreControls");
+    function toggleControls() {
+      if (moreControlsButton.innerHTML == "More Controls") {
+        moreControlsButton.innerHTML = "Less Controls";
+      } else {
+        moreControlsButton.innerHTML = "More Controls";
+      };
     }
 
 
