@@ -360,8 +360,8 @@
                 <div class="d-flex justify-content-center">
                   <ul class="list" id="Homeowner">
                     <li class="list-item">
-                      <input type="checkbox" class="hidden-box" id="name123" checked/>
-                      <label for="name123" class="check--label">
+                      <input type="checkbox" class="hidden-box" id="HomeownerChk" checked/>
+                      <label for="HomeownerChk" class="check--label">
                         <span class="check--label-box"></span>
                         <span class="check--label-text">I'm a homeowner</span>
                       </label>
@@ -377,33 +377,59 @@
               </h5>
             </div>
 
-            <button class="btn btn-outline-secondary btn-sm m3">Reset to Defaults</button><br>
             <button class="btn btn-info m-3" data-toggle="collapse" data-target="#morecontrols">More Controls</button>
 
             <div id="morecontrols" class="collapse">
-                <div class="history_tool container {% if session.theme == 'dark' %}dark{% endif %}">
-                    <table class="table table-sm table-hover">
-                        <tbody>
-                          <tr>
-                            <th scope="row" style="white-space: nowrap;">Something here</th>
-                            <td scope="row" style="height: 32px; overflow-x: scroll;">
-                              <div style="height: 24px;">
-                                Item in here
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                    </table>
+              <div class="row m-0">
+                <div class="col-sm-6 p-3 mb-3">
+                  <label for="ToolUpkeep">
+                    Tool upkeep
+                    <a href="#" role="button" data-toggle="popover" data-placement="top" title="Ownership Costs" data-content="RAV: replacement asset value <br> MC: maintenance cost" data-original-title='Ownership Costs'>costs</a>
+                  </label>
+                  <div class="d-flex justify-content-center">
+                    <div class="input-group">
+                      <input type="text" class="form-control" style="text-align: right;" id="ToolUpkeep" value=7>
+                      <div class="input-group-append">
+                        <span class="input-group-text">% RAV & MC</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+                <div class="col-sm-6 p-3 mb-3">
+                  <label for="HouseUpkeep">
+                    Yearly home upkeep (tools):
+                    <span style="font-weight: bold; color: #cc5500;">$</span><span id="HouseUpkeepbox" style="font-weight: bold; color: #cc5500;" ></span>
+                  </label>
+                  <div class="d-flex justify-content-between">
+                    <span class="text-muted small">$40</span>
+                    <span class="text-muted small">$120</span>
+                  </div>
+                  <div class="form-control border-0" style="width: inherit;">
+                    <input type="range" id="HouseUpkeepbar" name="HouseUpkeep" class="form-control-range custom-range slider track" min="40" max="120" value="67">
+                  </div>
+                </div>
+              </div>
+              <div class="row m-0">
+                <div class="col-sm-6 p-3 mb-3">
+                  <label for="AvgToolCost">
+                    Average tool cost:
+                    <span style="font-weight: bold; color: #cc5500;">$</span><span id="AvgToolCostbox" style="font-weight: bold; color: #cc5500;" ></span>
+                  </label>
+                  <div class="d-flex justify-content-between">
+                    <span class="text-muted small">$5</span>
+                    <span class="text-muted small">$1500</span>
+                  </div>
+                  <div class="form-control border-0" style="width: inherit;">
+                    <input type="range" id="AvgToolCostbar" name="AvgToolCost" class="form-control-range custom-range slider track" min="5" max="1500" value="85">
+                  </div>
+                </div>
+              </div>
+
             </div>
-            <br>
 
-
-            Tool upkeep cost 15%<br>
-            Yearly home upkeep (tools), slider 40-120, def $67<br>
-
-            Calc<br>
-            (ProjCount * ProjCost)/(0.12*ToolCount) + (OwnerFactor * HouseUpkeep)/(0.2 * ToolCount) + (ToolCount * ToolUpkeep)
+            <div>
+              <button class="btn btn-outline-secondary btn-sm m3">Reset to Defaults</button>
+            </div>
 
 
             <div class="deadspace"></div>
@@ -593,27 +619,74 @@
       }
     });
 
+    var savingsTotal = document.getElementById("savings");
+    var HomeownerChk = document.getElementById("HomeownerChk");
 
-    var slider1 = document.getElementById("ProjCountbar");
+    var ProjCount = document.getElementById("ProjCountbar");
     var output1 = document.getElementById("ProjCountbox");
-    output1.innerHTML = slider1.value; // Display the default slider value
-    slider1.oninput = function() {
+    output1.innerHTML = ProjCount.value; // Display the default slider value
+    ProjCount.oninput = function() {
       output1.innerHTML = this.value;
+      recalcSavings();
     }
 
-    var slider2 = document.getElementById("ProjCostbar");
+    var ProjCost = document.getElementById("ProjCostbar");
     var output2 = document.getElementById("ProjCostbox");
-    output2.innerHTML = slider2.value; // Display the default slider value
-    slider2.oninput = function() {
+    output2.innerHTML = ProjCost.value; // Display the default slider value
+    ProjCost.oninput = function() {
       output2.innerHTML = this.value;
+      recalcSavings();
     }
 
-    var slider3 = document.getElementById("ToolCountbar");
+    var ToolCount = document.getElementById("ToolCountbar");
     var output3 = document.getElementById("ToolCountbox");
-    output3.innerHTML = slider3.value; // Display the default slider value
-    slider3.oninput = function() {
+    output3.innerHTML = ToolCount.value; // Display the default slider value
+    ToolCount.oninput = function() {
       output3.innerHTML = this.value;
+      recalcSavings();
     }
+
+    var HouseUpkeep = document.getElementById("HouseUpkeepbar");
+    var output4 = document.getElementById("HouseUpkeepbox");
+    output4.innerHTML = HouseUpkeep.value; // Display the default slider value
+    HouseUpkeep.oninput = function() {
+      output4.innerHTML = this.value;
+      recalcSavings();
+    }
+
+    var AvgToolCost = document.getElementById("AvgToolCostbar");
+    var output5 = document.getElementById("AvgToolCostbox");
+    output5.innerHTML = AvgToolCost.value; // Display the default slider value
+    AvgToolCost.oninput = function() {
+      output5.innerHTML = this.value;
+      recalcSavings();
+    }
+
+    var homeownervalue = 1;
+    var savings_tmp = 0;
+    var ToolUpkeep = document.getElementById("ToolUpkeep");
+
+    function recalcSavings() {
+      if (HomeownerChk.checked) {
+        homeownervalue = 1;
+      } else {
+        homeownervalue = 0.15;
+      }
+      savings_tmp = Math.round(((ProjCount.value * ProjCost.value) / (0.12 * ToolCount.value)) + ((homeownervalue * HouseUpkeep.value) / (0.2 * ToolCount.value)) - (ToolCount.value * AvgToolCost.value * ToolUpkeep.value))
+      savingsTotal.innerHTML = "$" + savings_tmp;
+
+        //(ProjCount * ProjCost)/(0.12*ToolCount) + (OwnerFactor * HouseUpkeep)/(0.2 * ToolCount) + (ToolCount * ToolUpkeep)
+    }
+
+
+
+    $(document).ready(function(){
+        $('[data-toggle="popover"]').popover({
+            trigger: 'focus',
+            html: true
+        });
+    });
+
   </script>
 
 </html>
