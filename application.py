@@ -141,10 +141,9 @@ def service_worker():
 #Join - landing page
 @app.route("/")
 def index():
-    firstname = session.get("firstname")
-    if firstname == "":
-        firstname == "Log In"
-    return render_template("index.html", firstname=firstname)
+    if session.get("user_uuid") is not None:
+        return redirect(url_for("tools"))
+    return render_template("index.html")
 
 @app.route("/tools")
 @login_required

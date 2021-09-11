@@ -152,8 +152,13 @@ a:hover {
   grid-row: 1;
 }
 
+.layer1-landing {
+  z-index: 3;
+}
+
 .layer2-landing {
   width: 100%;
+  z-index: 2;
 }
 
 .layer2-landing img {
