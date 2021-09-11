@@ -56,6 +56,10 @@ a:hover {
   text-align: left;
 }
 
+.card-body-column .card-body {
+  padding: 0 1.25rem;
+}
+
 .card-category {
   font-variant-caps: all-petite-caps;
   letter-spacing: 0.15em;
@@ -64,6 +68,7 @@ a:hover {
 
 .card-title {
   font-size: 1.8em;
+  letter-spacing: 0.1rem;
   font-weight: 200;
   color: #cc5500;
 }
@@ -81,7 +86,9 @@ a:hover {
 
 .screeney-img {
   object-fit: contain;
-  padding: 50px;
+  padding: 0 50px;
+  max-height: 85vh;
+  margin: auto;
 }
 
 
