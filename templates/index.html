@@ -41,6 +41,7 @@
         <link rel="stylesheet" href="/static/bootstrap.min.slate.css">
         //Note: Replace ^[theme]^ (examples: darkly, slate, cosmo, spacelab, and superhero. See https://bootswatch.com/ for current theme names.)
         -->
+        <script src="/static/LandingMedia/flickity.pkgd.min.js"></script>
 
         <link href="/static/styles.css" rel="stylesheet">
 
@@ -534,7 +535,16 @@
               </ol>
               <div class="carousel-inner">
                 <div class="carousel-item active">
-                  <div class="d-block w-100" style="background: #cc5500; height: 400px">First Review</div>
+                  <div class="d-block w-100" style="background: #cc5500; height: 400px">First Review
+                    <div class="card" style="width: 18rem;">
+                      <img class="card-img-top" src="..." alt="Card image cap">
+                      <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="carousel-item">
                   <div class="d-block w-100" style="background: #60ffcc; height: 400px">Second Review</div>
@@ -554,6 +564,9 @@
               </a>
 
             </div>
+
+
+
             <div class="mt-5">
               <div class="px-4" style="letter-spacing: 0.3em; font-weight: 200; font-size: 1.3em;">Dont' be a fool, borrow a tool.</div>
               <a type="button" class="btn btn-toolshare m-3 px-4" href="/register">Get Started</a>
