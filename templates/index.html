@@ -64,7 +64,7 @@
 
     <body>
 
-        <nav class="navbar navbar-expand fixed-top navbar-light">
+        <nav class="navbar navbar-expand border-bottom fixed-top navbar-light">
             <a class="navbar-brand" href="/">
               <span class="orange">
                 <i class='fas fa-tools2'></i>
@@ -222,7 +222,7 @@
             <!-- Cross Platform Section -->
             <div class="crossplatform border-top">
               <h4 class="landingsectionheader">Cross Platform Support</h4>
-              <div class="row no-gutters">
+              <div class="row no-gutters mt-2">
                 <div class="col-sm-5 card-body-column">
                   <div class="card-body">
                     <h5 class="card-title">Use on any device</h5>
@@ -305,10 +305,8 @@
               </div>
             </div>
 
-            <div class="smalltopspace"></div>
-            <div class="smalltopspace"></div>
 
-            <h3>Savings Calculator</h3>
+            <h4 class="landingsectionheader">Savings Calculator</h4>
             <div>
               <div class="row m-0">
                 <div class="col-sm-6 p-3 mb-3">
@@ -422,7 +420,7 @@
             <div class="deadspace"></div>
 
             <!-- Pricing Table -->
-            <h3>Pricing Table</h3>
+            <h4 class="landingsectionheader">Pricing</h4>
             <div class="text-center">
                 <div class="container">
                     <div class="row pt-4 justify-content-center">
@@ -523,47 +521,142 @@
                 </div>
             </div>
 
-            <div class="deadspace"></div>
+            <div class="smalltopspace"></div>
+            <div class="smalltopspace"></div>
+            <div class="smalltopspace"></div>
 
             <!-- User Reviews -->
-            <!--<h3>User Reviews</h3>-->
-            <div id="carouselIndicators2" class="carousel slide" data-ride="carousel">
-              <ol class="carousel-indicators">
+            <div style="background-color: #cc5500bf;">
+            <h4 class="landingsectionheader" style="color: white; padding-bottom: 0.3em;">User Feedback</h4>
+            <div id="carouselIndicators2" class="carousel slide my-4" data-ride="carousel">
+              <ol class="carousel-indicators car2">
                 <li data-target="#carouselIndicators2" data-slide-to="0" class="active"></li>
                 <li data-target="#carouselIndicators2" data-slide-to="1"></li>
                 <li data-target="#carouselIndicators2" data-slide-to="2"></li>
+                <li data-target="#carouselIndicators2" data-slide-to="3"></li>
+                <li data-target="#carouselIndicators2" data-slide-to="4"></li>
               </ol>
+
               <div class="carousel-inner">
                 <div class="carousel-item active">
                   <div class="d-block w-100">
-                    <div class="m-5 border rounded">
-                      <div class="row no-gutters">
-                        <div class="col-sm-5 card-body-column" style="justify-content: center;">
-                          <img src="/static/LandingMedia/people/tdudley.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 220px;" alt="T. Duley">
+                    <div class="mx-5 mb-5 border border-white reviewcard">
+                      <div class="row no-gutters my-3">
+                        <div class="col-sm-5 card-body-column px-4" style="justify-content: center;">
+                          <img src="/static/LandingMedia/people/tdudley.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 210px;" alt="T. Duley">
                         </div>
                         <div class="col-sm-7 card-body-column">
                           <div class="card-body">
                             <p class="card-text my-1 px-4">
-                              "I didn't think I'd need this app as I'm just renting a place, but I realized
-                              that I really don't have the space to store any big tools at all. I had to borrow
-                              a car jack and some other wrenches to fix a tie rod on my 2003 Chevy Malibu, and
-                              the nice old man across the street had his stuff loaded in this app. I love being
+                              "I didn't think I'd need this app as we're just renting a place, but I realized
+                              we really don't have the space to store any big tools at all. I had to borrow
+                              a car jack and some other wrenches to fix a tie rod on our 2003 Chevy Malibu, and
+                              the nice old man across the street had his stuff loaded in this app. We love being
                               able to save space and money!"
                             </p>
-                            <h5 class="card-title mb-0 mt-1">Terry Dudley</h5>
-                            <div class="card-category px-4">chicago</div>
+                            <h5 class="card-title mb-0 mt-1" style="color: #00cc44;">Terry Dudley</h5>
+                            <div class="card-category px-4">Chicago</div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+
                 <div class="carousel-item">
-                  <div class="d-block w-100" style="background: #60ffcc; height: 400px">Second Review</div>
+                  <div class="d-block w-100">
+                    <div class="mx-5 mb-5 border border-white reviewcard">
+                      <div class="row no-gutters my-3">
+                        <div class="col-sm-5 card-body-column px-4" style="justify-content: center;">
+                          <img src="/static/LandingMedia/people/cjohnson.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 210px;" alt="C. Johnson">
+                        </div>
+                        <div class="col-sm-7 card-body-column">
+                          <div class="card-body">
+                            <p class="card-text my-1 px-4">
+                              "After a tree fell down in my back yard, I needed a chain saw to break
+                              it up and haul out the pieces. Thankfully one of my friends had one I
+                              could borrow, and it was super easy to find using this app."
+                            </p>
+                            <h5 class="card-title mb-0 mt-1" style="color: #00cc44;">Collie Johnston</h5>
+                            <div class="card-category px-4">Portland</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
                 <div class="carousel-item">
-                  <div class="d-block w-100" style="background: #af46ff; height: 400px">Third Review</div>
+                  <div class="d-block w-100">
+                    <div class="mx-5 mb-5 border border-white reviewcard">
+                      <div class="row no-gutters my-3">
+                        <div class="col-sm-5 card-body-column px-4" style="justify-content: center;">
+                          <img src="/static/LandingMedia/people/thowell.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 210px;" alt="T. Howell">
+                        </div>
+                        <div class="col-sm-7 card-body-column">
+                          <div class="card-body">
+                            <p class="card-text my-1 px-4">
+                              "I've had so many old tools that have just been sitting around. Even though
+                               I'm not charging other people to use my tools, I think it's helping them
+                               stay in better shape with a little use every once in a while. I mainly use
+                               this app to keep an inventory of all my tools."
+                            </p>
+                            <h5 class="card-title mb-0 mt-1" style="color: #00cc44;">Tracy Howell</h5>
+                            <div class="card-category px-4">Pittsburg</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+                <div class="carousel-item">
+                  <div class="d-block w-100">
+                    <div class="mx-5 mb-5 border border-white reviewcard">
+                      <div class="row no-gutters my-3">
+                        <div class="col-sm-5 card-body-column px-4" style="justify-content: center;">
+                          <img src="/static/LandingMedia/people/mstanton.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 210px;" alt="M. Stanton">
+                        </div>
+                        <div class="col-sm-7 card-body-column">
+                          <div class="card-body">
+                            <p class="card-text my-1 px-4">
+                              "So many people don't have enough gardening tools. I've been able to share
+                              my tiler and shovels and spades with so many friends. I think it's helping
+                              people break down barriers to getting into yard work themselves."
+                            </p>
+                            <h5 class="card-title mb-0 mt-1" style="color: #00cc44;">Marie Stanton</h5>
+                            <div class="card-category px-4">Columbus</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="carousel-item">
+                  <div class="d-block w-100">
+                    <div class="mx-5 mb-5 border border-white reviewcard">
+                      <div class="row no-gutters my-3">
+                        <div class="col-sm-5 card-body-column px-4" style="justify-content: center;">
+                          <img src="/static/LandingMedia/people/lmooney.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 210px;" alt="L. Mooney">
+                        </div>
+                        <div class="col-sm-7 card-body-column">
+                          <div class="card-body">
+                            <p class="card-text my-1 px-4">
+                              "I love being able to share with my neighbors. I'm a woodworker, so I've got
+                              lots of those kind of tools.  When it came time to pressure wash my house
+                              - I was able to find one a few doors down. I've even met a few new friends too."
+                            </p>
+                            <h5 class="card-title mb-0 mt-1" style="color: #00cc44;">Laurence Mooney</h5>
+                            <div class="card-category px-4">Louisville</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
               </div>
               <!-- Side Arrows -->
               <a class="carousel-control-prev" href="#carouselIndicators2" role="button" data-slide="prev">
@@ -576,17 +669,22 @@
               </a>
 
             </div>
+            </div>
 
-
+            <div class="smalltopspace"></div>
+            <div class="smalltopspace"></div>
+            <div class="smalltopspace"></div>
 
             <div class="mt-5">
               <div class="px-4" style="letter-spacing: 0.3em; font-weight: 200; font-size: 1.3em;">Dont' be a fool, borrow a tool.</div>
               <a type="button" class="btn btn-toolshare m-3 px-4" href="/register">Get Started</a>
             </div>
 
-            <div class="deadspace"></div>
+            <div class="smalltopspace"></div>
+            <div class="smalltopspace"></div>
+            <div class="smalltopspace"></div>
 
-            <h3>Request a Demo</h3>
+            <h4 class="landingsectionheader">Request a Demo</h4>
               <div class="card-body-column card-text px-5">
                 <p>
                   To seem more about how the app works and feels, head on over to the <a href="/FAQ" target="_blank"> FAQ page</a>.
@@ -600,9 +698,11 @@
               <a type="button" class="btn btn-light m-2" href="/contact?type=requestdemo">Request Demo</a>
 
 
-            <div class="deadspace"></div>
+            <div class="smalltopspace"></div>
+            <div class="smalltopspace"></div>
+            <div class="smalltopspace"></div>
 
-            <h3>About the Creator</h3>
+            <h4 class="landingsectionheader">About the Creator</h4>
               <div class="card-body-column card-text px-5">
                 <p>
                   I originally made this web app as a personal project to develop my programming skills. It started as my capstone project
