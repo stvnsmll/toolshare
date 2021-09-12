@@ -216,11 +216,13 @@ a:hover {
 }
 
 .carousel-control-next {
-    right: -25px;
+  align-items: start;
+  top: -54px;
 }
 
 .carousel-control-prev {
-    left: -25px;
+  align-items: start;
+  top: -54px;
 }
 
 .reviewcard {
