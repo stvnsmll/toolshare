@@ -2203,6 +2203,50 @@ def contactus():
         else:
             return apology("Misc error")
 
+#General contact form
+@app.route("/contact", methods=["GET", "POST"])
+def contact():
+    if session.get("user_uuid") is not None:
+        return redirect("/ContactUs")
+
+    if request.method == "GET":
+        return render_template("contact.html")
+    else: #post
+        return apology("not setup yet", "todo")
+        formAction = request.form.get("returnedAction")
+        if formAction == "cancel":
+            return redirect("/manageaccount")
+        elif formAction == "sendMe":
+            message = request.form.get("messsage")
+            shareList = request.form.get("shareList")
+            if message == "":
+                flash("You must include something in the message box.")
+                return render_template("ContactUs.html", openActions=countActions(), firstname=firstname, email=email, username=username)
+            email = "No email shared"
+            username = "No username shared"
+            firstname = "Anonymous"
+            if shareList != "":
+                share_items = shareList.split(",")
+                for item in share_items:
+                    itemname = item.split("_")[0]
+                    if itemname == "email":
+                        email = user_details['email']
+                    elif itemname == "firstname":
+                        firstname = user_details['firstname']
+                    elif itemname == "username":
+                        username == user_details['username']
+                    else:
+                        firstname = "CONTACT FORM SUBMISSION PARSE ERROR"
+            full_message = "\n" + firstname + " has submitted a 'contact us' email from " + email + "\n" + "Username: " + username + "\n" + " ----- message follows ----- \n\n" + message + "\n\n ----- end message -----"
+            #print(full_message)
+            send_mail([app.config['MAIL_USERNAME']], "ContactUs_Submission", full_message)
+            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            logHistory("other", "feedback_email", "", "", "", "")
+            flash("Your message has been sent, thank you!")
+            return redirect("/manageaccount")
+        else:
+            return apology("Misc error")
+
 
 @app.route("/TermsAndConditions")
 def termsandconditions():

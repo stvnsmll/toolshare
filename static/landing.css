@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 .subbody {
     width: 100%;
     overflow-x: scroll;
@@ -5,6 +9,7 @@
     height: 100vh;
     margin-top: 9px;
     padding-top: 9px;
+    scroll-behavior: smooth;
 }
 
 a {
