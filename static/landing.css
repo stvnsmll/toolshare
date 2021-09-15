@@ -118,7 +118,7 @@ a:hover {
   font-variant-caps: all-petite-caps;
   font-weight: 300;
   letter-spacing: 0.15em;
-  padding: 1.3em 0;
+  padding: 1.3em 0 0.5em 0
 }
 
 .crossplatform {
@@ -133,11 +133,14 @@ a:hover {
 }
 
 
-.rhombus {
-  margin-right: 10%;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
+.featureheader {
+  margin-right: 10px;
+  display: -webkit-inline-box;
+}
+
+.featureheader .card-category{
+  margin-left: 0.8rem;
+  margin-bottom: 0.5rem;
 }
 
 #rhombus {
@@ -238,7 +241,7 @@ a:hover {
 .aboutcreator {
   max-width: 160px;
   float: right;
-  margin: 3px 0 8px 25px;
+  margin: 3px 0 12px 25px;
   border-radius: 8px 8px 8px 8px;
   box-shadow: 3px 3px 0px 2px #cc5500;
 }

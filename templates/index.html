@@ -2,7 +2,7 @@
 
 <html lang="en">
 
-    <head>
+  <head>
 
         <!-- Required meta tags -->
         <meta charset="utf-8">
@@ -62,688 +62,694 @@
     </head>
 
 
-    <body>
+  <body>
 
-        <nav class="navbar navbar-expand border-bottom fixed-top navbar-light">
-            <a class="navbar-brand" href="/">
-              <span class="orange">
-                <i class='fas fa-tools2'></i>
-                <img src='/static/toolshare.png' alt="" style="height: 58px; margin: -20px 0 -15px -15px;">
-                <div class="brandname_big">
-                  <div style="margin: -4px 0 0 0; font-size:1.3em">ToolShare</div>
-                </div>
-                <div class="brandname_small" style="position: fixed; top: 15px; left: 70px;">
-                  <div style="margin: -4px 0 0 0; font-size:.7em">Tool</div>
-                  <div style="margin: -8px 0 0 0; font-size:.7em">Share</div>
-                </div>
-              </span>
-            </a>
+    <nav class="navbar navbar-expand border-bottom fixed-top navbar-light">
+        <a class="navbar-brand" href="/">
+          <span class="orange">
+            <i class='fas fa-tools2'></i>
+            <img src='/static/toolshare.png' alt="" style="height: 58px; margin: -20px 0 -15px -15px;">
+            <div class="brandname_big">
+              <div style="margin: -4px 0 0 0; font-size:1.3em">ToolShare</div>
+            </div>
+            <div class="brandname_small" style="position: fixed; top: 15px; left: 70px;">
+              <div style="margin: -4px 0 0 0; font-size:.7em">Tool</div>
+              <div style="margin: -8px 0 0 0; font-size:.7em">Share</div>
+            </div>
+          </span>
+        </a>
 
-            <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbar">
-              <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="/login" style="font-size: 0.9em;"><i class='fas fa-sign-in-alt'></i>&nbsp; Log In</a></li>
-                <li class="nav-item"><a class="nav-link btn btn-toolshare" style="padding: .5rem 1rem;" href="/register"><i class='fas fa-user-plus'></i>&nbsp; Sign Up</a></li>
-              </ul>
+        <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="/login" style="font-size: 0.9em;"><i class='fas fa-sign-in-alt'></i>&nbsp; Log In</a></li>
+            <li class="nav-item"><a class="nav-link btn btn-toolshare" style="padding: .5rem 1rem;" href="/register"><i class='fas fa-user-plus'></i>&nbsp; Sign Up</a></li>
+          </ul>
+      </div>
+    </nav>
+
+    <main>
+      <div class="subbody" >
+
+        <!-- Top Introduction Carousel -->
+        <div id="carouselIndicators" class="carousel slide" data-ride="carousel">
+          <ol class="carousel-indicators">
+            <li data-target="#carouselIndicators" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselIndicators" data-slide-to="1"></li>
+            <li data-target="#carouselIndicators" data-slide-to="2"></li>
+            <li data-target="#carouselIndicators" data-slide-to="3"></li>
+          </ol>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="d-block w-100">
+
+                <div class="mb-3">
+                  <div class="row no-gutters">
+                    <div class="col-sm-7 card-body-column">
+                      <img src="/static/LandingMedia/toolshare.svg" class="card-img" alt="tool sharing">
+                    </div>
+                    <div class="col-sm-5 card-body-column">
+                      <div class="card-body">
+                        <div class="card-category">Spotlight</div>
+                        <h5 class="card-title">Borrow and share tools</h5>
+                        <p class="card-text">
+                          Borrow and share your tools with friends and neighbors. Find what you need for your next project from those around
+                          you. Add your tools to your virtual toolbox so that others can find what they need too.
+                        </p>
+                        <a type="button" class="btn btn-toolshare" href="/register">SIGN UP FOR FREE</a>
+                        <p class="card-text mt-1"><a href="/FAQ" target="_blank"><small>Learn more about finding tools you need</small></a></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="d-block w-100">
+
+                <div class="mb-3">
+                  <div class="row no-gutters">
+                    <div class="col-sm-7 card-body-column">
+                      <img src="/static/LandingMedia/inventory.svg" class="card-img" alt="Inventory">
+                    </div>
+                    <div class="col-sm-5 card-body-column">
+                      <div class="card-body">
+                        <div class="card-category">Logistics</div>
+                        <h5 class="card-title">Manage your inventory</h5>
+                        <p class="card-text">
+                          Load all your tools and choose what to share. Keep track of their health
+                          and history along with any notes. Get those dusty tools back to use.
+                        </p>
+                        <a type="button" class="btn btn-toolshare" href="/register">SIGN UP FOR FREE</a>
+                        <p class="card-text mt-1"><a href="/FAQ" target="_blank"><small>Learn how to selectively share each tool</small></a></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="d-block w-100">
+
+                <div class="mb-3">
+                  <div class="row no-gutters">
+                    <div class="col-sm-7 card-body-column">
+                      <img src="/static/LandingMedia/savings.png" class="card-img" alt="money">
+                    </div>
+                    <div class="col-sm-5 card-body-column">
+                      <div class="card-body">
+                        <div class="card-category">Impact</div>
+                        <h5 class="card-title">Save money and the earth</h5>
+                        <p class="card-text">
+                          Don't buy a tool to use it two times- chances are someone already has what you need.
+                          You will save money and reduce waste. Every house doesn't need a pressure washer.
+                        </p>
+                        <a type="button" class="btn btn-toolshare" href="/register">SIGN UP FOR FREE</a>
+                        <p class="card-text mt-1"><a href="#SavingsCalculator"><small>See how much you could save</small></a></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="d-block w-100">
+
+                <div class="mb-3">
+                  <div class="row no-gutters">
+                    <div class="col-sm-7 card-body-column">
+                      <img src="/static/LandingMedia/blockparty.svg" class="card-img" alt="Block Party">
+                    </div>
+                    <div class="col-sm-5 card-body-column">
+                      <div class="card-body">
+                        <div class="card-category">Connect</div>
+                        <h5 class="card-title">Build community</h5>
+                        <p class="card-text">
+                          With more people home and isolating since COVID, sharing tools with friends and
+                          neighbors will start to rebuild the bonds of community. Get out and interact with people again.
+                        </p>
+                        <a type="button" class="btn btn-toolshare" href="/register">SIGN UP FOR FREE</a>
+                        <p class="card-text mt-1"><a href="/neighborhoods#join" target="_blank"><small>Find neighborhoods near you today</small></a></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
           </div>
-        </nav>
+          <!-- Side Arrows
+          <a class="carousel-control-prev" href="#carouselIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#carouselIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        -->
+        </div>
 
+        <div class="smalltopspace"></div>
 
-
-        <main>
-          <div class="subbody" >
-
-            <!-- Top Introduction Carousel -->
-            <div id="carouselIndicators" class="carousel slide" data-ride="carousel">
-              <ol class="carousel-indicators">
-                <li data-target="#carouselIndicators" data-slide-to="0" class="active"></li>
-                <li data-target="#carouselIndicators" data-slide-to="1"></li>
-                <li data-target="#carouselIndicators" data-slide-to="2"></li>
-                <li data-target="#carouselIndicators" data-slide-to="3"></li>
-              </ol>
-              <div class="carousel-inner">
-                <div class="carousel-item active">
-                  <div class="d-block w-100">
-
-                    <div class="mb-3">
-                      <div class="row no-gutters">
-                        <div class="col-sm-7 card-body-column">
-                          <img src="/static/LandingMedia/toolshare.svg" class="card-img" alt="tool sharing">
-                        </div>
-                        <div class="col-sm-5 card-body-column">
-                          <div class="card-body">
-                            <div class="card-category">Spotlight</div>
-                            <h5 class="card-title">Borrow and share tools</h5>
-                            <p class="card-text">
-                              Borrow and share your tools with friends and neighbors. Find what you need for your next project from those around
-                              you. Add your tools to your virtual toolbox so that others can find what they need too.
-                            </p>
-                            <a type="button" class="btn btn-toolshare" href="/register">SIGN UP FOR FREE</a>
-                            <p class="card-text mt-1"><a href="..." target="_blank"><small>Learn more about finding tools you need</small></a></p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-                <div class="carousel-item">
-                  <div class="d-block w-100">
-
-                    <div class="mb-3">
-                      <div class="row no-gutters">
-                        <div class="col-sm-7 card-body-column">
-                          <img src="/static/LandingMedia/inventory.svg" class="card-img" alt="Inventory">
-                        </div>
-                        <div class="col-sm-5 card-body-column">
-                          <div class="card-body">
-                            <div class="card-category">Logistics</div>
-                            <h5 class="card-title">Manage your inventory</h5>
-                            <p class="card-text">
-                              Load all your tools and choose what to share. Keep track of their health
-                              and history along with any notes. Get those dusty tools back to use.
-                            </p>
-                            <a type="button" class="btn btn-toolshare" href="/register">SIGN UP FOR FREE</a>
-                            <p class="card-text mt-1"><a href="..." target="_blank"><small>Learn how to selectively share each tool</small></a></p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-                <div class="carousel-item">
-                  <div class="d-block w-100">
-
-                    <div class="mb-3">
-                      <div class="row no-gutters">
-                        <div class="col-sm-7 card-body-column">
-                          <img src="/static/LandingMedia/savings.png" class="card-img" alt="money">
-                        </div>
-                        <div class="col-sm-5 card-body-column">
-                          <div class="card-body">
-                            <div class="card-category">Impact</div>
-                            <h5 class="card-title">Save money and the earth</h5>
-                            <p class="card-text">
-                              Don't buy a tool to use it two times- chances are someone already has what you need.
-                              You will save money and reduce waste. Every house doesn't need a pressure washer.
-                            </p>
-                            <a type="button" class="btn btn-toolshare" href="/register">SIGN UP FOR FREE</a>
-                            <p class="card-text mt-1"><a href="#SavingsCalculator"><small>See how much you could save</small></a></p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-                <div class="carousel-item">
-                  <div class="d-block w-100">
-
-                    <div class="mb-3">
-                      <div class="row no-gutters">
-                        <div class="col-sm-7 card-body-column">
-                          <img src="/static/LandingMedia/blockparty.svg" class="card-img" alt="Block Party">
-                        </div>
-                        <div class="col-sm-5 card-body-column">
-                          <div class="card-body">
-                            <div class="card-category">Connect</div>
-                            <h5 class="card-title">Build community</h5>
-                            <p class="card-text">
-                              With more people home and isolating since COVID, sharing tools with friends and
-                              neighbors will start to rebuild the bonds of community. Get out and interact with people again.
-                            </p>
-                            <a type="button" class="btn btn-toolshare" href="/register">SIGN UP FOR FREE</a>
-                            <p class="card-text mt-1"><a href="/neighborhoods#join" target="_blank"><small>Find neighborhoods near you today</small></a></p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-              <!-- Side Arrows
-              <a class="carousel-control-prev" href="#carouselIndicators" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-              </a>
-              <a class="carousel-control-next" href="#carouselIndicators" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-              </a>
-            -->
-            </div>
-
-            <div class="smalltopspace"></div>
-
-            <!-- Cross Platform Section -->
-            <div class="crossplatform border-top">
-              <h4 class="landingsectionheader">Cross Platform Support</h4>
-              <div class="row no-gutters mt-2">
-                <div class="col-sm-5 card-body-column">
-                  <div class="card-body">
-                    <h5 class="card-title">Use on any device</h5>
-                    <p class="card-text">
-                      As a web app, you can access and manage your tools on any device. Upload photos of your tools directly
-                      from your smartphone. <br><br>
-                      It's even possible to install the web app on your mobile device to make it feel more like a native app.
-                    </p>
-                  </div>
-                </div>
-                <div class="col-sm-7 card-body-column">
-                  <img src="/static/LandingMedia/digitaldevices.png" class="card-img" alt="any device">
-                </div>
-              </div>
-            </div>
-
-            <!-- Features Section -->
-            <div class="features border-top">
-              <h4 class="landingsectionheader">Features</h4>
-
-              <div class="row no-gutters mb-4">
-                <div class="col-sm-8 card-body-column">
-                  <img src="/static/LandingMedia/FindTool.png" class="screeney-img" alt="find a tool">
-                </div>
-                <div class="col-sm-4 card-body-column">
-                  <div class="card-body">
-                    <div class="rhombus"><div id="rhombus"></div></div>
-                    <p class="card-text">
-                      <strong>Search</strong> for the tools that you'll need in your next project. You'll see all of
-                      the tools that are being shared in all of your neighborhoods, and can filter
-                      by type (hand, power, garden, fastening, or other). If you can't find what you
-                      need just Ask a Neighbor. People will have tools that they haven't loaded in
-                      the app yet.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row no-gutters mb-4">
-                <div class="col-sm-8 card-body-column">
-                  <img src="/static/LandingMedia/EditTool.png" class="screeney-img" alt="edit tool">
-                </div>
-                <div class="col-sm-4 card-body-column">
-                  <div class="card-body">
-                    <div class="rhombus"><div id="rhombus"></div></div>
-                    <p class="card-text">
-                      Easily store images of your tools, track their health, and store notes about the tools. You can have
-                      public notes that share the features/usage/care instructions/fees for others to see who may be interested
-                      in using your tool. There are also private notes where you can save other details like purchase date, cost,
-                      and who should or shouldn't borrow this tool.
-                      Also control which tools get shared in which neighborhoods.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row no-gutters mb-4">
-                <div class="col-sm-8 card-body-column">
-                  <img id="darkswap" src="/static/LandingMedia/ActionsLight.png" class="screeney-img" alt="find a tool">
-                </div>
-                <div class="col-sm-4 card-body-column">
-                  <div class="card-body">
-                    <div class="rhombus"><div id="rhombus"></div></div>
-                    <p class="card-text">
-                      Approve or reject peoples requests to borrow your tools. View notifications for actions, messages, and
-                      other items.
-                      <br><br>
-                      Switch between light and dark mode in your account settings.
-                    </p>
-                    <span class="nighttoggle" id="switch">
-                      <input type="checkbox" class="checkbox" id="chk"/>
-                      <label class="label" for="chk">
-                          <i class="fas fa-sun"></i>
-                          <i class="fas fa-moon"></i>
-                          <div class="ball"></div>
-                      </label>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-
-            <h4 id="SavingsCalculator" class="landingsectionheader">Savings Calculator</h4>
-            <div>
-              <div class="row m-0">
-                <div class="col-sm-6 p-3 mb-3">
-                  <label for="ProjCount">
-                    Number of projects per year:
-                    <span id="ProjCountbox" style="font-weight: bold; color: #cc5500;" ></span>
-                  </label>
-                  <div class="d-flex justify-content-between">
-                    <span class="text-muted small">0</span>
-                    <span class="text-muted small">20</span>
-                  </div>
-                  <div class="form-control border-0" style="width: inherit;">
-                    <input type="range" id="ProjCountbar" name="ProjCount" class="form-control-range custom-range slider track" min="0" max="20" value="4">
-                  </div>
-                </div>
-                <div class="col-sm-6 p-3 mb-3">
-                  <label for="AvgToolCost">
-                    Average tool cost:
-                    <span style="font-weight: bold; color: #cc5500;">$</span><span id="AvgToolCostbox" style="font-weight: bold; color: #cc5500;" ></span>
-                  </label>
-                  <div class="d-flex justify-content-between">
-                    <span class="text-muted small">$2</span>
-                    <span class="text-muted small">$150</span>
-                  </div>
-                  <div class="form-control border-0" style="width: inherit;">
-                    <input type="range" id="AvgToolCostbar" name="AvgToolCost" class="form-control-range custom-range slider track" min="2" max="150" value="35">
-                  </div>
-                </div>
-              </div>
-
-              <div class="row m-0">
-                <div class="col-sm-6 p-3 mb-3">
-                  <label for="ToolCount">
-                    Number of tools you own:
-                    <span id="ToolCountbox" style="font-weight: bold; color: #cc5500;" ></span>
-                  </label>
-                  <div class="d-flex justify-content-between">
-                    <span class="text-muted small">10</span>
-                    <span class="text-muted small">150</span>
-                  </div>
-                  <div class="form-control border-0" style="width: inherit;">
-                    <input type="range" id="ToolCountbar" name="ToolCount" class="form-control-range custom-range slider track" min="10" max="150" value="36">
-                  </div>
-                </div>
-                <div class="col-sm-6 p-3 mb-3">
-                  <label for="Homeowner">
-                    Are you a homeonwer?
-                    <span id="Homeownerbox" style="font-weight: bold; color: #cc5500;"></span>
-                  </label>
-                  <div class="d-flex justify-content-center">
-                    <ul class="list" id="Homeowner">
-                      <li class="list-item">
-                        <input type="checkbox" class="hidden-box" id="HomeownerChk" checked/>
-                        <label for="HomeownerChk" class="check--label">
-                          <span class="check--label-box"></span>
-                          <span class="check--label-text">I'm a homeowner</span>
-                        </label>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="mb-4">
-                <h5>Total estimated yearly savings: <br>
-                  <span id="savings"  class="savings">$430</span>
-                </h5>
-              </div>
-
-              <button id="moreControls" class="btn btn-info m-3" data-toggle="collapse" data-target="#morecontrols" onclick="toggleControls();">More Controls</button>
-
-              <div id="morecontrols" class="collapse">
-                <div class="row m-0">
-                  <div class="col-sm-6 p-3 mb-3">
-                    <label for="ToolUpkeep">
-                      Tool upkeep
-                      <a href="#" role="button" data-toggle="popover" data-placement="top" title="Ownership Costs" data-content="RAV: replacement asset value <br> MC: maintenance cost" data-original-title='Ownership Costs'>costs</a>
-                    </label>
-                    <div class="d-flex justify-content-center">
-                      <div class="input-group">
-                        <input type="text" class="form-control" style="text-align: right;" id="ToolUpkeep" value=7>
-                        <div class="input-group-append">
-                          <span class="input-group-text">% RAV & MC</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-6 p-3 mb-3">
-                    <label for="HouseUpkeep">
-                      Yearly home upkeep (tools):
-                      <span style="font-weight: bold; color: #cc5500;">$</span><span id="HouseUpkeepbox" style="font-weight: bold; color: #cc5500;" ></span>
-                    </label>
-                    <div class="d-flex justify-content-between">
-                      <span class="text-muted small">$20</span>
-                      <span class="text-muted small">$230</span>
-                    </div>
-                    <div class="form-control border-0" style="width: inherit;">
-                      <input type="range" id="HouseUpkeepbar" name="HouseUpkeep" class="form-control-range custom-range slider track" min="20" max="230" value="67">
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
-              <div>
-                <button class="btn btn-outline-secondary btn-sm m3" onclick="resetDefaults();">Reset to Defaults</button>
-              </div>
-            </div>
-
-
-            <div class="deadspace"></div>
-
-            <!-- Pricing Table -->
-            <h4 class="landingsectionheader">Pricing</h4>
-            <div class="text-center">
-                <div class="container">
-                    <div class="row pt-4 justify-content-center">
-                        <div class="col-md-4">
-                            <div class="card mb-4 box-shadow">
-                                <div class="card-header">
-                                    <h4 class="my-0 font-weight-normal">Free</h4>
-                                </div>
-                                <div class="card-body">
-                                    <h1><b>$0 </b><small class="text-muted">/ yr</small></h1>
-                                    <ul class="list-unstyled mt-3 mb-4">
-                                        <li><strong>5</strong> tools</li>
-                                        <li><strong>1</strong> neighborhood</li>
-                                        <li>No tech support</li>
-                                    </ul>
-                                    <a type="button" class="btn btn-block btn-outline-info" href="/register?accounttype=free">Get Started</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card mb-4 box-shadow">
-                              <div class="container_row-landing">
-                                <div class="layer1-landing">
-                                  <div class="card-header">
-                                      <h4 class="my-0 font-weight-normal">Homeowner</h4>
-                                  </div>
-                                  <div class="card-body">
-                                      <div class="discount"> Reg <span>$10 / yr</span></div>
-                                      <h1 style="color: green"><b>$0 </b><small class="text-muted">/ yr</small><span class="redstar" style="font-size: smaller;">*</span></h1>
-                                      <ul class="list-unstyled mt-3 mb-4">
-                                        <li><strong>30</strong> tools</li>
-                                        <li><strong>5</strong> neighborhoods</li>
-                                        <li>No tech support</li>
-                                      </ul>
-                                      <a type="button" class="btn btn-block btn-toolshare" style="padding: 6px 12px; font-size: 1rem;" href="/register?accounttype=homeowner">Get Started</a>
-                                  </div>
-                                </div>
-                                <div class="layer2-landing">
-                                  <img src='/static/LandingMedia/BestValue.png' alt="Best Value">
-                                </div>
-                              </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card mb-4 box-shadow">
-                                <div class="card-header">
-                                    <h4 class="my-0 font-weight-normal">Handyman</h4>
-                                </div>
-                                <div class="card-body">
-                                    <div class="discount"> Reg <span>$45 / yr</span></div>
-                                    <h1><b>$0 </b><small class="text-muted">/ yr</small><span class="redstar" style="font-size: smaller;">*</span></h1>
-                                    <ul class="list-unstyled mt-3 mb-4">
-                                      <li><strong>120</strong> tools</li>
-                                      <li><strong>15</strong> neighborhoods</li>
-                                      <li>Email tech support</li>
-                                    </ul>
-                                    <a type="button" class="btn btn-block btn-primary" href="/register?accounttype=handyman">Get Started</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card mb-4 box-shadow">
-                                <div class="card-header">
-                                    <h4 class="my-0 font-weight-normal">Professional</h4>
-                                </div>
-                                <div class="card-body">
-                                    <div class="discount"> Reg <span>$650 / yr</span></div>
-                                    <h1><b>$0 </b><small class="text-muted">/ yr</small><span class="redstar" style="font-size: smaller;">*</span></h1>
-                                    <ul class="list-unstyled mt-3 mb-4">
-                                      <li><strong>Unlimited</strong> tools and neighborhoods</li>
-                                      <li>Email tech support</li>
-                                    </ul>
-                                    <a type="button" class="btn btn-block btn-primary" href="/register?accounttype=professional">Get Started</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card mb-4 box-shadow">
-                                <div class="card-header">
-                                    <h4 class="my-0 font-weight-normal">Enterprise</h4>
-                                </div>
-                                <div class="card-body">
-                                    <ul class="list-unstyled mt-3 mb-4">
-                                      <li>Taylored suite</li>
-                                      <li>Custom branding</li>
-                                      <li>Dedicated server</li>
-                                      <li>Full tech support</li>
-                                    </ul>
-                                    <a type="button" class="btn btn-block btn-light" href="/contact?type=enterprise">Contact us</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <small>
-                      <span class="redstar">*</span> All items currently on sale as this app is still under development.
-                      <br> Join now to be an early tester!
-                    </small>
-                </div>
-            </div>
-
-            <div class="smalltopspace"></div>
-            <div class="smalltopspace"></div>
-            <div class="smalltopspace"></div>
-
-            <!-- User Reviews -->
-            <div style="background-color: #cc5500bf;">
-            <h4 class="landingsectionheader" style="color: white; padding-bottom: 0.3em;">User Feedback</h4>
-            <div id="carouselIndicators2" class="carousel slide my-4" data-ride="carousel">
-              <ol class="carousel-indicators car2">
-                <li data-target="#carouselIndicators2" data-slide-to="0" class="active"></li>
-                <li data-target="#carouselIndicators2" data-slide-to="1"></li>
-                <li data-target="#carouselIndicators2" data-slide-to="2"></li>
-                <li data-target="#carouselIndicators2" data-slide-to="3"></li>
-                <li data-target="#carouselIndicators2" data-slide-to="4"></li>
-              </ol>
-
-              <div class="carousel-inner">
-                <div class="carousel-item active">
-                  <div class="d-block w-100">
-                    <div class="mx-5 mb-5 border border-white reviewcard">
-                      <div class="row no-gutters my-3">
-                        <div class="col-sm-5 card-body-column px-4" style="justify-content: center;">
-                          <img src="/static/LandingMedia/people/tdudley.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 210px;" alt="T. Duley">
-                        </div>
-                        <div class="col-sm-7 card-body-column">
-                          <div class="card-body">
-                            <p class="card-text my-1 px-4">
-                              "I didn't think I'd need this app as we're just renting a place, but I realized
-                              we really don't have the space to store any big tools at all. I had to borrow
-                              a car jack and some other wrenches to fix a tie rod on our 2003 Chevy Malibu, and
-                              the nice old man across the street had his stuff loaded in this app. We love being
-                              able to save space and money!"
-                            </p>
-                            <h5 class="card-title mb-0 mt-1" style="color: #00cc44;">Terry Dudley</h5>
-                            <div class="card-category px-4">Chicago</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="carousel-item">
-                  <div class="d-block w-100">
-                    <div class="mx-5 mb-5 border border-white reviewcard">
-                      <div class="row no-gutters my-3">
-                        <div class="col-sm-5 card-body-column px-4" style="justify-content: center;">
-                          <img src="/static/LandingMedia/people/cjohnson.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 210px;" alt="C. Johnson">
-                        </div>
-                        <div class="col-sm-7 card-body-column">
-                          <div class="card-body">
-                            <p class="card-text my-1 px-4">
-                              "After a tree fell down in my back yard, I needed a chain saw to break
-                              it up and haul out the pieces. Thankfully one of my friends had one I
-                              could borrow, and it was super easy to find using this app."
-                            </p>
-                            <h5 class="card-title mb-0 mt-1" style="color: #00cc44;">Collie Johnston</h5>
-                            <div class="card-category px-4">Portland</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="carousel-item">
-                  <div class="d-block w-100">
-                    <div class="mx-5 mb-5 border border-white reviewcard">
-                      <div class="row no-gutters my-3">
-                        <div class="col-sm-5 card-body-column px-4" style="justify-content: center;">
-                          <img src="/static/LandingMedia/people/thowell.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 210px;" alt="T. Howell">
-                        </div>
-                        <div class="col-sm-7 card-body-column">
-                          <div class="card-body">
-                            <p class="card-text my-1 px-4">
-                              "I had so many old tools that were just sitting around. Even though
-                               I'm not charging other people to use my tools, I think it's helping them
-                               stay in better shape with a little use every once in a while. I mainly use
-                               this app to keep an inventory of all my tools."
-                            </p>
-                            <h5 class="card-title mb-0 mt-1" style="color: #00cc44;">Tracy Howell</h5>
-                            <div class="card-category px-4">Pittsburg</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="carousel-item">
-                  <div class="d-block w-100">
-                    <div class="mx-5 mb-5 border border-white reviewcard">
-                      <div class="row no-gutters my-3">
-                        <div class="col-sm-5 card-body-column px-4" style="justify-content: center;">
-                          <img src="/static/LandingMedia/people/mstanton.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 210px;" alt="M. Stanton">
-                        </div>
-                        <div class="col-sm-7 card-body-column">
-                          <div class="card-body">
-                            <p class="card-text my-1 px-4">
-                              "So many people don't have enough gardening tools. I've been able to share
-                              my tiler and shovels and spades with so many friends. I think it's helping
-                              people break down barriers to getting into yard work themselves."
-                            </p>
-                            <h5 class="card-title mb-0 mt-1" style="color: #00cc44;">Marie Stanton</h5>
-                            <div class="card-category px-4">Columbus</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="carousel-item">
-                  <div class="d-block w-100">
-                    <div class="mx-5 mb-5 border border-white reviewcard">
-                      <div class="row no-gutters my-3">
-                        <div class="col-sm-5 card-body-column px-4" style="justify-content: center;">
-                          <img src="/static/LandingMedia/people/lmooney.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 210px;" alt="L. Mooney">
-                        </div>
-                        <div class="col-sm-7 card-body-column">
-                          <div class="card-body">
-                            <p class="card-text my-1 px-4">
-                              "I love being able to share with my neighbors. I'm a woodworker, so I've got
-                              lots of those kind of tools.  When it came time to pressure wash my house
-                              - I was able to find one a few doors down. I've even met a few new friends too."
-                            </p>
-                            <h5 class="card-title mb-0 mt-1" style="color: #00cc44;">Laurence Mooney</h5>
-                            <div class="card-category px-4">Louisville</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-              </div>
-              <!-- Side Arrows -->
-              <a class="carousel-control-prev" href="#carouselIndicators2" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-              </a>
-              <a class="carousel-control-next" href="#carouselIndicators2" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-              </a>
-
-            </div>
-            </div>
-
-            <div class="smalltopspace"></div>
-            <div class="smalltopspace"></div>
-            <div class="smalltopspace"></div>
-
-            <div class="mt-5">
-              <div class="px-4" style="letter-spacing: 0.3em; font-weight: 200; font-size: 1.3em;">Dont' be a fool, borrow a tool.</div>
-              <a type="button" class="btn btn-toolshare m-3 px-4" href="/register">Get Started</a>
-            </div>
-
-            <div class="smalltopspace"></div>
-            <div class="smalltopspace"></div>
-            <div class="smalltopspace"></div>
-
-            <h4 class="landingsectionheader">Request a Demo</h4>
-              <div class="card-body-column card-text px-5">
-                <p>
-                  To seem more about how the app works and feels, head on over to the <a href="/FAQ" target="_blank"> FAQ page</a>.
-                  There are overview videos, walk-throughs, and you should be able to get a good feel for how the
-                  app works.<br>
-                  If you'd still like to try it out before signing up, feel free to reach out for a demo session.<br><br>
-                  Please use the contact form and be sure to say a little about why you are interested. You can also
-                  use the form to ask questions or even provide feedback.
+        <!-- Cross Platform Section -->
+        <div class="crossplatform border-top">
+          <h4 class="landingsectionheader">Cross Platform Support</h4>
+          <div class="row no-gutters mt-2">
+            <div class="col-sm-5 card-body-column">
+              <div class="card-body">
+                <h5 class="card-title">Use on any device</h5>
+                <p class="card-text">
+                  As a web app, you can access and manage your tools on any device. Upload photos of your tools directly
+                  from your smartphone. <br><br>
+                  It's even possible to install the web app on your mobile device to make it feel more like a native app.
                 </p>
               </div>
-              <a type="button" class="btn btn-light m-2" href="/contact?type=requestdemo">Request Demo</a>
+            </div>
+            <div class="col-sm-7 card-body-column">
+              <img src="/static/LandingMedia/digitaldevices.png" class="card-img" alt="any device">
+            </div>
+          </div>
+        </div>
 
+        <!-- Features Section -->
+        <div class="features border-top">
+          <h4 class="landingsectionheader">Features</h4>
 
-            <div class="smalltopspace"></div>
-            <div class="smalltopspace"></div>
-            <div class="smalltopspace"></div>
-
-            <h4 class="landingsectionheader">About the Creator</h4>
-              <div class="card-body-column card-text px-5">
-                <span>
-                  <img src="/static/LandingMedia/people/ssmall.jpeg" class="aboutcreator" alt="S. Small">
-                  I originally made this web app as a personal project to develop my programming skills. It started as my capstone project
-                  to the amazing (and free) <a href="https://cs50.harvard.edu/" target="_blank">CS50</a> course, but then I continued to add
-                  more and more features. I learned how to publish and host it, and realized that people could actually use this.<br>
-                  Ultimately, I do want people to reconsider every purchase they make. If more poeple share tools, we will all help reduce the
-                  total amount of waste we continue to generate.
-                  <br>
-                  <br>
-                  Check out more about me and my work at <a href="https://stevensmall.tk" target="_blank">stevensmall.tk</a>
-                </span>
+          <div class="row no-gutters mb-4">
+            <div class="col-sm-8 card-body-column">
+              <img src="/static/LandingMedia/FindTool.png" class="screeney-img" alt="find a tool">
+            </div>
+            <div class="col-sm-4 card-body-column">
+              <div class="card-body">
+                <div class="featureheader">
+                  <div id="rhombus" class="mt-1 ml-2"></div>
+                  <div class="card-category">Find tools you need</div>
+                </div>
+                <p class="card-text">
+                  Search for the tools that you'll need in your next project. You'll see all of
+                  the tools that are being shared in all of your neighborhoods, and can filter
+                  by type (hand, power, garden, fastening, or other). If you can't find what you
+                  need just Ask a Neighbor. People will have tools that they haven't loaded in
+                  the app yet.
+                </p>
               </div>
-
-            <div class="deadspace"></div>
-
-
-            <footer class="text-center" style="height: 28px; padding-bottom: 180px;">
-              <div class="copyright">
-                  &copy 2020 -
-                  <script type="text/JavaScript">
-                      document.write(new Date().getFullYear());
-                  </script>
-                  / Steven Small / All Rights Reserved
-                  <br>
-                  <br>
-                  <a href="/TermsAndConditions" target="_blank" rel="noopener noreferrer">Terms and Conditions</a><br>
-                  <a href="/PrivacyPolicy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-                  <br>
-                  <br>
-                  Website artwork modified from free vector graphics from <a href="https://www.vecteezy.com/" target="_blank">Vecteezy.com</a><br>
-                  with special appreciation to artist <strong><a href="https://www.vecteezy.com/members/monsterjoke" target="_blank">monsterjoke</a></strong> for his great tools.
-                  <div class="deadspace" style="background-color: #4c4c4c;"></div>
-              </div>
-            </footer>
+            </div>
           </div>
 
-        </main>
+          <div class="row no-gutters mb-4">
+            <div class="col-sm-8 card-body-column">
+              <img src="/static/LandingMedia/EditTool.png" class="screeney-img" alt="edit tool">
+            </div>
+            <div class="col-sm-4 card-body-column">
+              <div class="card-body">
+                <div class="featureheader">
+                  <div id="rhombus" class="mt-1 ml-2"></div>
+                  <div class="card-category">Manage your tool inventory</div>
+                </div>
+                <p class="card-text">
+                  Easily store images of your tools, track their health, and store notes about the tools. You can have
+                  public notes that share the features/usage/care instructions/fees for others to see who may be interested
+                  in using your tool. There are also private notes where you can save other details like purchase date, cost,
+                  and who should or shouldn't borrow this tool.
+                  Also control which tools get shared in which neighborhoods.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="row no-gutters mb-4">
+            <div class="col-sm-8 card-body-column">
+              <img id="darkswap" src="/static/LandingMedia/ActionsLight.png" class="screeney-img" alt="find a tool">
+            </div>
+            <div class="col-sm-4 card-body-column">
+              <div class="card-body">
+                <div class="featureheader">
+                  <div id="rhombus" class="mt-1 ml-2"></div>
+                  <div class="card-category">Interract with your community</div>
+                </div>
+                <p class="card-text">
+                  Approve or reject peoples requests to borrow your tools. View notifications for actions, messages, and
+                  other items.
+                  <br><br>
+                  Switch between light and dark mode in your account settings.
+                </p>
+                <span class="nighttoggle" id="switch">
+                  <input type="checkbox" class="checkbox" id="chk"/>
+                  <label class="label" for="chk">
+                      <i class="fas fa-sun"></i>
+                      <i class="fas fa-moon"></i>
+                      <div class="ball"></div>
+                  </label>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
 
 
+
+        <h4 id="SavingsCalculator" class="landingsectionheader">Savings Calculator</h4>
+        <div>
+          <div class="row m-0">
+            <div class="col-sm-6 p-3 mb-3">
+              <label for="ProjCount">
+                Number of projects per year:
+                <span id="ProjCountbox" style="font-weight: bold; color: #cc5500;" ></span>
+              </label>
+              <div class="d-flex justify-content-between">
+                <span class="text-muted small">0</span>
+                <span class="text-muted small">20</span>
+              </div>
+              <div class="form-control border-0" style="width: inherit;">
+                <input type="range" id="ProjCountbar" name="ProjCount" class="form-control-range custom-range slider track" min="0" max="20" value="4">
+              </div>
+            </div>
+            <div class="col-sm-6 p-3 mb-3">
+              <label for="AvgToolCost">
+                Average tool cost:
+                <span style="font-weight: bold; color: #cc5500;">$</span><span id="AvgToolCostbox" style="font-weight: bold; color: #cc5500;" ></span>
+              </label>
+              <div class="d-flex justify-content-between">
+                <span class="text-muted small">$2</span>
+                <span class="text-muted small">$150</span>
+              </div>
+              <div class="form-control border-0" style="width: inherit;">
+                <input type="range" id="AvgToolCostbar" name="AvgToolCost" class="form-control-range custom-range slider track" min="2" max="150" value="35">
+              </div>
+            </div>
+          </div>
+
+          <div class="row m-0">
+            <div class="col-sm-6 p-3 mb-3">
+              <label for="ToolCount">
+                Number of tools you own:
+                <span id="ToolCountbox" style="font-weight: bold; color: #cc5500;" ></span>
+              </label>
+              <div class="d-flex justify-content-between">
+                <span class="text-muted small">10</span>
+                <span class="text-muted small">120</span>
+              </div>
+              <div class="form-control border-0" style="width: inherit;">
+                <input type="range" id="ToolCountbar" name="ToolCount" class="form-control-range custom-range slider track" min="10" max="120" value="36">
+              </div>
+            </div>
+            <div class="col-sm-6 p-3 mb-3">
+              <label for="Homeowner">
+                Are you a homeonwer?
+                <span id="Homeownerbox" style="font-weight: bold; color: #cc5500;"></span>
+              </label>
+              <div class="d-flex justify-content-center">
+                <ul class="list" id="Homeowner">
+                  <li class="list-item">
+                    <input type="checkbox" class="hidden-box" id="HomeownerChk" checked/>
+                    <label for="HomeownerChk" class="check--label">
+                      <span class="check--label-box"></span>
+                      <span class="check--label-text">I'm a homeowner</span>
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <h5>Total estimated yearly savings: <br>
+              <span id="savings"  class="savings">$430</span>
+            </h5>
+          </div>
+
+          <button id="moreControls" class="btn btn-info m-3" data-toggle="collapse" data-target="#morecontrols" onclick="toggleControls();">More Controls</button>
+
+          <div id="morecontrols" class="collapse">
+            <div class="row m-0">
+              <div class="col-sm-6 p-3 mb-3">
+                <label for="ToolUpkeep">
+                  Tool upkeep
+                  <a href="#" role="button" data-toggle="popover" data-placement="top" title="Ownership Costs" data-content="RAV: replacement asset value <br> MC: maintenance cost" data-original-title='Ownership Costs'>costs</a>
+                </label>
+                <div class="d-flex justify-content-center">
+                  <div class="input-group">
+                    <input type="text" class="form-control" style="text-align: right;" id="ToolUpkeep" value=7>
+                    <div class="input-group-append">
+                      <span class="input-group-text">% RAV & MC</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 p-3 mb-3">
+                <label for="HouseUpkeep">
+                  Yearly home upkeep (tools):
+                  <span style="font-weight: bold; color: #cc5500;">$</span><span id="HouseUpkeepbox" style="font-weight: bold; color: #cc5500;" ></span>
+                </label>
+                <div class="d-flex justify-content-between">
+                  <span class="text-muted small">$20</span>
+                  <span class="text-muted small">$230</span>
+                </div>
+                <div class="form-control border-0" style="width: inherit;">
+                  <input type="range" id="HouseUpkeepbar" name="HouseUpkeep" class="form-control-range custom-range slider track" min="20" max="230" value="67">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div>
+            <button class="btn btn-outline-secondary btn-sm m3" onclick="resetDefaults();">Reset to Defaults</button>
+          </div>
+        </div>
+
+
+        <div class="deadspace"></div>
+
+        <!-- Pricing Table -->
+        <h4 class="landingsectionheader">Pricing</h4>
+        <div class="text-center" style="font-size: 0.9em;">
+            <div class="container">
+                <div class="row pt-4 justify-content-center">
+                    <div class="col-md-4">
+                        <div class="card mb-4 box-shadow">
+                            <div class="card-header">
+                                <h5 class="my-0 font-weight-light">Free</h5>
+                            </div>
+                            <div class="card-body">
+                                <h2><b>$0 </b><small class="text-muted">/ yr</small></h2>
+                                <ul class="list-unstyled mt-3 mb-4">
+                                    <li><strong>5</strong> tools</li>
+                                    <li><strong>1</strong> neighborhood</li>
+                                    <li>No tech support</li>
+                                </ul>
+                                <a type="button" class="btn btn-block btn-outline-info" href="/register?accounttype=free">Get Started</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4 box-shadow">
+                          <div class="container_row-landing">
+                            <div class="layer1-landing">
+                              <div class="card-header">
+                                  <h5 class="my-0 font-weight-light">Homeowner</h5>
+                              </div>
+                              <div class="card-body">
+                                  <div class="discount"> Reg <span>$10 / yr</span></div>
+                                  <h2 style="color: green"><b>$0 </b><small class="text-muted">/ yr</small><span class="redstar" style="font-size: smaller;">*</span></h2>
+                                  <ul class="list-unstyled mt-3 mb-4">
+                                    <li><strong>30</strong> tools</li>
+                                    <li><strong>5</strong> neighborhoods</li>
+                                    <li>No tech support</li>
+                                  </ul>
+                                  <a type="button" class="btn btn-block btn-toolshare" style="padding: 6px 12px; font-size: 1rem;" href="/register?accounttype=homeowner">Get Started</a>
+                              </div>
+                            </div>
+                            <div class="layer2-landing">
+                              <img src='/static/LandingMedia/BestValue.png' alt="Best Value">
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4 box-shadow">
+                            <div class="card-header">
+                                <h5 class="my-0 font-weight-light">Handyman</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="discount"> Reg <span>$45 / yr</span></div>
+                                <h2><b>$0 </b><small class="text-muted">/ yr</small><span class="redstar" style="font-size: smaller;">*</span></h2>
+                                <ul class="list-unstyled mt-3 mb-4">
+                                  <li><strong>120</strong> tools</li>
+                                  <li><strong>15</strong> neighborhoods</li>
+                                  <li>Email tech support</li>
+                                </ul>
+                                <a type="button" class="btn btn-block btn-primary" href="/register?accounttype=handyman">Get Started</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4 box-shadow">
+                            <div class="card-header">
+                                <h5 class="my-0 font-weight-light">Professional</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="discount"> Reg <span>$650 / yr</span></div>
+                                <h2><b>$0 </b><small class="text-muted">/ yr</small><span class="redstar" style="font-size: smaller;">*</span></h2>
+                                <ul class="list-unstyled mt-3 mb-4">
+                                  <li><strong>Unlimited</strong> tools and neighborhoods</li>
+                                  <li>Email tech support</li>
+                                </ul>
+                                <a type="button" class="btn btn-block btn-primary" href="/register?accounttype=professional">Get Started</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4 box-shadow">
+                            <div class="card-header">
+                                <h5 class="my-0 font-weight-light">Enterprise</h5>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-unstyled mt-3 mb-4">
+                                  <li>Taylored suite</li>
+                                  <li>Custom branding</li>
+                                  <li>Dedicated server</li>
+                                  <li>Full tech support</li>
+                                </ul>
+                                <a type="button" class="btn btn-block btn-light" href="/contact?type=enterprise">Contact us</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <small>
+                  <span class="redstar">*</span> All items currently on sale as this app is still under development.
+                  <br> Join now to be an early tester!
+                </small>
+            </div>
+        </div>
+
+        <div class="smalltopspace"></div>
+        <div class="smalltopspace"></div>
+        <div class="smalltopspace"></div>
+
+        <!-- User Reviews -->
+        <div style="background-color: #cc5500bf;">
+        <h4 class="landingsectionheader" style="color: white; padding-bottom: 0.3em;">User Feedback</h4>
+        <div id="carouselIndicators2" class="carousel slide my-4" data-ride="carousel">
+          <ol class="carousel-indicators car2">
+            <li data-target="#carouselIndicators2" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselIndicators2" data-slide-to="1"></li>
+            <li data-target="#carouselIndicators2" data-slide-to="2"></li>
+            <li data-target="#carouselIndicators2" data-slide-to="3"></li>
+            <li data-target="#carouselIndicators2" data-slide-to="4"></li>
+          </ol>
+
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="d-block w-100">
+                <div class="mx-5 mb-5 border border-white reviewcard">
+                  <div class="row no-gutters my-3">
+                    <div class="col-sm-5 card-body-column px-4" style="justify-content: center;">
+                      <img src="/static/LandingMedia/people/tdudley.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 210px;" alt="T. Duley">
+                    </div>
+                    <div class="col-sm-7 card-body-column">
+                      <div class="card-body">
+                        <p class="card-text my-1 px-4">
+                          "I didn't think I'd need this app as we're just renting a place, but I realized
+                          we really don't have the space to store any big tools at all. I had to borrow
+                          a car jack and some other wrenches to fix a tie rod on our 2003 Chevy Malibu, and
+                          the nice old man across the street had his stuff loaded in this app. We love being
+                          able to save space and money!"
+                        </p>
+                        <h5 class="card-title mb-0 mt-1" style="color: #00cc44;">Terry Dudley</h5>
+                        <div class="card-category px-4">Chicago</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="carousel-item">
+              <div class="d-block w-100">
+                <div class="mx-5 mb-5 border border-white reviewcard">
+                  <div class="row no-gutters my-3">
+                    <div class="col-sm-5 card-body-column px-4" style="justify-content: center;">
+                      <img src="/static/LandingMedia/people/cjohnson.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 210px;" alt="C. Johnson">
+                    </div>
+                    <div class="col-sm-7 card-body-column">
+                      <div class="card-body">
+                        <p class="card-text my-1 px-4">
+                          "After a tree fell down in my back yard, I needed a chain saw to break
+                          it up and haul out the pieces. Thankfully one of my friends had one I
+                          could borrow, and it was super easy to find using this app."
+                        </p>
+                        <h5 class="card-title mb-0 mt-1" style="color: #00cc44;">Collie Johnston</h5>
+                        <div class="card-category px-4">Portland</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="carousel-item">
+              <div class="d-block w-100">
+                <div class="mx-5 mb-5 border border-white reviewcard">
+                  <div class="row no-gutters my-3">
+                    <div class="col-sm-5 card-body-column px-4" style="justify-content: center;">
+                      <img src="/static/LandingMedia/people/thowell.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 210px;" alt="T. Howell">
+                    </div>
+                    <div class="col-sm-7 card-body-column">
+                      <div class="card-body">
+                        <p class="card-text my-1 px-4">
+                          "I had so many old tools that were just sitting around. Even though
+                           I'm not charging other people to use my tools, I think it's helping them
+                           stay in better shape with a little use every once in a while. I mainly use
+                           this app to keep an inventory of all my tools."
+                        </p>
+                        <h5 class="card-title mb-0 mt-1" style="color: #00cc44;">Tracy Howell</h5>
+                        <div class="card-category px-4">Pittsburg</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="carousel-item">
+              <div class="d-block w-100">
+                <div class="mx-5 mb-5 border border-white reviewcard">
+                  <div class="row no-gutters my-3">
+                    <div class="col-sm-5 card-body-column px-4" style="justify-content: center;">
+                      <img src="/static/LandingMedia/people/mstanton.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 210px;" alt="M. Stanton">
+                    </div>
+                    <div class="col-sm-7 card-body-column">
+                      <div class="card-body">
+                        <p class="card-text my-1 px-4">
+                          "So many people don't have enough gardening tools. I've been able to share
+                          my tiler and shovels and spades with so many friends. I think it's helping
+                          people break down barriers to getting into yard work themselves."
+                        </p>
+                        <h5 class="card-title mb-0 mt-1" style="color: #00cc44;">Marie Stanton</h5>
+                        <div class="card-category px-4">Columbus</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="carousel-item">
+              <div class="d-block w-100">
+                <div class="mx-5 mb-5 border border-white reviewcard">
+                  <div class="row no-gutters my-3">
+                    <div class="col-sm-5 card-body-column px-4" style="justify-content: center;">
+                      <img src="/static/LandingMedia/people/lmooney.jpeg" class="card-img m-4 rounded-circle shadow" style="max-width: 210px;" alt="L. Mooney">
+                    </div>
+                    <div class="col-sm-7 card-body-column">
+                      <div class="card-body">
+                        <p class="card-text my-1 px-4">
+                          "I love being able to share with my neighbors. I'm a woodworker, so I've got
+                          lots of those kind of tools.  When it came time to pressure wash my house
+                          - I was able to find one a few doors down. I've even met a few new friends too."
+                        </p>
+                        <h5 class="card-title mb-0 mt-1" style="color: #00cc44;">Laurence Mooney</h5>
+                        <div class="card-category px-4">Louisville</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+          <!-- Side Arrows -->
+          <a class="carousel-control-prev" href="#carouselIndicators2" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#carouselIndicators2" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+        </div>
+        </div>
+
+        <div class="smalltopspace"></div>
+        <div class="smalltopspace"></div>
+        <div class="smalltopspace"></div>
+
+        <div class="mt-5">
+          <div class="px-4" style="letter-spacing: 0.3em; font-weight: 200; font-size: 1.3em;">Dont' be a fool, borrow a tool.</div>
+          <a type="button" class="btn btn-toolshare m-3 px-4" href="/register">Get Started</a>
+        </div>
+
+        <div class="smalltopspace"></div>
+        <div class="smalltopspace"></div>
+        <div class="smalltopspace"></div>
+
+        <h4 class="landingsectionheader">Request a Demo</h4>
+          <div class="card-body-column card-text px-5">
+            <p>
+              To seem more about how the app works and feels, head on over to the <a href="/FAQ" target="_blank"> FAQ page</a>.
+              There are overview videos, walk-throughs, and you should be able to get a good feel for how the
+              app works. If you have any questions, you can use the <a href="/contact" target="_blank"> contact form</a> to ask anything you want.<br>
+              If you'd still like to try it out before signing up, feel free to reach out for a demo session.<br><br>
+              Please use the contact form and be sure to say a little about why you are interested. You can also
+              use the form to ask questions or even provide feedback.
+            </p>
+          </div>
+          <a type="button" class="btn btn-light m-2" href="/contact?type=requestdemo">Request Demo</a>
+
+
+        <div class="smalltopspace"></div>
+        <div class="smalltopspace"></div>
+        <div class="smalltopspace"></div>
+
+        <h4 class="landingsectionheader">About the Creator</h4>
+          <div class="card-body-column card-text px-5">
+            <span>
+              <img src="/static/LandingMedia/people/ssmall.jpeg" class="aboutcreator" alt="S. Small">
+              I originally made this web app as a personal project to develop my programming skills. It started as my capstone project
+              to the amazing (and free) <a href="https://cs50.harvard.edu/" target="_blank" rel="noopener noreferrer">CS50</a> course, but then I continued to add
+              more and more features. I learned how to publish and host it, and realized that people could actually use this.<br>
+              Ultimately, I do want people to reconsider every purchase they make. If more poeple share tools, we will all help reduce the
+              total amount of waste we continue to generate.
+              <br>
+              <br>
+              Check out more about me and my work at <a href="https://stevensmall.tk" target="_blank">stevensmall.tk</a>
+            </span>
+          </div>
+
+        <div class="deadspace"></div>
+
+
+        <footer class="text-center" style="height: 28px; padding-bottom: 180px;">
+          <div class="copyright">
+              &copy 2020 -
+              <script type="text/JavaScript">
+                  document.write(new Date().getFullYear());
+              </script>
+              / Steven Small / All Rights Reserved
+              <br>
+              <br>
+              <a href="/contact" target="_blank">Contact Us</a><br>
+              <a href="/TermsAndConditions" target="_blank">Terms and Conditions</a><br>
+              <a href="/PrivacyPolicy" target="_blank">Privacy Policy</a><br>
+              <br>
+              <br>
+              Website artwork modified from free vector graphics from <a href="https://www.vecteezy.com/" target="_blank" rel="noopener noreferrer">Vecteezy.com</a><br>
+              with special appreciation to artist <a href="https://www.vecteezy.com/members/monsterjoke" target="_blank" rel="noopener noreferrer">monsterjoke</a> for his great tools.
+              <div class="deadspace" style="background-color: #4c4c4c;"></div>
+          </div>
+        </footer>
+      </div>
+
+    </main>
 
   </body>
 

@@ -7,26 +7,26 @@
 
 {% block main %}
 <div class="scrolling_page no-x">
-  <div class="smalltopspace"></div>
+  <div class="smalltopspace mt-3"></div>
     <form action="/contact" method="post">
         <div class="form-group" style="text-align: left;">
-          <h3>Contact Us</h3><br>
+          <h3>Contact Us</h3>
           <p>
-            Get more info before you sign up!  Let us konw how we can help. <br>
-            If you would like a demo of the session, please check the box below. Also include any additional
+            Want more info before you sign up? <br>
+            Let me konw how I can help. If you would like a demo of the session,
+            please check the box at the bottom. Also include any additional
             information on why you want a demo instead of simply signing up.
             <ul>
-              <li>What works well? What do you like?</li>
-              <li>What doesn't work? What feels clunky?</li>
-              <li>Did you find a bug? What were you trying to do?</li>
-              <li>What is confusing in the app or website?</li>
-              <li>What extra features would you like to see?</li>
-              <li>What is keeping you from using this app more?</li>
+              <li>What are your reasons for requesting a demo?</li>
+              <li>Are the additional features that you are looking for?</li>
+              <li>How do you primarily want to use this app?</li>
+              <li>Do you have questions about the features/capabilities?</li>
+              <li>Feel free to tell a little about yourself too!</li>
             </ul>
           </p>
           <br>
           <div class="d-flex justify-content-start">
-            <label class="text-left" for="messsage"><strong>Questions or Feedback:</strong></label><br>
+            <label class="text-left" for="messsage"><strong>Interests / Questions / Feedback:</strong></label><br>
           </div>
           <textarea class="form-control" rows="5" id="messsage" name="messsage" style="width: 90%" placeholder="your message" maxlength="800"></textarea>
 
@@ -34,29 +34,20 @@
         <br>
           <div style="font-size: smaller">
             <p>
-              By default, we will received your firstname, username, and email address that are saved in your account. This can help us reach out if we have any follow-up questions.<br>
-              If you wish to remain anonymous, you can select which fields you are willing to share with your response.
-            </p>
-            <p>
-              Please note, if you are asking a question, at least include your email address so that we can respond to you directly.
+              Please be sure to include your email address in the feld below so that I can reach out to you and answer your question(s)
+              or provide you with a demo session.
             </p>
             <div id="shareSelector" style="margin: 20px; padding: 10px; border: 1px dashed gray; border-radius: 3px; width: max-content;">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" onchange="getShareList()" value="" id="email_check" checked/>
-                <label class="form-check-label" for="email_check">
-                  Email <span class="text-muted">Example email</span>
-                </label>
+              <div class="input-group mb-3 long-input mx-auto">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><span class="redstar"">*</span>Email</span>
+                  </div>
+                  <input autocomplete="off" class="form-control" name="email" placeholder="you@somewhere.com" type="email" required>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" onchange="getShareList()" value="" id="firstname_check" checked/>
-                <label class="form-check-label" for="firstname_check">
-                  Firstname <span class="text-muted">example firstname</span>
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" onchange="getShareList()" value="" id="username_check" checked/>
-                <label class="form-check-label" for="username_check">
-                  Username <span class="text-muted">example username</span>
+                <input class="form-check-input" type="checkbox" onchange="" value="" id="requestdemo" {{ 'checked' if demoRequested }}/>
+                <label class="form-check-label" for="requestdemo">
+                  I'm interested in a demo session.
                 </label>
               </div>
             </div>

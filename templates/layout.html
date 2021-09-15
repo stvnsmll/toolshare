@@ -121,7 +121,7 @@
             {% block main %}{% endblock %}
 
         <!-- The Spinner Modal-->
-        <div class="modal" style="width: 100vw; height: 100vh; z-index: 1055;" id="spinnerModal">
+        <div class="modal" style="width: 100vw; height: 100vh; z-index: 1055;" id="spinnerModal" onclick="hide_the_modals();">
             <div class="modal-dialog-centered">
                 <div style="width: 50%; margin: auto; height: 120px;">
                     <i class="fas fa-circle-notch fa-spin" style="margin-top: 40px; font-size:40px; color: white;"></i>
@@ -129,7 +129,7 @@
             </div>
         </div>
         <!-- The Cog Spinner Modal-->
-        <div class="modal" style="width: 100vw; height: 100vh; z-index: 1055;" id="spinnerCogModal">
+        <div class="modal" style="width: 100vw; height: 100vh; z-index: 1055;" id="spinnerCogModal" onclick="hide_the_modals();">
             <div class="modal-dialog-centered">
                 <div style="width: 50%; margin: auto; height: 120px;">
                     <i class="fa fa-cog fa-spin" style="margin-top: 40px; font-size:40px; color: white;"></i>
@@ -226,6 +226,11 @@
         }/* else {
             alert('Element does not exist!');
         }*/
+
+        function hide_the_modals() {
+          $('#spinnerModal').modal('hide');
+          $('#spinnerCogModal').modal('hide');
+        };
 
 
     </script>

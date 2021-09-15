@@ -2210,7 +2210,11 @@ def contact():
         return redirect("/ContactUs")
 
     if request.method == "GET":
-        return render_template("contact.html")
+        requesttype = request.args.get("type")
+        demoRequested = False
+        if requesttype == "requestdemo":
+            demoRequested = True
+        return render_template("contact.html", demoRequested=demoRequested)
     else: #post
         return apology("not setup yet", "todo")
         formAction = request.form.get("returnedAction")
