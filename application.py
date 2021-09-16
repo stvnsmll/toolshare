@@ -143,7 +143,7 @@ def service_worker():
 def index():
     if session.get("user_uuid") is not None:
         return redirect(url_for("tools"))
-    return render_template("index.html")
+    return render_template("general/index.html")
 
 @app.route("/tools")
 @login_required
@@ -1366,7 +1366,7 @@ def login():
     else:
         #logHistory("other", "pagevisit", "", "", "", "")
         #db.execute("INSERT INTO history (type, action, useruuid, timestamp) VALUES (?, ?, ?, ?);", "other", "pagevisit", "unknown", datetime.datetime.now())
-        return render_template("login.html")
+        return render_template("general/login.html")
 
 
 @app.route("/logout")
@@ -1385,7 +1385,7 @@ def logout():
 def register():
     """Register user"""
     if request.method == "GET":
-        return render_template("register.html")
+        return render_template("general/register.html")
     else:
         firstname = request.form.get("firstname")
         newUsername = request.form.get("username").lower()
@@ -1483,7 +1483,7 @@ def validateemail():
                 errormessage = "Your prior code has expired, please check your email for a new one."
             elif error == "incorrect":
                 errormessage = "Incorrect authorization code. Please try again."
-        return render_template("validateemail.html", new_email=new_email, errormessage=errormessage)
+        return render_template("accountmgmt/validateemail.html", new_email=new_email, errormessage=errormessage)
     else:#POST
         formAction = request.form.get("returnedAction")
         new_email = request.form.get("useremail")
@@ -1520,7 +1520,7 @@ def validateemail():
                 authcode = generate_new_authcode(new_email)
 
                 errormessage = "Your prior code has expired, please check your email for a new one."
-                return render_template("validateemail.html", new_email=new_email, errormessage=errormessage)
+                return render_template("accountmgmt/validateemail.html", new_email=new_email, errormessage=errormessage)
             if input_authcode == valid_code:
                 # accound validated
                 send_email_welcome(new_email, new_user[0]["firstname"])
@@ -1551,7 +1551,7 @@ def manageaccount():
     email = miscInfo["email"]
     scrollPos = 0
     if request.method == "GET":
-        return render_template("manageaccount.html", openActions=countActions(), firstname=firstname, username=username, email=email, scrollPos=scrollPos)
+        return render_template("accountmgmt/manageaccount.html", openActions=countActions(), firstname=firstname, username=username, email=email, scrollPos=scrollPos)
     else:
         formAction = request.form.get("returnedAction")
         if formAction == "changeName":
@@ -1576,7 +1576,7 @@ def manageaccount():
             #set the preference for the user
             db.execute("UPDATE users SET theme = :newTheme WHERE uuid = :userUUID;", userUUID=userUUID, newTheme=session["theme"])
             scrollPos = request.form.get("pageoffset")
-            return render_template("manageaccount.html", openActions=countActions(), firstname=firstname, username=username, email=email, scrollPos=scrollPos)
+            return render_template("accountmgmt/manageaccount.html", openActions=countActions(), firstname=firstname, username=username, email=email, scrollPos=scrollPos)
         else:
             return apology("Misc Error")
 
@@ -1610,9 +1610,9 @@ def communication():
                                 flash("You have been unsubscribed")
                                 userUUID = session.get("user_uuid")
                                 firstname = session.get("firstname")
-                                return render_template("communicationpreferences.html", openActions=countActions(), firstname=firstname)
+                                return render_template("accountmgmt/communicationpreferences.html", openActions=countActions(), firstname=firstname)
                             else:
-                                return render_template("unsubscribed.html")
+                                return render_template("accountmgmt/unsubscribed.html")
                         else:
                             return apology("Invalid opt-out token", "contact admin")
                     else:
@@ -1621,7 +1621,7 @@ def communication():
                             flash("You have already opted out.")
                             userUUID = session.get("user_uuid")
                             firstname = session.get("firstname")
-                            return render_template("communicationpreferences.html", openActions=countActions(), firstname=firstname)
+                            return render_template("accountmgmt/communicationpreferences.html", openActions=countActions(), firstname=firstname)
                         else:
                             return redirect("/login")
                 else:
@@ -1646,7 +1646,7 @@ def communication():
                 optout = True
             else:
                 optout = False
-            return render_template("communicationpreferences.html", openActions=countActions(), firstname=firstname, optout=optout, phonenumber=phonenumber, phonepref=phonepref, nbhemails=nbhemails)
+            return render_template("accountmgmt/communicationpreferences.html", openActions=countActions(), firstname=firstname, optout=optout, phonenumber=phonenumber, phonepref=phonepref, nbhemails=nbhemails)
         else:
             return redirect("/login")
     else: #POST
@@ -1714,7 +1714,7 @@ def changepassword():
                     if (userdeetz[0]['recoverykey'] != "") and (recoverytoken != None):
                         if userdeetz[0]['recoverykey'] == recoverytoken:
                             verb = "New"
-                            return render_template("updatepwd.html", recoverytoken=recoverytoken, email=email, verb=verb)
+                            return render_template("accountmgmt/updatepwd.html", recoverytoken=recoverytoken, email=email, verb=verb)
                         else:
                             flash("Password reset link has expired.")
             return redirect(url_for("login"))
@@ -1727,7 +1727,7 @@ def changepassword():
                 flash("Already logged in, no password reset needed.")
                 db.execute("UPDATE users SET recoverykey = '' WHERE uuid = :userUUID;", userUUID=userUUID)
                 return redirect("/tools")
-            return render_template("updatepwd.html", openActions=countActions(), verb=verb, firstname=firstname)
+            return render_template("accountmgmt/updatepwd.html", openActions=countActions(), verb=verb, firstname=firstname)
     else:
         #todo add in the recovery key check and if valid, change password, login the user (set session), reset recoverykey, redirecto to "/tools"
         formAction = request.form.get("returnedAction")
@@ -1809,7 +1809,7 @@ def changename():
     userUUID = session.get("user_uuid")
     firstname = session.get("firstname")
     if request.method == "GET":
-        return render_template("updatename.html", openActions=countActions(), firstname=firstname)
+        return render_template("accountmgmt/updatename.html", openActions=countActions(), firstname=firstname)
     else:
         formAction = request.form.get("returnedAction")
         if formAction == "returnHome":
@@ -1819,10 +1819,10 @@ def changename():
             newName = request.form.get("newName")
             if not newName:
                 flash('Must enter a name.')
-                return render_template("updatename.html", openActions=countActions(), firstname=firstname)
+                return render_template("accountmgmt/updatename.html", openActions=countActions(), firstname=firstname)
             if newName == firstname:
                 flash('that is not a new name...')
-                return render_template("updatename.html", openActions=countActions(), firstname=firstname)
+                return render_template("accountmgmt/updatename.html", openActions=countActions(), firstname=firstname)
 
             # Update the user's name
             db.execute("UPDATE users SET firstname = :newName WHERE uuid = :userUUID;", newName=newName, userUUID=userUUID)
@@ -1845,7 +1845,7 @@ def updateemail():
     firstname = miscInfo["firstname"]
     oldEmail = miscInfo["email"]
     if request.method == "GET":
-        return render_template("updateemail.html", openActions=countActions(), firstname=firstname, oldEmail=oldEmail)
+        return render_template("accountmgmt/updateemail.html", openActions=countActions(), firstname=firstname, oldEmail=oldEmail)
     else:
         formAction = request.form.get("returnedAction")
         if formAction == "returnHome":
@@ -1855,10 +1855,10 @@ def updateemail():
             newEmail = request.form.get("newEmail")
             if newEmail == "":
                 flash('Must enter an email address.')
-                return render_template("updateemail.html", openActions=countActions(), firstname=firstname, oldEmail=oldEmail)
+                return render_template("accountmgmt/updateemail.html", openActions=countActions(), firstname=firstname, oldEmail=oldEmail)
             if newEmail == oldEmail:
                 flash("that's the same email address...")
-                return render_template("updateemail.html", openActions=countActions(), firstname=firstname, oldEmail=oldEmail)
+                return render_template("accountmgmt/updateemail.html", openActions=countActions(), firstname=firstname, oldEmail=oldEmail)
 
             # Update the user's email
             db.execute("UPDATE users SET email = :newEmail WHERE uuid = :userUUID;", newEmail=newEmail, userUUID=userUUID)
@@ -1884,7 +1884,7 @@ def deleteaccount():
     userUUID = session.get("user_uuid")
     firstname = session.get("firstname")
     if request.method == "GET":
-        return render_template("confirmdelete.html", openActions=countActions(), firstname=firstname)
+        return render_template("/accountmgmt/confirmdelete.html", openActions=countActions(), firstname=firstname)
     else:
         formAction = request.form.get("returnedAction")
         if formAction == "deleteAccount":
@@ -1974,7 +1974,7 @@ def history():
             info = {"refnumber": refnumber, "date": date, "timestamp": timestamp, "action": action, "neighborhoodid": neighborhoodid, "neighborhoodname": neighborhoodname, "comment": description}
             nbhhistory[refnumber] = info
 
-        return render_template("history.html", openActions=countActions(), firstname=firstname, toolhistory=toolhistory, nbhhistory=nbhhistory)
+        return render_template("accountmgmt/history.html", openActions=countActions(), firstname=firstname, toolhistory=toolhistory, nbhhistory=nbhhistory)
 
     else:
         pass
@@ -1987,7 +1987,7 @@ def passwordrecovery():
         flash("Already logged in...")
         return redirect("/manageaccount")
     if request.method == "GET":
-        return render_template("passwordrecovery.html")
+        return render_template("accountmgmt/passwordrecovery.html")
     else:
         formAction = request.form.get("returnedAction")
         if formAction == "resetPW":
@@ -1996,7 +1996,7 @@ def passwordrecovery():
             userdeetz = db.execute("SELECT * FROM users WHERE email = :email", email=email)
             if len(userdeetz) != 1:
                 # no email with this account... but don't release this information
-                return render_template("passwordrecoverysent.html")
+                return render_template("accountmgmt/passwordrecoverysent.html")
                 #return apology("email check fail")
 
             # generate new recovery key, and set it to the user
@@ -2036,7 +2036,7 @@ def passwordrecovery():
             send_mail(recipients, subject, message)
 
             # redirect back to confirmation
-            return render_template("passwordrecoverysent.html")
+            return render_template("accountmgmt/passwordrecoverysent.html")
         elif formAction == "returnHome":
             return redirect("/login")
         else:
@@ -2100,7 +2100,7 @@ def validatePWchange():
                 errormessage = "Your prior code has expired, please check your email for a new one."
             elif error == "incorrect":
                 errormessage = "Incorrect authorization code. Please try again."
-        return render_template("validateemail.html", new_email=new_email, errormessage=errormessage)
+        return render_template("accountmgmt/validateemail.html", new_email=new_email, errormessage=errormessage)
     else:#POST
         formAction = request.form.get("returnedAction")
         new_email = request.form.get("useremail")
@@ -2137,7 +2137,7 @@ def validatePWchange():
                 authcode = generate_new_authcode(new_email)
 
                 errormessage = "Your prior code has expired, please check your email for a new one."
-                return render_template("validateemail.html", new_email=new_email, errormessage=errormessage)
+                return render_template("accountmgmt/validateemail.html", new_email=new_email, errormessage=errormessage)
             if input_authcode == valid_code:
                 # accound validated
                 send_email_welcome(new_email, new_user[0]["firstname"])
@@ -2167,7 +2167,7 @@ def contactus():
     username = user_details['username']
 
     if request.method == "GET":
-        return render_template("ContactUs.html", openActions=countActions(), firstname=firstname, email=email, username=username)
+        return render_template("general/ContactUs.html", openActions=countActions(), firstname=firstname, email=email, username=username)
     else: #post
         formAction = request.form.get("returnedAction")
         if formAction == "cancel":
@@ -2177,7 +2177,7 @@ def contactus():
             shareList = request.form.get("shareList")
             if message == "":
                 flash("You must include something in the message box.")
-                return render_template("ContactUs.html", openActions=countActions(), firstname=firstname, email=email, username=username)
+                return render_template("general/ContactUs.html", openActions=countActions(), firstname=firstname, email=email, username=username)
             email = "No email shared"
             username = "No username shared"
             firstname = "Anonymous"
@@ -2214,7 +2214,7 @@ def contact():
         demoRequested = False
         if requesttype == "requestdemo":
             demoRequested = True
-        return render_template("contact.html", demoRequested=demoRequested)
+        return render_template("general/contact.html", demoRequested=demoRequested)
     else: #post
         return apology("not setup yet", "todo")
         formAction = request.form.get("returnedAction")
@@ -2225,7 +2225,7 @@ def contact():
             shareList = request.form.get("shareList")
             if message == "":
                 flash("You must include something in the message box.")
-                return render_template("ContactUs.html", openActions=countActions(), firstname=firstname, email=email, username=username)
+                return render_template("general/general/ContactUs.html", openActions=countActions(), firstname=firstname, email=email, username=username)
             email = "No email shared"
             username = "No username shared"
             firstname = "Anonymous"
@@ -2260,7 +2260,7 @@ def termsandconditions():
     else:
         firstname = session.get("firstname")
         openActions = countActions()
-    return render_template("TermsAndConditions.html", openActions=openActions, firstname=firstname)
+    return render_template("general/TermsAndConditions.html", openActions=openActions, firstname=firstname)
 
 
 @app.route("/PrivacyPolicy")
@@ -2271,7 +2271,27 @@ def privacypolicy():
     else:
         firstname = session.get("firstname")
         openActions = countActions()
-    return render_template("PrivacyPolicy.html", openActions=openActions, firstname=firstname)
+    return render_template("general/PrivacyPolicy.html", openActions=openActions, firstname=firstname)
+
+
+@app.route("/FAQ")
+@app.route("/FAQ/")
+@app.route("/FAQ/<category>")
+def FAQ(category='none'):
+    if session.get("user_uuid") is None:
+        firstname = ""
+        openActions = 0
+    else:
+        firstname = session.get("firstname")
+        openActions = countActions()
+
+    if category == 'none':
+        return render_template("/FAQ/FAQ_home.html", openActions=openActions, firstname=firstname, category=category)
+    else:
+        print("FAQ for category:" + category)
+
+
+    return render_template("FAQ/FAQ_home.html", openActions=openActions, firstname=firstname, category=category)
 
 
 
