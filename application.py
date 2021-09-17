@@ -163,7 +163,7 @@ def tools():
         borrowedlist = db.execute("SELECT * FROM tools WHERE activeuseruuid = :userUUID AND deleted = 0 ORDER BY toolname;", userUUID=userUUID)#removed ' COLLATE NOCASE' for postgreSQL
         borrowedtools = format_tools(borrowedlist)
     # render the template
-    return render_template("tools.html", setActive1="active", openActions=countActions(), firstname=firstname, mytools=mytools, borrowedtools=borrowedtools)
+    return render_template("tools/tools.html", setActive1="active", openActions=countActions(), firstname=firstname, mytools=mytools, borrowedtools=borrowedtools)
 
 
 @app.route('/myTools')
@@ -240,7 +240,7 @@ def actions():
                     'actionid': item["actionid"],
                     'photo': photo}
             myrequests[item["actionid"]] = info
-        return render_template("actions.html", setActive2="active", openActions=countActions(), firstname=firstname, myrequests=myrequests, myapprovals=myapprovals)
+        return render_template("tool/actions.html", setActive2="active", openActions=countActions(), firstname=firstname, myrequests=myrequests, myapprovals=myapprovals)
     else:
         returnedAction = request.form.get("returnedAction")
         if returnedAction == 'fromMyRequests':
@@ -309,7 +309,7 @@ def findtool():
         alltools = format_tools(alltoollist)
 
         # render the template
-        return render_template("findtool.html", openActions=countActions(), firstname=firstname, alltools=alltools)
+        return render_template("tools/findtool.html", openActions=countActions(), firstname=firstname, alltools=alltools)
     else:
         # get data from the form
         flash("do nothing???")
@@ -331,14 +331,14 @@ def newtool():
         myNeighborhoods[myNeighborhoodsData[i]['neighborhoodid']] = info
 
     if request.method == "GET":
-        return render_template("newtool.html", openActions=countActions(), firstname=firstname, myNeighborhoods=myNeighborhoods)
+        return render_template("tools/newtool.html", openActions=countActions(), firstname=firstname, myNeighborhoods=myNeighborhoods)
 
     else: # Post
         # get data from the form
         toolname = request.form.get("toolname")
         if toolname == "":
             flash("Tool entry error: please provide a tool name.")
-            return render_template("newtool.html", openActions=countActions(), firstname=firstname, myNeighborhoods=myNeighborhoods)
+            return render_template("tools/newtool.html", openActions=countActions(), firstname=firstname, myNeighborhoods=myNeighborhoods)
 
         #Create the tools new UUID
         new_tool_uuid = uuid.uuid4().hex
@@ -517,7 +517,7 @@ def tool_details():
         if tooldetails["photo"] != 'none':
             photo = get_image_s3(toolid + ".jpeg")
 
-        return render_template("tooldetails.html",
+        return render_template("tools/tooldetails.html",
                                 openActions=countActions(),
                                 firstname=firstname,
                                 activeuserfirstname=activeuserfirstname,
@@ -710,7 +710,7 @@ def edittool():
             #print("Tool is Custom")
             toolVis = 'custom'
 
-        return render_template("edittool.html", openActions=countActions(), firstname=firstname, toolname=toolname, publicCheck=publicCheck, description=description, category=category, health=health, photo=photo, toolid=toolid, notes=notes, myNeighborhoods=myNeighborhoods, toolVis=toolVis)
+        return render_template("tools/edittool.html", openActions=countActions(), firstname=firstname, toolname=toolname, publicCheck=publicCheck, description=description, category=category, health=health, photo=photo, toolid=toolid, notes=notes, myNeighborhoods=myNeighborhoods, toolVis=toolVis)
     else:
         toolid = request.form.get("toolid")
         toolname = request.form.get("toolname")
@@ -841,7 +841,7 @@ def neighborhoods():
             info = {'neighborhood': row["neighborhood"], 'neighborhoodid': row["neighborhoodid"], 'zipcode': row["zip"]}
             allneighborhoods[row["neighborhoodid"]] = info
 
-        return render_template("neighborhoods.html", setActive3="active", openActions=countActions(), firstname=firstname, myneighborhoods=myneighborhoods, allneighborhoods=allneighborhoods)
+        return render_template("neighborhood/neighborhoods.html", setActive3="active", openActions=countActions(), firstname=firstname, myneighborhoods=myneighborhoods, allneighborhoods=allneighborhoods)
     else:
         # get data from the form
         neighborhoodname = request.form.get("neighborhoodname")
@@ -958,7 +958,7 @@ def neighborhood_details():
                         'isVisible': visible}
                 myTools[allmyToolsData[i]['toolid']] = info
 
-            return render_template("neighborhooddetails.html", openActions=countActions(), firstname=firstname, neighborhoodname=neighborhoodname, zipcode=zipcode, description=description, membercount=membercount, privateYN=privateYN, passwordYN=passwordYN, yesadmin=yesadmin, notmember=notmember, neighborhoodid=neighborhoodid, myTools=myTools)
+            return render_template("neighborhood/neighborhooddetails.html", openActions=countActions(), firstname=firstname, neighborhoodname=neighborhoodname, zipcode=zipcode, description=description, membercount=membercount, privateYN=privateYN, passwordYN=passwordYN, yesadmin=yesadmin, notmember=notmember, neighborhoodid=neighborhoodid, myTools=myTools)
     else:
         formAction = request.form.get("returnedAction")
         neighborhoodid = request.form.get("nbhid")
@@ -1125,7 +1125,7 @@ def managemembers():
                         "firstname": banneduserinfo['firstname']}
                 bannedUsers[bannedlist_db[i]['useruuid']] = info
 
-            return render_template("managemembers.html", openActions=countActions(), firstname=firstname, neighborhoodname=neighborhoodname, membercount=membercount, neighborhoodid=neighborhoodid, allMembers=allMembers, bannedUsers=bannedUsers)
+            return render_template("neighborhood/managemembers.html", openActions=countActions(), firstname=firstname, neighborhoodname=neighborhoodname, membercount=membercount, neighborhoodid=neighborhoodid, allMembers=allMembers, bannedUsers=bannedUsers)
     else:
         formAction = request.form.get("returnedAction")
         if formAction == "sendMail":
@@ -1166,7 +1166,7 @@ def editneighborhood():
         else:
             passwordYN = "Yes"
 
-        return render_template("editneighborhood.html", openActions=countActions(), firstname=firstname, neighborhood=neighborhood, zipcode=zipcode, description=description, privateCheck=privateCheck, passwordYN=passwordYN, neighborhoodid=neighborhoodid)
+        return render_template("neighborhood/editneighborhood.html", openActions=countActions(), firstname=firstname, neighborhood=neighborhood, zipcode=zipcode, description=description, privateCheck=privateCheck, passwordYN=passwordYN, neighborhoodid=neighborhoodid)
     else:
         neighborhoodid = request.form.get("neighborhoodid")
         neighborhood = request.form.get("neighborhood")
@@ -1200,7 +1200,7 @@ def deleteneighborhood():
             flash("UNAUTHORIZED - cannot delete the neighborhood if not the admin.")
             return redirect(url_for('neighborhood_details') + '?neighborhoodid=' + neighborhoodid)
 
-        return render_template("confirmdelete_nbh.html", openActions=countActions(), firstname=firstname, neighborhoodname=neighborhoodname, neighborhoodid=neighborhoodid)
+        return render_template("neighborhood/confirmdelete_nbh.html", openActions=countActions(), firstname=firstname, neighborhoodname=neighborhoodname, neighborhoodid=neighborhoodid)
     else:
         formAction = request.form.get("returnedAction")
         neighborhoodid = request.form.get("neighborhoodid")
@@ -1252,7 +1252,7 @@ def sendmail():
             userdeetz = db.execute("SELECT * FROM users WHERE uuid = :userUUID", userUUID=userUUID)[0]
             username = userdeetz['username']
             email = userdeetz['email']
-            return render_template("sendmail.html", openActions=countActions(), firstname=firstname, username=username, email=email, neighborhoodName=neighborhoodName, askall=False, neighborhood_send_list=neighborhoodid)
+            return render_template("neighborhood/sendmail.html", openActions=countActions(), firstname=firstname, username=username, email=email, neighborhoodName=neighborhoodName, askall=False, neighborhood_send_list=neighborhoodid)
 
         mynbhlist = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID) AND deleted = 0;", userUUID=userUUID)
         myneighborhoods = {}
@@ -1262,7 +1262,7 @@ def sendmail():
         userdeetz = db.execute("SELECT * FROM users WHERE uuid = :userUUID", userUUID=userUUID)[0]
         username = userdeetz['username']
         email = userdeetz['email']
-        return render_template("sendmail.html", openActions=countActions(), firstname=firstname, myneighborhoods=myneighborhoods, username=username, email=email, askall=True)
+        return render_template("neighborhood/sendmail.html", openActions=countActions(), firstname=firstname, myneighborhoods=myneighborhoods, username=username, email=email, askall=True)
     else:
         formAction = request.form.get("returnedAction")
         if formAction == "sendMail":
@@ -2286,12 +2286,12 @@ def FAQ(category='none'):
         openActions = countActions()
 
     if category == 'none':
-        return render_template("/FAQ/FAQ_home.html", openActions=openActions, firstname=firstname, category=category)
+        return render_template("/FAQs/FAQ_home.html", openActions=openActions, firstname=firstname, category=category)
     else:
         print("FAQ for category:" + category)
 
 
-    return render_template("FAQ/FAQ_home.html", openActions=openActions, firstname=firstname, category=category)
+    return render_template("FAQs/FAQ_home.html", openActions=openActions, firstname=firstname, category=category)
 
 
 
