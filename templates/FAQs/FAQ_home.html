@@ -10,11 +10,26 @@
 
 
 {% block main %}
-<div class="scrolling_page" style="text-align: left; padding-top: 70px">
+<div class="scrolling_page px-0 pt-3">
+  <div class="pt-5 pb-2 mt-2">
+    <img src='/static/toolshare.png' alt="" style="height: 130px;">
+  </div>
   <div class="container" style="padding: 0 5% 0 5%;">
-    <h1>Frequently Asked Questions</h1>
+    <h1>How can we help?</h1>
+    <br>
+    <p>
+      Here are some of the frequently asked questions.<br>
+      Select a category or enter a keyword in the search field.
+    </p>
 
-    <p>Please select from the below categories</p>
+
+    <div class="input-group px-1 py-3 mb-5" style="max-width: 650px; margin-right: auto; margin-left: auto;">
+      <div class="text-muted" style="bottom: 1.4em;position: absolute;z-index: 15;left: 1.1em;">
+        <i class="fa fa-search"></i>
+      </div>
+
+      <input class="form-control border rounded px-5" type="search" placeholder="keyword or subject" id="FAQ_search">
+    </div>
 
     <div class="text-center" style="font-size: 0.9em;">
         <div class="container">

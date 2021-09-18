@@ -859,3 +859,7 @@ min-height: 40px;
   text-align: left;
   padding-inline-start: 20px;
 }
+
+.rounded {
+  border-radius: 1000px!important;
+}
