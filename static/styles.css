@@ -854,3 +854,8 @@ min-height: 40px;
   color: #cc5500;
   text-shadow: 2px 2px 4px #828282de;
 }
+
+.FAQ_list {
+  text-align: left;
+  padding-inline-start: 20px;
+}

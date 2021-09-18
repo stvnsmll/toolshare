@@ -11,12 +11,86 @@
 
 {% block main %}
 <div class="scrolling_page" style="text-align: left; padding-top: 70px">
-  <div class="container" style="padding: 0 5% 0 5%; max-width: 750px">
+  <div class="container" style="padding: 0 5% 0 5%;">
     <h1>Frequently Asked Questions</h1>
 
     <p>Please select from the below categories</p>
+
+    <div class="text-center" style="font-size: 0.9em;">
+        <div class="container">
+            <div class="row pt-4 justify-content-center">
+                <div class="col-md-6 col-lg-3">
+                    <div class="card mb-4 box-shadow {% if session.theme == 'dark' %}nav_dark{% endif %}">
+                        <div class="card-header">
+                            <h5 class="my-0 font-weight-light">Tool Help</h5>
+                        </div>
+                        <div class="card-body pt-2">
+                            <ul class="FAQ_list">
+                                <li>Adding tools</li>
+                                <li>Editing tools</li>
+                                <li>Selective tool sharing</li>
+                                <li> and more ...</li>
+                            </ul>
+                            <a type="button" class="btn btn-block btn-outline-info" href="/FAQ/tools">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="card mb-4 box-shadow {% if session.theme == 'dark' %}nav_dark{% endif %}">
+                      <div class="card-header">
+                          <h5 class="my-0 font-weight-light">Borrowing & Lending</h5>
+                      </div>
+                      <div class="card-body pt-2">
+                          <ul class="FAQ_list">
+                              <li>Finding a tool</li>
+                              <li>Requesting a tool</li>
+                              <li>Approving or rejecting requests</li>
+                              <li> and more ...</li>
+                          </ul>
+                          <a type="button" class="btn btn-block btn-outline-info" href="/FAQ/actions">Learn More</a>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card mb-4 box-shadow {% if session.theme == 'dark' %}nav_dark{% endif %}">
+                        <div class="card-header">
+                            <h5 class="my-0 font-weight-light">Neighbrhood Help</h5>
+                        </div>
+                        <div class="card-body pt-2">
+                            <ul class="FAQ_list">
+                                <li>Find a neighborhood</li>
+                                <li>Join or leave a neighborhood</li>
+                                <li>Admin actions</li>
+                                <li> and more ...</li>
+                            </ul>
+                            <a type="button" class="btn btn-block btn-outline-info" href="/FAQ/neighborhoods">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card mb-4 box-shadow {% if session.theme == 'dark' %}nav_dark{% endif %}">
+                        <div class="card-header">
+                            <h5 class="my-0 font-weight-light">Account Management</h5>
+                        </div>
+                        <div class="card-body pt-2">
+                            <ul class="FAQ_list">
+                                <li>Updating user info</li>
+                                <li>View your history</li>
+                                <li>Deleting your account</li>
+                                <li> and more ...</li>
+                            </ul>
+                            <a type="button" class="btn btn-block btn-outline-info" href="/FAQ/account">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <h5>{{ category }}</h5>
-    
+
     <div class="deadspace"></div>
     <div class="deadspace"></div>
   </div>

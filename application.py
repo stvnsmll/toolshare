@@ -2289,9 +2289,8 @@ def FAQ(category='none'):
         return render_template("/FAQs/FAQ_home.html", openActions=openActions, firstname=firstname, category=category)
     else:
         print("FAQ for category:" + category)
-
-
-    return render_template("FAQs/FAQ_home.html", openActions=openActions, firstname=firstname, category=category)
+        
+    return render_template("/FAQs/", openActions=openActions, firstname=firstname, category=category)
 
 
 
