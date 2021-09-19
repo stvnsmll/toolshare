@@ -12,10 +12,10 @@
 {% block main %}
 <div class="scrolling_page px-0 pt-3">
   <div class="pt-5 pb-2 mt-2">
-    <img src='/static/toolshare.png' alt="" style="height: 130px;">
+    <img src='/static/toolshare.png' alt="" style="height: 100px;">
   </div>
   <div class="container" style="padding: 0 5% 0 5%;">
-    <h1>How can we help?</h1>
+    <h2>How can we help?</h2>
     <br>
     <p>
       Here are some of the frequently asked questions.<br>
@@ -27,9 +27,101 @@
       <div class="text-muted" style="bottom: 1.4em;position: absolute;z-index: 15;left: 1.1em;">
         <i class="fa fa-search"></i>
       </div>
-
-      <input class="form-control border rounded px-5" type="search" placeholder="keyword or subject" id="FAQ_search">
+      <input class="form-control border rounded px-5 {% if session.theme == 'dark' %}nav_dark{% endif %}" type="search" placeholder="keyword or subject" id="FAQ_search">
     </div>
+
+
+    <div id="accordion" style="font-size: 0.9em;" class="text-left">
+      <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
+        <div class="card-header" id="headingOne">
+          <h5 class="mb-0">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Tool Management
+            </button>
+          </h5>
+        </div>
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+          <div class="card-body pt-2">
+              <ul class="FAQ_list">
+                  <li>Adding tools</li>
+                  <li>Editing tools</li>
+                  <li>Selective tool sharing</li>
+                  <li> and more ...</li>
+              </ul>
+              <a type="button" class="btn btn-sm btn-outline-info" href="/FAQ/tools">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
+        <div class="card-header" id="headingTwo">
+          <h5 class="mb-0">
+            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              Borrowing & Lending Tools
+            </button>
+          </h5>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+          <div class="card-body pt-2">
+              <ul class="FAQ_list">
+                  <li>Finding a tool</li>
+                  <li>Requesting a tool</li>
+                  <li>Approving or rejecting requests</li>
+                  <li> and more ...</li>
+              </ul>
+              <a type="button" class="btn btn-sm btn-outline-info" href="/FAQ/actions">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
+        <div class="card-header" id="headingThree">
+          <h5 class="mb-0">
+            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+              Neighborhood Help
+            </button>
+          </h5>
+        </div>
+        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+          <div class="card-body pt-2">
+              <ul class="FAQ_list">
+                  <li>Find a neighborhood</li>
+                  <li>Join or leave a neighborhood</li>
+                  <li>Admin actions</li>
+                  <li> and more ...</li>
+              </ul>
+              <a type="button" class="btn btn-sm btn-outline-info" href="/FAQ/neighborhoods">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
+        <div class="card-header" id="headingThree">
+          <h5 class="mb-0">
+            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+              Account Management
+            </button>
+          </h5>
+        </div>
+        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+          <div class="card-body pt-2">
+              <ul class="FAQ_list">
+                  <li>Updating user info</li>
+                  <li>View your history</li>
+                  <li>Deleting your account</li>
+                  <li> and more ...</li>
+              </ul>
+              <a type="button" class="btn btn-sm btn-outline-info" href="/FAQ/account">Learn More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="pt-5">
+      <br>
+    </div>
+
 
     <div class="text-center" style="font-size: 0.9em;">
         <div class="container">
@@ -105,6 +197,18 @@
 
 
     <h5>{{ category }}</h5>
+    <div class="pt-5 text-left">
+      <h4>Popular Articles</h4>
+      <p class="ml-3 m-0"><a href="">Selective tool sharing</a></p>
+      <p class="ml-3 m-0"><a href="">How to view the history of my tool</a></p>
+      <p class="ml-3 m-0"><a href="">Invite others to your neighborhood</a></p>
+    </div>
+
+    <div class="pt-5 text-left">
+      <h4>Still need help?</h4>
+      <p class="ml-3 m-0"><a href="/contact?type=help">Contact us</a> if you still have questions that aren't answered above.</p>
+    </div>
+
 
     <div class="deadspace"></div>
     <div class="deadspace"></div>
