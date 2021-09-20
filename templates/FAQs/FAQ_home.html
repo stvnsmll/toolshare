@@ -31,7 +31,7 @@
     </div>
 
 
-    <div id="accordion" style="font-size: 0.9em;" class="text-left">
+    <div id="accordion" style="font-size: 0.9em; display: none;" class="text-left">
       <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
         <div class="card-header" id="headingOne">
           <h5 class="mb-0">
@@ -118,6 +118,104 @@
     </div>
 
 
+    <div class="accordion text-left" id="accordionExample" style="font-size: 0.9em;">
+        <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
+            <div class="card-header py-1" id="headingOne" data-toggle="collapse" data-target="#collapseOne">
+              <div class="row mb-0">
+                <div class="col-auto mr-auto">
+                  <div class="btn btn-link collapsed">Tool Help</div>
+                </div>
+                <div class="col-auto text-muted btn" style="display: flex; align-items: center;">
+                  <i class="fa fa-chevron-down"></i>
+                </div>
+              </div>
+            </div>
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body pl-5">
+                  <ul class="FAQ_list">
+                      <li>Adding tools</li>
+                      <li>Editing tools</li>
+                      <li>Selective tool sharing</li>
+                      <li> and more ...</li>
+                  </ul>
+                  <a class="btn btn-outline-info" href="/FAQ/tools">Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
+            <div class="card-header py-1" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo">
+              <div class="row mb-0">
+                <div class="col-auto mr-auto">
+                  <div class="btn btn-link collapsed">Borrowing & Lending</div>
+                </div>
+                <div class="col-auto text-muted btn" style="display: flex; align-items: center;">
+                  <i class="fa fa-chevron-down"></i>
+                </div>
+              </div>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body pl-5">
+                  <ul class="FAQ_list">
+                      <li>Finding a tool</li>
+                      <li>Requesting a tool</li>
+                      <li>Approving or rejecting requests</li>
+                      <li> and more ...</li>
+                  </ul>
+                  <a class="btn btn-outline-info" href="/FAQ/actions">Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
+            <div class="card-header py-1" id="headingThree" data-toggle="collapse" data-target="#collapseThree">
+              <div class="row mb-0">
+                <div class="col-auto mr-auto">
+                  <div class="btn btn-link collapsed">Neighborhood Help</div>
+                </div>
+                <div class="col-auto text-muted btn" style="display: flex; align-items: center;">
+                  <i class="fa fa-chevron-down"></i>
+                </div>
+              </div>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body pl-5">
+                  <ul class="FAQ_list">
+                      <li>Find a neighborhood</li>
+                      <li>Join or leave a neighborhood</li>
+                      <li>Admin actions</li>
+                      <li> and more ...</li>
+                  </ul>
+                  <a class="btn btn-outline-info" href="/FAQ/neighborhoods">Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
+            <div class="card-header py-1" id="headingFour" data-toggle="collapse" data-target="#collapseFour">
+              <div class="row mb-0">
+                <div class="col-auto mr-auto">
+                  <div class="btn btn-link collapsed">Account Management</div>
+                </div>
+                <div class="col-auto text-muted btn" style="display: flex; align-items: center;">
+                  <i class="fa fa-chevron-down"></i>
+                </div>
+              </div>
+            </div>
+            <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+                <div class="card-body pl-5">
+                  <ul class="FAQ_list">
+                      <li>Updating user info</li>
+                      <li>View your history</li>
+                      <li>Deleting your account</li>
+                      <li> and more ...</li>
+                  </ul>
+                  <a class="btn btn-outline-info" href="/FAQ/account">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="pt-5">
       <br>
     </div>
@@ -138,7 +236,7 @@
                                 <li>Selective tool sharing</li>
                                 <li> and more ...</li>
                             </ul>
-                            <a type="button" class="btn btn-block btn-outline-info" href="/FAQ/tools">Learn More</a>
+                            <a class="btn btn-block btn-outline-info" href="/FAQ/tools">Learn More</a>
                         </div>
                     </div>
                 </div>
@@ -214,5 +312,24 @@
     <div class="deadspace"></div>
   </div>
 </div>
+
+
+
+
+<script>
+    $(document).ready(function(){
+        // Add minus icon for collapse element which is open by default
+        $(".collapse.show").each(function(){
+        	$(this).prev(".card-header").find(".fa").addClass("fa-chevron-up").removeClass("fa-chevron-down");
+        });
+
+        // Toggle plus minus icon on show hide of collapse element
+        $(".collapse").on('show.bs.collapse', function(){
+        	$(this).prev(".card-header").find(".fa").removeClass("fa-chevron-down").addClass("fa-chevron-up");
+        }).on('hide.bs.collapse', function(){
+        	$(this).prev(".card-header").find(".fa").removeClass("fa-chevron-up").addClass("fa-chevron-down");
+        });
+    });
+</script>
 
 {% endblock %}
