@@ -11,19 +11,13 @@
 
 {% block main %}
 <div class="scrolling_page px-0 pt-3">
-  <div class="pt-5 pb-2 mt-2">
+  <div class="pt-4 pb-2 mt-2">
     <img src='/static/toolshare.png' alt="" style="height: 100px;">
   </div>
   <div class="container" style="padding: 0 5% 0 5%;">
-    <h2>How can we help?</h2>
-    <br>
-    <p>
-      Here are some of the frequently asked questions.<br>
-      Select a category or enter a keyword in the search field.
-    </p>
+    <h2>How can we help you?</h2>
 
-
-    <div class="input-group px-1 py-3 mb-5" style="max-width: 650px; margin-right: auto; margin-left: auto;">
+    <div class="input-group px-1 py-3 mb-4" style="max-width: 650px; margin-right: auto; margin-left: auto;">
       <div class="text-muted" style="bottom: 1.4em;position: absolute;z-index: 15;left: 1.1em;">
         <i class="fa fa-search"></i>
       </div>
@@ -31,101 +25,16 @@
     </div>
 
 
-    <div id="accordion" style="font-size: 0.9em; display: none;" class="text-left">
-      <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
-        <div class="card-header" id="headingOne">
-          <h5 class="mb-0">
-            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              Tool Management
-            </button>
-          </h5>
-        </div>
-        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-          <div class="card-body pt-2">
-              <ul class="FAQ_list">
-                  <li>Adding tools</li>
-                  <li>Editing tools</li>
-                  <li>Selective tool sharing</li>
-                  <li> and more ...</li>
-              </ul>
-              <a type="button" class="btn btn-sm btn-outline-info" href="/FAQ/tools">Learn More</a>
-          </div>
-        </div>
-      </div>
+    <p class="m-3 pb-1 text-left"><a href="/FAQ/overview">Introduction: help me get started</a></p>
 
-      <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
-        <div class="card-header" id="headingTwo">
-          <h5 class="mb-0">
-            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              Borrowing & Lending Tools
-            </button>
-          </h5>
-        </div>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-          <div class="card-body pt-2">
-              <ul class="FAQ_list">
-                  <li>Finding a tool</li>
-                  <li>Requesting a tool</li>
-                  <li>Approving or rejecting requests</li>
-                  <li> and more ...</li>
-              </ul>
-              <a type="button" class="btn btn-sm btn-outline-info" href="/FAQ/actions">Learn More</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
-        <div class="card-header" id="headingThree">
-          <h5 class="mb-0">
-            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-              Neighborhood Help
-            </button>
-          </h5>
-        </div>
-        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-          <div class="card-body pt-2">
-              <ul class="FAQ_list">
-                  <li>Find a neighborhood</li>
-                  <li>Join or leave a neighborhood</li>
-                  <li>Admin actions</li>
-                  <li> and more ...</li>
-              </ul>
-              <a type="button" class="btn btn-sm btn-outline-info" href="/FAQ/neighborhoods">Learn More</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
-        <div class="card-header" id="headingThree">
-          <h5 class="mb-0">
-            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-              Account Management
-            </button>
-          </h5>
-        </div>
-        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-          <div class="card-body pt-2">
-              <ul class="FAQ_list">
-                  <li>Updating user info</li>
-                  <li>View your history</li>
-                  <li>Deleting your account</li>
-                  <li> and more ...</li>
-              </ul>
-              <a type="button" class="btn btn-sm btn-outline-info" href="/FAQ/account">Learn More</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="accordion text-left" id="accordionExample" style="font-size: 0.9em;">
-        <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
-            <div class="card-header py-1" id="headingOne" data-toggle="collapse" data-target="#collapseOne">
+    <div class="accordion text-left mb-3" id="accordionExample" style="font-size: 0.9em;">
+        <div class="card {% if session.theme == 'dark' %}dark{% endif %}">
+            <div class="card-header py-1 border-bottom-0 btn" id="headingOne" data-toggle="collapse" data-target="#collapseOne">
               <div class="row mb-0">
                 <div class="col-auto mr-auto">
-                  <div class="btn btn-link collapsed">Tool Help</div>
+                  <div class="ml-3 collapsed">Tool Help</div>
                 </div>
-                <div class="col-auto text-muted btn" style="display: flex; align-items: center;">
+                <div class="col-auto text-muted" style="display: flex; align-items: center;">
                   <i class="fa fa-chevron-down"></i>
                 </div>
               </div>
@@ -143,13 +52,13 @@
             </div>
         </div>
 
-        <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
-            <div class="card-header py-1" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo">
+        <div class="card {% if session.theme == 'dark' %}dark{% endif %}">
+            <div class="card-header py-1 border-bottom-0 btn" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo">
               <div class="row mb-0">
                 <div class="col-auto mr-auto">
-                  <div class="btn btn-link collapsed">Borrowing & Lending</div>
+                  <div class="ml-3 collapsed">Borrowing & Lending</div>
                 </div>
-                <div class="col-auto text-muted btn" style="display: flex; align-items: center;">
+                <div class="col-auto text-muted" style="display: flex; align-items: center;">
                   <i class="fa fa-chevron-down"></i>
                 </div>
               </div>
@@ -167,13 +76,13 @@
             </div>
         </div>
 
-        <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
-            <div class="card-header py-1" id="headingThree" data-toggle="collapse" data-target="#collapseThree">
+        <div class="card {% if session.theme == 'dark' %}dark{% endif %}">
+            <div class="card-header py-1 border-bottom-0 btn" id="headingThree" data-toggle="collapse" data-target="#collapseThree">
               <div class="row mb-0">
                 <div class="col-auto mr-auto">
-                  <div class="btn btn-link collapsed">Neighborhood Help</div>
+                  <div class="ml-3 collapsed">Neighborhood Help</div>
                 </div>
-                <div class="col-auto text-muted btn" style="display: flex; align-items: center;">
+                <div class="col-auto text-muted" style="display: flex; align-items: center;">
                   <i class="fa fa-chevron-down"></i>
                 </div>
               </div>
@@ -191,13 +100,13 @@
             </div>
         </div>
 
-        <div class="card {% if session.theme == 'dark' %}nav_dark{% endif %}">
-            <div class="card-header py-1" id="headingFour" data-toggle="collapse" data-target="#collapseFour">
+        <div class="card {% if session.theme == 'dark' %}dark{% endif %}">
+            <div class="card-header py-1 border-bottom-0 btn" id="headingFour" data-toggle="collapse" data-target="#collapseFour">
               <div class="row mb-0">
                 <div class="col-auto mr-auto">
-                  <div class="btn btn-link collapsed">Account Management</div>
+                  <div class="ml-3 collapsed">Account Management</div>
                 </div>
-                <div class="col-auto text-muted btn" style="display: flex; align-items: center;">
+                <div class="col-auto text-muted" style="display: flex; align-items: center;">
                   <i class="fa fa-chevron-down"></i>
                 </div>
               </div>
@@ -214,14 +123,35 @@
                 </div>
             </div>
         </div>
+
+        <div class="card {% if session.theme == 'dark' %}dark{% endif %}">
+            <div class="card-header py-1 border-bottom-0 btn" id="headingFive" data-toggle="collapse" data-target="#collapseFive">
+              <div class="row mb-0">
+                <div class="col-auto mr-auto">
+                  <div class="ml-3 collapsed">Terms and Policies</div>
+                </div>
+                <div class="col-auto text-muted" style="display: flex; align-items: center;">
+                  <i class="fa fa-chevron-down"></i>
+                </div>
+              </div>
+            </div>
+            <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionExample">
+                <div class="card-body pl-5">
+                  <ul class="FAQ_list">
+                      <li>Privacy Policy</li>
+                      <li>Terms and Conditions</li>
+                      <li>Copyright</li>
+                      <li> and more ...</li>
+                  </ul>
+                  <a class="btn btn-outline-info" href="/FAQ/account">Learn More</a>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="pt-5">
-      <br>
-    </div>
 
 
-    <div class="text-center" style="font-size: 0.9em;">
+    <div class="text-center pt-5" style="font-size: 0.9em; display: none;">
         <div class="container">
             <div class="row pt-4 justify-content-center">
                 <div class="col-md-6 col-lg-3">
@@ -294,16 +224,17 @@
 
 
 
-    <h5>{{ category }}</h5>
+    <h5 style="display: none;">{{ category }}</h5>
+    
     <div class="pt-5 text-left">
-      <h4>Popular Articles</h4>
+      <h5>Popular Articles</h5>
       <p class="ml-3 m-0"><a href="">Selective tool sharing</a></p>
       <p class="ml-3 m-0"><a href="">How to view the history of my tool</a></p>
       <p class="ml-3 m-0"><a href="">Invite others to your neighborhood</a></p>
     </div>
 
     <div class="pt-5 text-left">
-      <h4>Still need help?</h4>
+      <h5>Still need help?</h5>
       <p class="ml-3 m-0"><a href="/contact?type=help">Contact us</a> if you still have questions that aren't answered above.</p>
     </div>
 
