@@ -861,8 +861,8 @@ min-height: 40px;
 }
 
 .accordion .card-header {
-  font-weight: 200;
-  letter-spacing: 0.05em;
+  font-weight: 300;
+  letter-spacing: 0.15em;
 }
 
 .rounded {
