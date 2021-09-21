@@ -2276,8 +2276,8 @@ def privacypolicy():
 
 @app.route("/FAQ")
 @app.route("/FAQ/")
-@app.route("/FAQ/<category>")
-def FAQ(category='none'):
+@app.route("/FAQ/<subpage>")
+def FAQ(subpage='none'):
     if session.get("user_uuid") is None:
         firstname = ""
         openActions = 0
@@ -2285,14 +2285,13 @@ def FAQ(category='none'):
         firstname = session.get("firstname")
         openActions = countActions()
 
-    if category == 'none':
-        return render_template("/FAQs/FAQ_home.html", openActions=openActions, firstname=firstname, category=category)
-    elif category == 'no_page':
+    if subpage == 'none':
+        return render_template("/FAQs/FAQ_home.html", openActions=openActions, firstname=firstname, subpage=subpage)
+    elif subpage == 'no_page':
         return apology("is under construction", "sorry, this help page")
     else:
-        print("FAQ for category:" + category)
-
-    return render_template("/FAQs/", openActions=openActions, firstname=firstname, category=category)
+        FAQ_path = "/FAQs/pages/" + subpage + ".html"
+        return render_template(FAQ_path, openActions=openActions, firstname=firstname, subpage=subpage)
 
 
 

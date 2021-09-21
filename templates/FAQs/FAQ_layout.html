@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    FAQ - {% block FAQ_subject %}{% endblock %}
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+
+{% block main %}
+<div class="scrolling_page px-0 pt-3 text-left">
+  <a class="btn text-left m-3 pl-2" href="/FAQ/">
+    <img src='/static/toolshare.png' alt="" style="height: 35px;">
+    <span class="ml-2"><i class="fa fa-arrow-left mr-2"></i>Back to Help</span>
+  </a>
+  <div class="container" style="padding: 0 5% 0 5%;">
+    <h3>{% block FAQ_title %}{% endblock %}</h3>
+
+    {% block FAQ_body %}{% endblock %}
+
+    <p class="mt-5"><a href="/FAQ/">Back to Help</a></p>
+
+    <div class="pt-5 text-left">
+      <h5>Still need help?</h5>
+      <p class="ml-3 m-0"><a href="/contact?type=help">Contact us</a> if you still have questions that aren't answered above.</p>
+    </div>
+
+
+    <div class="deadspace"></div>
+    <div class="deadspace"></div>
+  </div>
+</div>
+
+
+{% endblock %}
