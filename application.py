@@ -1466,6 +1466,7 @@ def validateemail():
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
                 session["neighborhood_check"] = "0"
+                session["theme"] = new_user[0]["theme"]
                 logHistory("other", "email_validated", "", "", "", "")
                 # redirect back to the tools (root) page
                 flash(new_user[0]["firstname"] + ", your email has been validated.")
@@ -1528,6 +1529,7 @@ def validateemail():
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
                 session["neighborhood_check"] = "0"
+                session["theme"] = new_user[0]["theme"]
                 logHistory("other", "email_validated", "", "", "", "")
                 # redirect back to the tools (root) page
                 flash(new_user[0]["firstname"] + ", your email has been validated.")
@@ -1759,6 +1761,7 @@ def changepassword():
                 # go agead and log the user in at this point
                 session["user_uuid"] = userdeetz[0]["uuid"]
                 session["firstname"] = userdeetz[0]["firstname"]
+                session["theme"] = userdeetz[0]["theme"]
                 # See if the user is a member of any neighborhoods
                 myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
                 if len(myneighborhoods) != 0:
@@ -2083,6 +2086,7 @@ def validatePWchange():
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
                 session["neighborhood_check"] = "0"
+                session["theme"] = new_user[0]["theme"]
                 logHistory("other", "email_validated", "", "", "", "")
                 # redirect back to the tools (root) page
                 flash(new_user[0]["firstname"] + ", your email has been validated.")
@@ -2145,6 +2149,7 @@ def validatePWchange():
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
                 session["neighborhood_check"] = "0"
+                session["theme"] = new_user[0]["theme"]
                 logHistory("other", "email_validated", "", "", "", "")
                 # redirect back to the tools (root) page
                 flash(new_user[0]["firstname"] + ", your email has been validated.")
