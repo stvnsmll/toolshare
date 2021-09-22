@@ -20,9 +20,12 @@
     <span class="ml-2"><i class="fa fa-arrow-left mr-2"></i>Back to Help</span>
   </a>
   <div class="container" style="padding: 0 5% 0 5%;">
-    <h3>{% block FAQ_title %}{% endblock %}</h3>
+    <h4 class="pt-2" style="letter-spacing: 0.1em;">{% block FAQ_title %}{% endblock %}</h4>
+    <div class="m-3">
 
-    {% block FAQ_body %}{% endblock %}
+      {% block FAQ_body %}{% endblock %}
+
+    </div>
 
     <p class="mt-5"><a href="/FAQ/">Back to Help</a></p>
 

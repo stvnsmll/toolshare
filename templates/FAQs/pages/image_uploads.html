@@ -1,0 +1,26 @@
+{% extends "/FAQs/FAQ_layout.html" %}
+
+{% block FAQ_subject %}
+Tools
+{% endblock %}
+
+{% block FAQ_title %}
+Image Upload
+{% endblock %}
+
+
+{% block FAQ_body %}
+You can load an image of your tool so that other members can see the tool before
+they request to borrow it. At this point, there is only capability to upload one
+image for each tool.
+Once it is uploaded, you can always change it - either immediately or you can change
+it later while editing a tool.<br>
+<br>
+Your images are stored in an encrypted AWS storage location and cannot be accessed
+from outside of this app. Any member who has visibility of the tool can view the
+image and potentially screenshot or download the image at that point.<br>
+<br>
+There is a known issue with image uploading. On some browsers, the image does
+not save or show properly. Until this issue is resolved, please login to your
+account in a different browser to upload images.
+{% endblock %}

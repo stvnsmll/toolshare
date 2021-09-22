@@ -2163,8 +2163,11 @@ def validatePWchange():
 
 
 @app.route("/ContactUs", methods=["GET", "POST"])
-@login_required
+#@login_required
 def contactus():
+    if session.get("user_uuid") is None:
+        return redirect("/contact")
+        
     userUUID = session.get("user_uuid")
     firstname = session.get("firstname")
     user_details = db.execute("SELECT * FROM users WHERE uuid = :uuid;", uuid=userUUID)[0]
