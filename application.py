@@ -35,9 +35,9 @@ import SQL
 import PIL
 import config
 import boto3, botocore
-import qrcode
-import io
-import base64
+#import qrcode
+#import io
+#import base64
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for, send_from_directory, make_response
 from flask_session import Session
 from tempfile import mkdtemp
