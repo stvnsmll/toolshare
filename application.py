@@ -429,7 +429,7 @@ def newtool():
 
 
 @app.route("/tool_details", methods=["GET", "POST"])
-#@login_required #(allow users to share tools, and view the toolweclcome without having an account)
+@login_required #(allow users to share tools, and view the toolweclcome without having an account)
 def tool_details():
     #if not logged in, this is an external invite for a potential new user (toolwelcome)
     # They will be redirected to a welcome page and be offered to join or login
@@ -934,7 +934,7 @@ def neighborhoods():
 
 
 @app.route("/neighborhood_details", methods=["GET", "POST"])
-#@login_required #allow not logged in for new users
+@login_required #allow not logged in for new users
 def neighborhood_details():
     if request.method == "GET":
         #if not logged in, this is an external invite for a potential new user
