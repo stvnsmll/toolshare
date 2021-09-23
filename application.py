@@ -892,13 +892,37 @@ def neighborhoods():
 
 
 @app.route("/neighborhood_details", methods=["GET", "POST"])
-@login_required
+#@login_required
 def neighborhood_details():
-    """Show user neighborhood details page"""
-    userUUID = session.get("user_uuid")
-    firstname = session.get("firstname")
-
     if request.method == "GET":
+        #if not logged in, this is an external invite for a potential new user
+        # They will be redirected to a welcome page and be offered to join or login
+        if session.get("user_uuid") is None:
+            neighborhoodid = request.args.get("neighborhoodid")
+            if not neighborhoodid:
+                return redirect("/")
+            else:
+                neighborhooddeetz = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid = :neighborhoodid AND deleted = 0;", neighborhoodid=neighborhoodid)[0]
+                neighborhoodname = neighborhooddeetz["neighborhood"]
+                if neighborhooddeetz["description"]:
+                    description = neighborhooddeetz["description"].split('\n')
+                else:
+                    description = ""
+                #Get some tool images to display to the prospective user
+                sometoolslist = db.execute("SELECT * FROM tools WHERE toolid IN (SELECT DISTINCT toolid FROM toolvisibility WHERE neighborhoodid = :neighborhoodid) ORDER BY toolname;", neighborhoodid=neighborhoodid)
+                if len(sometoolslist) > 4:
+                    showtools = True
+                    sometools = format_tools(sometoolslist[:5])#get the details on only the first 5 tools in this neighborhood
+                else:
+                    showtools = False
+                    sometools = []
+                return render_template("neighborhood/neighborhoodwelcome.html", neighborhoodname=neighborhoodname, neighborhoodid=neighborhoodid, description=description, showtools=showtools, sometools=sometools)
+
+        #else:
+        """Show user neighborhood details page"""
+        userUUID = session.get("user_uuid")
+        firstname = session.get("firstname")
+
         # Use: to get the info from the URL /neighborhood_details?neighborhoodid=3
         neighborhoodid = request.args.get("neighborhoodid")
         if not neighborhoodid:
@@ -1584,7 +1608,7 @@ def manageaccount():
 
 
 @app.route("/communication", methods=["GET", "POST"])
-#@login_required <--managed internally
+#@login_required <--managed internally to be url unsubscribed
 def communication():
     '''Update communication preferences'''
     if request.method == "GET":
@@ -2167,7 +2191,7 @@ def validatePWchange():
 def contactus():
     if session.get("user_uuid") is None:
         return redirect("/contact")
-        
+
     userUUID = session.get("user_uuid")
     firstname = session.get("firstname")
     user_details = db.execute("SELECT * FROM users WHERE uuid = :uuid;", uuid=userUUID)[0]

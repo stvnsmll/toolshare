@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+    {{ neighborhoodname }}
+{% endblock %}
+
+
+{% block main %}
+<div class="scrolling_page">
+    <br>
+    <div style="font-weight: 400; letter-spacing: 0.05em; font-size: 1.8em; font-variant: petite-caps;">{{ neighborhoodname }}</div>
+    <p>
+      You must first login or signup to join this neighborhood.
+    </p>
+    <span class="nav-item"><a class="m-2 p-2 btn btn-outline-secondary" href="/login?next=neighborhood_details?neighborhoodid={{ neighborhoodid }}" style="font-size: 0.9em;"><i class='fas fa-sign-in-alt'></i>&nbsp; Log In</a></span>
+    <span class="nav-item"><a class="m-2 btn btn-toolshare" style="padding: .5rem 1rem;" href="/register?nbh_welcome={{ neighborhoodid }}"><i class='fas fa-user-plus'></i>&nbsp; Sign Up</a></span>
+    <div class="mt-3" style="font-weight: 300;">
+      <a href="/" target="_blank"><i class="small fas fa-external-link-alt" aria-hidden="true"></i>&nbsp; Learn more about ToolShare first</a>
+    </div>
+
+    <hr>
+    <div style="font-weight: 300; letter-spacing: 0.05em; font-size: 1.2em;">Neighborhood Description:</div>
+    <div style="font-size: 0.9em; font-weight: 200;">
+      {% autoescape false %}
+      <p>
+          <i>{% for line in description %}{{ line }}<br />{% endfor %}</i>
+      </p>
+      {% endautoescape %}
+    </div>
+
+    {% if showtools %}
+    <div style="font-weight: 300; letter-spacing: 0.05em; font-size: 1.2em;">Some Tools:</div>
+    <div class="tab-content">
+      <ul class="list-group list-group-flush border-top border-bottom" id="myList2">
+        {% for tool in sometools %}
+            <li class="list-group-item" style="display: flex; cursor: auto; background-color: inherit;">
+              <div class="card_image-list">
+                {% if sometools[tool]['photo'] %}<img class="thumbnail" src="{{ sometools[tool]['photo'] }}" alt="">
+                {% else %}<i class="fas fa-wrench"></i>
+                {% endif %}
+              </div>
+              <span id="tool_name" style="padding-left: 10px;">{{ sometools[tool]["toolname"] }}</span>
+              <span id="category" class="hiddencategory">{{ sometools[tool]["category"] }}</span>
+              <span id="owner" class="hiddencategory">{{ sometools[tool]["owner"] }}</span>
+            </li>
+        {% endfor %}
+
+      </ul>
+      <div class="" style="display: flex; position: relative; bottom: 10px">
+        <div style="width: 100%; background: #0080006b; height: 20px;">
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div style="width: 50px; height: 50px; background: green;">
+      banana
+    <div>
+    {% endif %}
+
+    <div class="deadspace"></div>
+</div>
+
+{% endblock %}
