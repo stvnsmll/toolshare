@@ -12,3 +12,4 @@ psycopg2
 boto3
 botocore
 flask_mail
+qrcode

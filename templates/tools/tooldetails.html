@@ -60,9 +60,11 @@
     <hr>
 
     <h5>Features and Rules</h5>
+    {% autoescape false %}
     <p>
         <i>{% for line in description %}{{ line }}<br />{% endfor %}</i>
     </p>
+    {% endautoescape %}
     {% if yesowner %}
     <h5>Private Notes</h5>
     <p>

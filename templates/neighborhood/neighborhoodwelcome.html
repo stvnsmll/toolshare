@@ -30,8 +30,8 @@
     </div>
 
     {% if showtools %}
-    <div style="font-weight: 300; letter-spacing: 0.05em; font-size: 1.2em;">Some Tools:</div>
-    <div class="tab-content">
+    <div style="font-weight: 300; letter-spacing: 0.05em; font-size: 1.2em;">Some of the tools:</div>
+    <div class="tab-content mb-0">
       <ul class="list-group list-group-flush border-top border-bottom" id="myList2">
         {% for tool in sometools %}
             <li class="list-group-item" style="display: flex; cursor: auto; background-color: inherit;">
@@ -47,18 +47,12 @@
         {% endfor %}
 
       </ul>
-      <div class="" style="display: flex; position: relative; bottom: 10px">
-        <div style="width: 100%; background: #0080006b; height: 20px;">
-        </div>
-      </div>
     </div>
-    {% else %}
-    <div style="width: 50px; height: 50px; background: green;">
-      banana
-    <div>
+    <div class="" style="display: flex; position: relative; bottom: 200px">
+      <div class="shadeout"></div>
+    </div>
     {% endif %}
 
-    <div class="deadspace"></div>
 </div>
 
 {% endblock %}

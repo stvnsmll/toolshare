@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+    {{ toolname }}
+{% endblock %}
+
+
+{% block main %}
+<div class="scrolling_page">
+    <br>
+    <div style="font-weight: 400; letter-spacing: 0.05em; font-size: 1.8em; font-variant: petite-caps;">{{ toolname }}</div>
+    {% if photo %}
+        <img src="{{ photo }}" alt="image lookup error" class="makesquareimg"><br>
+    {% endif %}
+
+    <p>
+      You must first login or signup to see this tool.
+    </p>
+    <span class="nav-item"><a class="m-2 p-2 btn btn-outline-secondary" href="/login?next=neighborhood_details?neighborhoodid={{ neighborhoodid }}" style="font-size: 0.9em;"><i class='fas fa-sign-in-alt'></i>&nbsp; Log In</a></span>
+    <span class="nav-item"><a class="m-2 btn btn-toolshare" style="padding: .5rem 1rem;" href="/register?nbh_welcome={{ neighborhoodid }}"><i class='fas fa-user-plus'></i>&nbsp; Sign Up</a></span>
+    <div class="mt-3" style="font-weight: 300;">
+      <a href="/" target="_blank"><i class="small fas fa-external-link-alt" aria-hidden="true"></i>&nbsp; Learn more about ToolShare first</a>
+    </div>
+    <hr>
+
+    <div style="font-weight: 300; letter-spacing: 0.05em; font-size: 1.2em;">Features and Rules:</div>
+    <div style="font-size: 0.9em; font-weight: 200;">
+      {% autoescape false %}
+      <p>
+          <i>{% for line in description %}{{ line }}<br />{% endfor %}</i>
+      </p>
+      {% endautoescape %}
+    </div>
+    <div class="" style="display: flex; position: relative; bottom: 100px">
+      <div class="shadeout"></div>
+    </div>
+
+</div>
+
+{% endblock %}

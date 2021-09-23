@@ -53,7 +53,7 @@
           <div id="toolselector" class="expandanimate" style="max-height: 0px">
             <div class="btn-group btn-group-sm" style="margin-top: 5px">
               <button class="btn btn-success" onclick="updateinfobox('updatetoolvis')" type="submit">Save <i class="fa fa-check"></i></button>
-              <button type="button" class="btn btn-warning" onclick="window.location.reload();">Discard <i class="fa fa-times"></i></button>
+              <button class="btn btn-warning" onclick="window.location.reload();">Discard <i class="fa fa-times"></i></button>
             </div>
             <div class="selector_list ">
               <ul class="list {% if session.theme == 'dark' %}dark{% endif %}" style="overflow-y: scroll;">
@@ -74,6 +74,15 @@
           </div>
         </div>
         <br>
+        <button type="button" id="shareme" onclick=showShare() style="width: 260px" class='btn btn-outline-primary'>Share Neighborhood&nbsp;&nbsp;<i id="chevron2" class="fa fa-chevron-down spinme" style="font-size: 10px"></i></button><br><br>
+        <div id="sharelink" class="expandanimate" style="max-height: 0px">
+          <div>
+            Link to this neighborhood:
+            <a style="cursor: pointer; color: blue;">Copy <i class="fa fa-clipboard"></i><a><br>
+            <a style="cursor: pointer; color: blue;">Generate a QR code<a>
+              <br><br>
+          </div>
+        </div>
         {% if yesadmin %}
             <button class="btn btn-secondary" onclick="updateinfobox('edit')" type="submit" style="width: 260px">Edit Details</button><br><br>
             <button class="btn btn-secondary" onclick="updateinfobox('managemembers')" type="submit" style="width: 260px">Manage Members</button><br><br>
@@ -102,7 +111,7 @@
         <!-- Modal Header -->
         <div class="modal-header {% if session.theme == 'dark' %}nav_dark{% endif %}">
           <h4 class="modal-title">Tool Visibilities</h4>
-          <button type="button" class="close {% if session.theme == 'dark' %}dark{% endif %}" data-dismiss="modal">&times;</button>
+          <button class="close {% if session.theme == 'dark' %}dark{% endif %}" data-dismiss="modal">&times;</button>
         </div>
 
         <!-- Modal body -->
@@ -119,7 +128,7 @@
 
         <!-- Modal footer -->
         <div class="modal-footer {% if session.theme == 'dark' %}nav_dark{% endif %}">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          <button class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
 
       </div>
@@ -167,7 +176,22 @@
               chevron1.style.color = "white";
               toolselector.style.maxHeight = '1042px';
             }
+        }
 
+        function showShare() {
+          var shareme = document.getElementById("shareme");
+          var chevron2 = document.getElementById('chevron2');
+          var sharelink = document.getElementById("sharelink");
+
+            /*$("#toolselector").collapse('toggle');*/
+            if (sharelink.style.maxHeight == '0px') {
+              chevron2.style.transform = "rotateX(180deg)";
+              sharelink.style.maxHeight = '1042px';
+            } else {
+              chevron2.style.transform = "rotateX(0deg)";
+              sharelink.style.maxHeight = '0px';
+
+            }
         }
 
         function gotosite(siteid){

@@ -32,8 +32,12 @@ import uuid
 
 #from cs50 import SQL
 import SQL
+import PIL
 import config
 import boto3, botocore
+import qrcode
+import io
+import base64
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for, send_from_directory, make_response
 from flask_session import Session
 from tempfile import mkdtemp
@@ -41,7 +45,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 # importing Image class from PIL package for creating tool image thumbnails
-from PIL import Image
+#from PIL import Image
 #for sending emails
 from flask_mail import Mail, Message
 
@@ -130,6 +134,20 @@ def service_worker():
     return response
 
 
+#QR CODE GENERATION
+'''
+#in application.py
+img = qrcode.make("url...")
+data = io.BytesIO()
+img.save(data, "PNG")
+encoded_qr_image = base64.b64encode(data.getvalue())
+
+#pass to template:
+qrcode_data=encoded_qr_image.decode('utf-8')
+
+#in templage:
+<img src="data:image/png;base64,{{ qrcode_data }}" alt="QR Code generation error" class="qrcode"><br>
+'''
 
 
 ################################################################
@@ -411,12 +429,34 @@ def newtool():
 
 
 @app.route("/tool_details", methods=["GET", "POST"])
-@login_required
+#@login_required (allow users to share tools, and view the toolweclcome without having an account)
 def tool_details():
+    #if not logged in, this is an external invite for a potential new user (toolwelcome)
+    # They will be redirected to a welcome page and be offered to join or login
+    if session.get("user_uuid") is None:
+        toolid = request.args.get("toolid")
+        if not toolid:
+            return redirect("/")
+        else:
+            tooldetails = db.execute("SELECT * FROM tools WHERE toolid = :toolid AND deleted = 0;", toolid=toolid)
+            if len(tooldetails) == 0:
+                return apology("No tool")
+            tooldetails = tooldetails[0]
+            toolname = tooldetails["toolname"]
+            if tooldetails["features"]:
+                description = tooldetails["features"].split('\n')
+            else:
+                description = ""
+            photo = ""
+            if tooldetails["photo"] != 'none':
+                photo = get_image_s3(toolid + ".jpeg")
+            return render_template("tools/toolwelcome.html", toolname=toolname, toolid=toolid, description=description, photo=photo)
+
+    #else:
     """Show user tool details page"""
-    userUUID = session.get("user_uuid")
-    firstname = session.get("firstname")
     if request.method == "GET":
+        userUUID = session.get("user_uuid")
+        firstname = session.get("firstname")
         toolid = request.args.get("toolid")
         if not toolid:
             return apology("Need to provide a tool id")
@@ -541,7 +581,9 @@ def tool_details():
                                 notes=notes,
                                 toolid=toolid,
                                 toolhistory=toolhistory)
-    else:
+    else:#Post
+        userUUID = session.get("user_uuid")
+        firstname = session.get("firstname")
         formAction = request.form.get("returnedAction")
         toolid = request.form.get("toolid")
         if formAction == "returnHome":
@@ -984,6 +1026,8 @@ def neighborhood_details():
 
             return render_template("neighborhood/neighborhooddetails.html", openActions=countActions(), firstname=firstname, neighborhoodname=neighborhoodname, zipcode=zipcode, description=description, membercount=membercount, privateYN=privateYN, passwordYN=passwordYN, yesadmin=yesadmin, notmember=notmember, neighborhoodid=neighborhoodid, myTools=myTools)
     else:
+        userUUID = session.get("user_uuid")
+        firstname = session.get("firstname")
         formAction = request.form.get("returnedAction")
         neighborhoodid = request.form.get("nbhid")
         if formAction == "join":
@@ -2444,8 +2488,8 @@ def save_local_thumbnail(image_uuid):
     if os.path.exists(file_thumb):
         os.remove(file_thumb)
     MAX_SIZE = (75, 75)
-    image = Image.open(UPLOAD_FOLDER + image_uuid + ".jpeg")
-    image.thumbnail(MAX_SIZE, Image.ANTIALIAS)
+    image = pil.Image.open(UPLOAD_FOLDER + image_uuid + ".jpeg")
+    image.thumbnail(MAX_SIZE, pil.Image.ANTIALIAS)
     image.save(file_thumb)
     print("thumbnail created.")
 
@@ -2660,6 +2704,14 @@ def generate_new_authcode(email):
     send_email_auth(email, authcode)
     return authcode
 
+
+def qr_code_image(url):
+    #url is the full url of the address that needs to be put into the QR code
+    qr_image = qrcode.make(url)
+    type(qr_image)  # qrcode.image.pil.PilImage
+    #don't save the image, pass it back
+    #img.save("static/toolimages/some_file.png")
+    return qr_image
 
 # Listen for errors
 for code in default_exceptions:
