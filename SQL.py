@@ -70,7 +70,7 @@ class SQL_db(object):
         url = url.replace("postgres:","postgres:")
         print("new URL:")
         print(url)
-        self._engine = sqlalchemy.create_engine(url, **kwargs)
+        self._engine = sqlalchemy.create_engine(url, **kwargs).execution_options(autocommit=False)
 
         print("engine made!!!!")
         # Get logger
