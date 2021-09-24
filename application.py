@@ -85,9 +85,9 @@ try:
     db = SQL.SQL_db(os.getenv("DATABASE_URL"))
     print("postgreSQL database: production mode")
 except:
+    print("UNABLE TO CONNECT TO postgreSQL DATABASE")
     db = SQL.SQL_db("sqlite:///toolshare.db")
     app.config["SESSION_FILE_DIR"] = mkdtemp()# <-- not used for Heroku
-    print("UNABLE TO CONNECT TO postgreSQL DATABASE")
     print("sqlite3 database: development mode")
     DATABASE__TYPE = 1
 
