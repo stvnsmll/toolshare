@@ -80,6 +80,8 @@ def after_request(response):
 # postgreSQL = 2 (production on Heroku)
 DATABASE__TYPE = 2
 try:
+
+    print("Database Path from ENV = " + str(os.getenv("DATABASE_URL")))
     db = SQL.SQL_db(os.getenv("DATABASE_URL"))
     print("postgreSQL database: production mode")
 except:
