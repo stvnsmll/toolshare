@@ -65,9 +65,11 @@ class SQL_db(object):
         # Create engine, disabling SQLAlchemy's own autocommit mode, raising exception if back end's module not installed
         #self._engine = sqlalchemy.create_engine(url, **kwargs).execution_options(autocommit=False)
         # ^-- Error is happening somewhere in here...
+        print("made it at least to here...")
+        print(url)
         self._engine = sqlalchemy.create_engine(url, **kwargs)
 
-        print("made it here: 0.3")
+        print("engine made!!!!")
         # Get logger
         self._logger = logging.getLogger("")#<-- was cs50 in the quotes...
 
