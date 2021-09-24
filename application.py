@@ -33,7 +33,7 @@ import psycopg2
 
 #from cs50 import SQL
 import SQL
-#import PIL
+import PIL
 import config
 import boto3, botocore
 #import qrcode
@@ -46,7 +46,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 # importing Image class from PIL package for creating tool image thumbnails
-from PIL import Image
+#from PIL import Image
 #for sending emails
 from flask_mail import Mail, Message
 
@@ -81,10 +81,8 @@ def after_request(response):
 # postgreSQL = 2 (production on Heroku)
 DATABASE__TYPE = 2
 try:
-
     print("Database Path from ENV = " + str(os.getenv("DATABASE_URL")))
-    #db = SQL.SQL_db(os.getenv("DATABASE_URL"))
-    db = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode='require')
+    db = SQL.SQL_db(os.getenv("DATABASE_URL"))
     print("postgreSQL database: production mode")
 except:
     db = SQL.SQL_db("sqlite:///toolshare.db")
@@ -435,7 +433,7 @@ def newtool():
 
 
 @app.route("/tool_details", methods=["GET", "POST"])
-@login_required #(allow users to share tools, and view the toolweclcome without having an account)
+#@login_required  #allow not logged in for new users to see tool preview
 def tool_details():
     #if not logged in, this is an external invite for a potential new user (toolwelcome)
     # They will be redirected to a welcome page and be offered to join or login
@@ -940,7 +938,7 @@ def neighborhoods():
 
 
 @app.route("/neighborhood_details", methods=["GET", "POST"])
-@login_required #allow not logged in for new users
+#@login_required #allow not logged in for new users to see neighborhood preview
 def neighborhood_details():
     if request.method == "GET":
         #if not logged in, this is an external invite for a potential new user
