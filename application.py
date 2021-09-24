@@ -29,6 +29,7 @@ application.py section layout:
 import os
 import datetime
 import uuid
+import psycopg2
 
 #from cs50 import SQL
 import SQL
@@ -82,7 +83,8 @@ DATABASE__TYPE = 2
 try:
 
     print("Database Path from ENV = " + str(os.getenv("DATABASE_URL")))
-    db = SQL.SQL_db(os.getenv("DATABASE_URL"))
+    #db = SQL.SQL_db(os.getenv("DATABASE_URL"))
+    db = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode='require')
     print("postgreSQL database: production mode")
 except:
     db = SQL.SQL_db("sqlite:///toolshare.db")
