@@ -38,10 +38,6 @@ class SQL_db(object):
         http://docs.sqlalchemy.org/en/latest/dialects/index.html
         """
 
-        #import pkg_resources
-        #pkg_resources.require("sqlalchemy==`1.3.24")
-        #pkg_resources.require("sqlalchemy.orm==`1.3.24")
-
         # Lazily import
         import logging
         import os
@@ -49,8 +45,6 @@ class SQL_db(object):
         import sqlalchemy
         import sqlalchemy.orm
         import sqlite3
-
-        print("made it here: 0.1")
 
         # Require that file already exist for SQLite
         matches = re.search(r"^sqlite:///(.+)$", url)
@@ -60,58 +54,40 @@ class SQL_db(object):
             if not os.path.isfile(matches.group(1)):
                 raise RuntimeError("not a file: {}".format(matches.group(1)))
 
-        print("made it here: 0.2")
-
         # Create engine, disabling SQLAlchemy's own autocommit mode, raising exception if back end's module not installed
-        #self._engine = sqlalchemy.create_engine(url, **kwargs).execution_options(autocommit=False)
-        # ^-- Error is happening somewhere in here...
-        print("made it at least to here...")
-        print(url)
+        #new in sqalchemy 1.4, the database name must begin with "postgresql" and not just "postgres"...
         url = url.replace("postgres:","postgresql:")
-        print("new URL:")
-        print(url)
         self._engine = sqlalchemy.create_engine(url, **kwargs).execution_options(autocommit=False)
 
-        print("engine made!!!!")
         # Get logger
         self._logger = logging.getLogger("")#<-- was cs50 in the quotes...
 
-        print("made it here: 0.4")
 
         # Listener for connections
         def connect(dbapi_connection, connection_record):
 
-            print("made it here: 1.0")
 
             # Disable underlying API's own emitting of BEGIN and COMMIT so we can ourselves
             # https://docs.sqlalchemy.org/en/13/dialects/sqlite.html#serializable-isolation-savepoints-transactional-ddl
             dbapi_connection.isolation_level = None
-            print("made it here: 1.1")
 
             # Enable foreign key constraints
             if type(dbapi_connection) is sqlite3.Connection:  # If back end is sqlite
-                print("made it here: 1.1b")
                 cursor = dbapi_connection.cursor()
                 cursor.execute("PRAGMA foreign_keys=ON")
                 cursor.close()
 
-        print("made it here: 0.5")
-
         # Register listener
         sqlalchemy.event.listen(self._engine, "connect", connect)
-
-        print("made it here: 0.6")
 
         # Autocommit by default
         self._autocommit = True
 
-        print("made it here: 0.7")
-
         # Test database
         disabled = self._logger.disabled
-        print("made it here: 0.8")
+
         self._logger.disabled = True
-        print("made it here: 0.9")
+
         try:
             self.execute("SELECT 1")
         except sqlalchemy.exc.OperationalError as e:
@@ -120,7 +96,6 @@ class SQL_db(object):
             raise e
         finally:
             self._logger.disabled = disabled
-        print("made it here: 2.0- end")
 
     def __del__(self):
         """Disconnect from database."""
