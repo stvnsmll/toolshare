@@ -32,7 +32,7 @@ import uuid
 
 #from cs50 import SQL
 import SQL
-import PIL
+#import PIL
 import config
 import boto3, botocore
 #import qrcode
@@ -45,7 +45,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 # importing Image class from PIL package for creating tool image thumbnails
-#from PIL import Image
+from PIL import Image
 #for sending emails
 from flask_mail import Mail, Message
 
@@ -81,9 +81,11 @@ def after_request(response):
 DATABASE__TYPE = 2
 try:
     db = SQL.SQL_db(os.getenv("DATABASE_URL"))
+    print("postgreSQL database: production mode")
 except:
     db = SQL.SQL_db("sqlite:///toolshare.db")
     app.config["SESSION_FILE_DIR"] = mkdtemp()# <-- not used for Heroku
+    print("UNABLE TO CONNECT TO postgreSQL DATABASE")
     print("sqlite3 database: development mode")
     DATABASE__TYPE = 1
 
