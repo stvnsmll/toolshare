@@ -67,6 +67,9 @@ class SQL_db(object):
         # ^-- Error is happening somewhere in here...
         print("made it at least to here...")
         print(url)
+        url = url.replace("postgres:","postgres:")
+        print("new URL:")
+        print(url)
         self._engine = sqlalchemy.create_engine(url, **kwargs)
 
         print("engine made!!!!")
