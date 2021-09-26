@@ -65,7 +65,7 @@
                     <span class="check--label-text {% if session.theme == 'dark' %}dark{% endif %}">{{ myTools[item]['toolName'] }}</span>
                   </label>
                   <div class="list-link" onclick="gotosite('{{ myTools[item]['toolID'] }}')">
-                    <i class="fa fa-link"></i>
+                    <i class="fas fa-external-link-alt"></i>
                   </div>
                 </li>
                 {% endfor %}
@@ -74,12 +74,17 @@
           </div>
         </div>
         <br>
-        <button type="button" id="shareme" onclick=showShare() style="width: 260px" class='btn btn-outline-primary'>Share Neighborhood&nbsp;&nbsp;<i id="chevron2" class="fa fa-chevron-down spinme" style="font-size: 10px"></i></button><br><br>
+        <button type="button" id="shareme" onclick=showShare() style="width: 260px" class='btn btn-outline-success'>Share Neighborhood&nbsp;&nbsp;<i id="chevron2" class="fa fa-chevron-down spinme" style="font-size: 10px"></i></button><br><br>
         <div id="sharelink" class="expandanimate" style="max-height: 0px">
           <div>
-            Link to this neighborhood:
-            <a style="cursor: pointer; color: blue;">Copy <i class="fa fa-clipboard"></i><a><br>
-            <a style="cursor: pointer; color: blue;">Generate a QR code<a>
+            <div>Share the link to this neighborhood</div>
+            <div class="input-group input-group-xs mb-2 copyurl">
+              <input class="form-control" type="text" id="myURL" value="url for this page..." disabled>
+              <div class="input-group-append">
+                  <a href="#" class="input-group-text" id="basic-addon2" style="color: #007bff;" onclick="copyURL();"><i class="fa fa-clipboard"></i>&nbsp;copy</a>
+                </div>
+            </div>
+            <a href="#"><i class="fa fa-qrcode"></i> Generate a QR code<a>
               <br><br>
           </div>
         </div>
@@ -141,6 +146,19 @@
         //var hiddenInfoBox2 = document.getElementById("hiddenInfoBox2");
         var neighborhoodpassword = document.getElementById("nbhpw");
         var joinbtn = document.getElementById("joinbtn");
+
+        var myURL = document.getElementById("myURL");
+
+        window.onload = function setURL() {
+          myURL.value = window.location.href;
+        };
+
+        function copyURL(){
+          //clipboard = myURL.value;
+          navigator.clipboard.writeText(myURL.value);
+        };
+
+
 
         //hiddenInfoBox.style.display = 'none';
         //hiddenInfoBox2.style.display = 'none';

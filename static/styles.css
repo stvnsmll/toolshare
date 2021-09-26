@@ -39,6 +39,18 @@ ul a:hover {
     text-decoration: inherit; /* no underline */
 }
 
+.link {
+  color: #007bff;; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+  cursor: pointer;
+}
+
+.link:hover {
+  color: #007bff; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
+
+
 .scrolling_page {
     padding: 2px 50px;
     overflow-x: scroll;
@@ -890,4 +902,18 @@ min-height: 40px;
   border: 8px solid #cc5500;
   border-radius: 36px;
   margin: 15px;
+}
+
+.input-group-xs>.form-control, .input-group-xs>.input-group-append>.btn, .input-group-xs>.input-group-append>.input-group-text, .input-group-xs>.input-group-prepend>.btn, .input-group-xs>.input-group-prepend>.input-group-text {
+    height: calc(1.72rem + 2px);
+    padding: .2rem .4rem;
+    font-size: .75rem;
+    line-height: 1.25;
+    border-radius: .15rem;
+}
+
+.copyurl {
+  max-width: 70%;
+  margin: auto;
+  font-family: monospace;
 }

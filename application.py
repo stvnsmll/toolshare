@@ -36,9 +36,11 @@ import SQL
 import PIL
 import config
 import boto3, botocore
-#import qrcode
-#import io
-#import base64
+
+import qrcode
+import io
+import base64
+
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for, send_from_directory, make_response
 from flask_session import Session
 from tempfile import mkdtemp
@@ -46,7 +48,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 # importing Image class from PIL package for creating tool image thumbnails
-#from PIL import Image
+from PIL import Image
 #for sending emails
 from flask_mail import Mail, Message
 
@@ -442,6 +444,8 @@ def tool_details():
             return redirect("/")
         else:
             tooldetails = db.execute("SELECT * FROM tools WHERE toolid = :toolid AND deleted = 0;", toolid=toolid)
+            #TODO, if tool is private, don't show any details.
+            #if the tool had been delteted, redirect to ("/")
             if len(tooldetails) == 0:
                 return apology("No tool")
             tooldetails = tooldetails[0]
@@ -2491,8 +2495,8 @@ def save_local_thumbnail(image_uuid):
     if os.path.exists(file_thumb):
         os.remove(file_thumb)
     MAX_SIZE = (75, 75)
-    image = pil.Image.open(UPLOAD_FOLDER + image_uuid + ".jpeg")
-    image.thumbnail(MAX_SIZE, pil.Image.ANTIALIAS)
+    image = PIL.Image.open(UPLOAD_FOLDER + image_uuid + ".jpeg")
+    image.thumbnail(MAX_SIZE, PIL.Image.ANTIALIAS)
     image.save(file_thumb)
     print("thumbnail created.")
 
@@ -2711,7 +2715,7 @@ def generate_new_authcode(email):
 def qr_code_image(url):
     #url is the full url of the address that needs to be put into the QR code
     qr_image = qrcode.make(url)
-    type(qr_image)  # qrcode.image.pil.PilImage
+    type(qr_image)  # qrcode.image.PIL.PilImage
     #don't save the image, pass it back
     #img.save("static/toolimages/some_file.png")
     return qr_image
