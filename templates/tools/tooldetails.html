@@ -104,6 +104,22 @@
                 <button class="btn btn-secondary" onclick="updateinfobox('makePrivate')" type="submit" style="width: 260px" data-toggle="modal" data-target="#spinnerCogModal">Make Private</button><br><br>
             {% endif %}
 
+            <br>
+            <button type="button" id="shareme" onclick=showShare() style="width: 260px" class='btn btn-outline-success'>Share Tool&nbsp;&nbsp;<i id="chevron2" class="fa fa-chevron-down spinme" style="font-size: 10px"></i></button><br><br>
+            <div id="sharelink" class="expandanimate" style="max-height: 0px">
+              <div>
+                <div>Share the link to this tool</div>
+                <div class="input-group input-group-xs mb-2 copyurl">
+                  <input class="form-control" type="text" id="myURL" value="url for this page..." disabled>
+                  <div class="input-group-append">
+                      <a href="#" class="input-group-text" id="basic-addon2" style="color: #007bff;" onclick="copyURL();"><i class="fa fa-clipboard"></i>&nbsp;copy</a>
+                    </div>
+                </div>
+                <a id="qrLink" href="/sharelink?typ=nbh&id={{ neighborhoodid }}"><i class="fa fa-qrcode"></i> Generate a QR code<a>
+                  <br><br>
+              </div>
+            </div>
+
             <!-- onclick="updateinfobox('deleteTool')" type="submit" -->
             <div class="btn btn-danger"  style="width: 260px" target="#" data-toggle="modal" data-target="#deleteModal">Delete Tool</div><br><br>
             {% if isavailable %}
@@ -206,6 +222,20 @@
         var commentButton = document.getElementById("commentButton");
         //requestCommentContainer.style.display = "none";
 
+        var myURL = document.getElementById("myURL");
+        var qrlink = document.getElementById("qrLink");
+
+        window.onload = function setURL() {
+          myURL.value = window.location.href;
+          qrLink.href = "/sharelink?link=" + window.location.href;
+        };
+
+        function copyURL(){
+          //clipboard = myURL.value;
+          navigator.clipboard.writeText(myURL.value);
+        };
+
+
         function updateinfobox(newtext) {
             if ((newtext == 'requestBorrow') && (requestCommentContainer.style.display === "none")) {
                 requestComment.value = "";
@@ -221,6 +251,22 @@
             }
         }
 
+        function showShare() {
+          var shareme = document.getElementById("shareme");
+          var chevron2 = document.getElementById('chevron2');
+          var sharelink = document.getElementById("sharelink");
+
+            /*$("#toolselector").collapse('toggle');*/
+            if (sharelink.style.maxHeight == '0px') {
+              chevron2.style.transform = "rotateX(180deg)";
+              sharelink.style.maxHeight = '1042px';
+            } else {
+              chevron2.style.transform = "rotateX(0deg)";
+              sharelink.style.maxHeight = '0px';
+
+            }
+        }
+
         $(document).ready(function(){
             $('[data-toggle="popover"]').popover({
                 trigger: 'focus',
@@ -228,8 +274,5 @@
             });
         });
 
-        function text() {
-            window.alert("banana");
-        }
     </script>
 {% endblock %}

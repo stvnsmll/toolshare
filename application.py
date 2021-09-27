@@ -2074,7 +2074,7 @@ def sharelink():
         if link.find("neighborhood_details") != -1:
             requesttype = "nbh"
         elif link.find("tool_details") != -1:
-            requesttpye = "tool"
+            requesttype = "tool"
         else:
             return apology("Misc error")
 
@@ -2102,7 +2102,7 @@ def sharelink():
         img.save(data, "PNG")
         encoded_qr_image = base64.b64encode(data.getvalue())
 
-        return render_template("general/sharelink.html", openActions=countActions(), firstname=firstname, qrcode_data=encoded_qr_image.decode('utf-8'))
+        return render_template("general/sharelink.html", openActions=countActions(), firstname=firstname, qrcode_data=encoded_qr_image.decode('utf-8'), type=requesttype)
     else: #post
         return redirect("/tools")
 
