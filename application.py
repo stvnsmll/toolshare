@@ -2055,7 +2055,56 @@ def history():
         return render_template("accountmgmt/history.html", openActions=countActions(), firstname=firstname, toolhistory=toolhistory, nbhhistory=nbhhistory)
 
     else:
-        pass
+        return redirect("/manageaccount")
+
+@app.route("/sharelink", methods=["GET", "POST"])
+@login_required
+def sharelink():
+    if session.get("user_uuid") is None:
+        return redirect("/")
+
+    userUUID = session.get("user_uuid")
+    firstname = session.get("firstname")
+    user_details = db.execute("SELECT * FROM users WHERE uuid = :uuid;", uuid=userUUID)[0]
+
+    if request.method == "GET":
+        link = request.args.get("link")
+        #requesttype can be "nbh" for neighborhood or "tool" for a tool link
+        print(link)
+        if link.find("neighborhood_details") != -1:
+            requesttype = "nbh"
+        elif link.find("tool_details") != -1:
+            requesttpye = "tool"
+        else:
+            return apology("Misc error")
+
+        itemID = link[(link.find("id=") + 3):]
+        #the ID is the UUID for each item.
+
+
+        if requesttype == "nbh":
+            #ensure the active user is a member of the neighborhood
+            accesscheck = db.execute("SELECT * from MEMBERSHIPS where useruuid = :userUUID AND neighborhoodid = :itemID;", userUUID=userUUID, itemID=itemID)
+            nbh_exists = db.execute("SELECT * from NEIGHBORHOODS where neighborhoodid = :itemID AND deleted = 0", itemID=itemID)
+            if len(nbh_exists) == 0:
+                accesscheck = []#make it an empty list to cancel the action
+        elif requesttype == "tool":
+            #ensure the active user is the tool owner
+            accesscheck = db.execute("SELECT * from TOOLS where owneruuid = :userUUID AND toolid = :itemID AND deleted = 0", userUUID=userUUID, itemID=itemID)
+
+        if len(accesscheck) == 0:
+            # no access or doesn't exist
+            return redirect("/")
+
+        #generate the QR code based on the incomming link.
+        img = qrcode.make(link)
+        data = io.BytesIO()
+        img.save(data, "PNG")
+        encoded_qr_image = base64.b64encode(data.getvalue())
+
+        return render_template("general/sharelink.html", openActions=countActions(), firstname=firstname, qrcode_data=encoded_qr_image.decode('utf-8'))
+    else: #post
+        return redirect("/tools")
 
 
 @app.route("/passwordrecovery", methods=["GET", "POST"])

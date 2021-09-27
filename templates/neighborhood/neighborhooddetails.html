@@ -84,7 +84,7 @@
                   <a href="#" class="input-group-text" id="basic-addon2" style="color: #007bff;" onclick="copyURL();"><i class="fa fa-clipboard"></i>&nbsp;copy</a>
                 </div>
             </div>
-            <a href="#"><i class="fa fa-qrcode"></i> Generate a QR code<a>
+            <a id="qrLink" href="/sharelink?typ=nbh&id={{ neighborhoodid }}"><i class="fa fa-qrcode"></i> Generate a QR code<a>
               <br><br>
           </div>
         </div>
@@ -148,9 +148,11 @@
         var joinbtn = document.getElementById("joinbtn");
 
         var myURL = document.getElementById("myURL");
+        var qrlink = document.getElementById("qrLink");
 
         window.onload = function setURL() {
           myURL.value = window.location.href;
+          qrLink.href = "/sharelink?link=" + window.location.href;
         };
 
         function copyURL(){

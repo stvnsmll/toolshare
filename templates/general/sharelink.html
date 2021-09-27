@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Share
+{% endblock %}
+
+{% block firstname %}
+    {{ firstname }}
+{% endblock %}
+
+
+{% block main %}
+<div class="scrolling_page" style="text-align: left; padding-top: 70px">
+  <div class="container" style="padding: 0 5% 0 5%; max-width: 750px">
+    <h1>Share this link!</h1>
+
+    <img src="data:image/png;base64,{{ qrcode_data }}" alt="QR Code generation error" class="qrcode"><br>
+
+    <div class="deadspace"></div>
+    <div class="deadspace"></div>
+  </div>
+</div>
+
+{% endblock %}
