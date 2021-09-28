@@ -112,7 +112,7 @@
                 <div class="input-group input-group-xs mb-2 copyurl">
                   <input class="form-control" type="text" id="myURL" value="url for this page..." disabled>
                   <div class="input-group-append">
-                      <a href="#" class="input-group-text" id="basic-addon2" style="color: #007bff;" onclick="copyURL();"><i class="fa fa-clipboard"></i>&nbsp;copy</a>
+                      <a href="#" class="input-group-text" id="copy_button" style="color: #007bff;" onclick="copyURL();"><i class="fa fa-clipboard"></i>&nbsp;copy</a>
                     </div>
                 </div>
                 <a id="qrLink" href="/sharelink?typ=nbh&id={{ neighborhoodid }}"><i class="fa fa-qrcode"></i> Generate a QR code<a>
@@ -233,7 +233,27 @@
         function copyURL(){
           //clipboard = myURL.value;
           navigator.clipboard.writeText(myURL.value);
+          setTooltip('copied!');
+          hideTooltip();
         };
+
+        $('#copy_button').tooltip({
+          trigger: 'click',
+          placement: 'top'
+        });
+
+        function setTooltip(message) {
+          $('#copy_button').tooltip('hide')
+            .attr('data-original-title', message)
+            .tooltip('show');
+        }
+
+        function hideTooltip() {
+          setTimeout(function() {
+            $('#copy_button').tooltip('hide');
+            $('#copy_button').attr('data-original-title', "");
+          }, 1000);
+        }
 
 
         function updateinfobox(newtext) {
@@ -273,6 +293,7 @@
                 html: true
             });
         });
+
 
     </script>
 {% endblock %}
