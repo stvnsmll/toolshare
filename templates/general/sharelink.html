@@ -10,13 +10,29 @@
 
 
 {% block main %}
-<div class="scrolling_page" style="text-align: left; padding-top: 70px">
+<div style="text-align: left; padding-top: 70px; overflow-x: scroll; height: 100vh;">
   <div class="container" style="padding: 0 5% 0 5%; max-width: 750px">
-    <h1>Share this link!</h1>
+    <div class="qrcode text-center mb-5">
+      <div class="h2" style="font-weight: 300; letter-spacing: 0.08em;">
+        <img src='/static/toolshare_light2.png' alt="" style="height: 45px; margin: -20px 5px -15px -15px;">
+        ToolShare
+      </div>
 
-    <img src="data:image/png;base64,{{ qrcode_data }}" alt="QR Code generation error" class="qrcode"><br>
+      <img src="data:image/png;base64,{{ qrcode_data }}" alt="QR Code generation error" style="border-radius: 0.6rem; width: 100%;"><br>
+      <div class="smallwebsitewatermark">sharetools.tk</div>
 
-    <div class="deadspace"></div>
+      <div class="mt-2">
+        {% if type == 'nbh' %}
+          <strong>Neighborhood:</strong> {{ name }}
+        {% else %}
+          <strong>Tool:</strong> {{ name }} <br>
+          <strong>Owner:</strong> {{ firstname }}
+        {% endif %}
+      </div>
+    </div>
+    <div class="small text-muted text-center mb-5">
+      You may need to login or create an account to view the above content.
+    </div>
     <div class="deadspace"></div>
   </div>
 </div>

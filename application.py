@@ -2088,10 +2088,13 @@ def sharelink():
             nbh_exists = db.execute("SELECT * from NEIGHBORHOODS where neighborhoodid = :itemID AND deleted = 0", itemID=itemID)
             if len(nbh_exists) == 0:
                 accesscheck = []#make it an empty list to cancel the action
+            if len(accesscheck) != 0:
+                name = nbh_exists[0]["neighborhood"]
         elif requesttype == "tool":
             #ensure the active user is the tool owner
             accesscheck = db.execute("SELECT * from TOOLS where owneruuid = :userUUID AND toolid = :itemID AND deleted = 0", userUUID=userUUID, itemID=itemID)
-
+            if len(accesscheck) != 0:
+                name = accesscheck[0]["toolname"]
         if len(accesscheck) == 0:
             # no access or doesn't exist
             return redirect("/")
@@ -2102,7 +2105,7 @@ def sharelink():
         img.save(data, "PNG")
         encoded_qr_image = base64.b64encode(data.getvalue())
 
-        return render_template("general/sharelink.html", openActions=countActions(), firstname=firstname, qrcode_data=encoded_qr_image.decode('utf-8'), type=requesttype)
+        return render_template("general/sharelink.html", openActions=countActions(), firstname=firstname, qrcode_data=encoded_qr_image.decode('utf-8'), type=requesttype, name=name)
     else: #post
         return redirect("/tools")
 
