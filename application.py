@@ -2625,28 +2625,28 @@ def send_email_auth(email, authcode):
     recipients = [email]
     subject = "Welcome to ToolShare!"
     message = f"""\
+                <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
                 <html style="font-family: arial; background-color: lightgray;">
                   <head>
                     <title>Tool Share - Validate Email</title>
-                  </head>
 
+                  </head>
                   <body style="margin: 0; background-color: white; border: 7px solid lightgray; position: absolute; top: 0; left: 0;">
                     <div style="width: 100%; background-color: #f8f9fa;">
                       <a href="https://sharetools.tk"><img src="https://i.imgur.com/dzuJftm.png" alt=""></a>
                     </div>
                     <div style="padding: 20px 10px 30px 10px; background-color: white; ">
                       Please confirm this is a functional email by entering this one-time
-                      confirmation code back in the app or by simply clicking the link.<br>
+                                      confirmation code back in the app or by simply clicking the link.<br>
                       <span style="font-size: small;">(the code and link are only valid for 2 minutes)</span>
                       <div style="padding: 25px;">
                         <span style="border: 2px dashed gray; border-radius: 8px; padding: 4px 3px 6px 7px; width: fit-content; color:#cc5500; font-size: 1.3em; font-weight: bold;">
                           {authcode}
-                        </span>
+                                        </span>
                         <span style="padding-left: 12px;">
                           or click this <a href="https://sharetools.tk/validateemail?email={email}&authcode={authcode}"> direct link</a>.
-                        </span>
+                                        </span>
                       </div>
-
                       <div style="font-size: small; padding-top: 20px"><i>#dontbeafoolborrowatool</i></div>
                     </div>
                     <div style="padding: 8px; position: fixed; bottom: 0; left: 0; width: 100%;">
