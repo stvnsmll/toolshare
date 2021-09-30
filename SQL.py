@@ -99,7 +99,10 @@ class SQL_db(object):
 
     def __del__(self):
         """Disconnect from database."""
-        self._disconnect()
+        try:
+            self._disconnect()
+        except:
+            print("\nterminating connection to sqlite3 database")
 
     def _disconnect(self):
         """Close database connection."""

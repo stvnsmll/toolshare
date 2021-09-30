@@ -2624,39 +2624,47 @@ def send_email_auth(email, authcode):
     # generic send_mail([recipients], subject, message)
     recipients = [email]
     subject = "Welcome to ToolShare!"
+    print(authcode)
     message = f"""\
-                <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-                <html style="font-family: arial; background-color: lightgray;">
-                  <head>
-                    <title>Tool Share - Validate Email</title>
-
-                  </head>
-                  <body style="margin: 0; background-color: white; border: 7px solid lightgray; position: absolute; top: 0; left: 0;">
-                    <div style="width: 100%; background-color: #f8f9fa;">
-                      <a href="https://sharetools.tk"><img src="https://i.imgur.com/dzuJftm.png" alt=""></a>
-                    </div>
-                    <div style="padding: 20px 10px 30px 10px; background-color: white; ">
-                      Please confirm this is a functional email by entering this one-time
-                                      confirmation code back in the app or by simply clicking the link.<br>
-                      <span style="font-size: small;">(the code and link are only valid for 2 minutes)</span>
-                      <div style="padding: 25px;">
-                        <span style="border: 2px dashed gray; border-radius: 8px; padding: 4px 3px 6px 7px; width: fit-content; color:#cc5500; font-size: 1.3em; font-weight: bold;">
-                          {authcode}
-                                        </span>
-                        <span style="padding-left: 12px;">
-                          or click this <a href="https://sharetools.tk/validateemail?email={email}&authcode={authcode}"> direct link</a>.
-                                        </span>
-                      </div>
-                      <div style="font-size: small; padding-top: 20px"><i>#dontbeafoolborrowatool</i></div>
-                    </div>
-                    <div style="padding: 8px; position: fixed; bottom: 0; left: 0; width: 100%;">
-                      <div style="font-size: 10px; color: gray; text-align: center; width: 100%;">
-                        Copyright 2021 / Steven Small / All Rights Reserved
-                      </div>
-                    </div>
-                  </body>
-                </html>
-                """
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<title style="font-family: arial;">Tool Share - Validate Email</title>
+</head>
+<body style="margin: 0; background-color: #d3d3d3; border: 7px solid #d3d3d3;color: #000000;font-family: arial;">
+<div style="background-color:#d3d3d3; width: 100%; height:max-content;">
+<div style="width: 100%; height: 78px; background-color: #f8f9fa;font-family: arial;">
+<a href="https://sharetools.tk" target="_blank" style="text-decoration: none;line-height: 78px;">
+<img src='https://i.imgur.com/J5Rhl45.png' alt="icon" style="height: 58px;margin:10px 10px 10px 15px">
+<span style="font-size:2.2em;display: inline;color: #cc5500;vertical-align: text-bottom;">ToolShare</span>
+</a>
+</div>
+<div style="padding: 20px 10px 30px 10px; background-color: #ffffff;">
+Please confirm this is a functional email by entering this one-time confirmation code back in the app or by simply clicking the link.
+<br>
+<span style="font-size: small;">
+(the code and link are only valid for 2 minutes)
+</span>
+<div style="padding: 25px;">
+<span style="border: 2px dashed #808080; border-radius: 8px; padding: 4px 3px 6px 7px; width: fit-content; color:#cc5500; font-size: 1.3em; font-weight: bold;"> {authcode}&nbsp;</span>
+<br>
+<br>
+<span style="padding-left: 12px;">
+or click this <a href="https://sharetools.tk/validateemail?email={email}&authcode={authcode}"> direct link</a>.
+</span>
+</div>
+</div>
+<div style="padding: 8px; width: 100%;">
+<div style="font-size: 10px; color: #808080; text-align: center; width: 100%;">
+#dontbeafoolborrowatool<br>
+Copyright 2021 / ToolShare / All Rights Reserved
+</div>
+</div>
+</div>
+</body>
+</html>
+"""
+    message = message.replace('\n', ' ').replace('\r', '')
     # Send welcome email with the proper authorization code
     send_mail(recipients, subject, message)
 
@@ -2693,12 +2701,12 @@ def send_email_welcome(email, firstname):
 
                       <div style="font-size: small; padding-top: 20px"><i>#dontbeafoolborrowatool</i></div>
                     </div>
-                    <div style="padding: 8px; position: fixed; bottom: 0; left: 0; width: 100%;">
-                      <div style="font-size: 10px; color: gray; text-align: center; width: 100%;">
-                        Copyright 2021 / Steven Small / All Rights Reserved
-                      </div>
-                    </div>
                   </body>
+                  <div style="padding: 8px; position: fixed; bottom: 0; left: 0; width: 100%;">
+                    <div style="font-size: 10px; color: gray; text-align: center; width: 100%;">
+                      Copyright 2021 / Steven Small / All Rights Reserved
+                    </div>
+                  </div>
                 </html>
                 """
     # Send welcome email with the proper authorization code
