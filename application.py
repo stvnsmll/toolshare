@@ -176,7 +176,10 @@ def tools():
     firstname = session.get("firstname")
     # get all user tools
     mytoollist = db.execute("SELECT * FROM tools WHERE owneruuid = :userUUID AND deleted = 0 ORDER BY toolname;", userUUID=userUUID)#removed ' COLLATE NOCASE' for postgreSQL
-    mytools = format_tools(mytoollist)
+    if len(mytoollist) == 0:
+        mytools = ['no-tools']
+    else:
+        mytools = format_tools(mytoollist)
 
     #check if the user is part of a neighborhood
     if session.get("neighborhood_check") == "0":
@@ -2135,32 +2138,39 @@ def passwordrecovery():
             recipients = [userdeetz[0]["email"]]
             subject = "ToolShare Password Reset"
             message = f"""\
-                        <html style="font-family: arial; background-color: lightgray;">
-                          <head>
-                            <title>Tool Share - Password Recovery</title>
-                          </head>
-
-                          <body style="margin: 0; background-color: white; border: 7px solid lightgray; position: absolute; top: 0; left: 0;">
-                            <div style="width: 100%; background-color: #f8f9fa;">
-                              <a href="https://sharetools.tk"><img src="https://i.imgur.com/dzuJftm.png" alt=""></a>
-                            </div>
-                            <div style="padding: 20px 10px 30px 10px; background-color: white; ">
-                              In order to reset the password to your ToolShare account, please click the link below<br>
-                              <span style="font-size: small;">If you did not request this password change, please log back in to confirm your account.</span>
-                              <div style="padding: 25px;">
-                                <span style="padding-left: 12px;">
-                                  <a href="https://sharetools.tk/changepassword?email={email}&recoverytoken={recoverykey}">Reset my password</a>.
-                                </span>
-                              </div>
-                            </div>
-                            <div style="padding: 8px; position: fixed; bottom: 0; left: 0; width: 100%;">
-                              <div style="font-size: 10px; color: gray; text-align: center; width: 100%;">
-                                Copyright 2021 / Steven Small / All Rights Reserved
-                              </div>
-                            </div>
-                          </body>
-                        </html>
-                        """
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<title style="font-family: arial;">Tool Share - Password Recovery</title>
+</head>
+<body style="margin: 0; background-color: #d3d3d3; border: 7px solid #d3d3d3;color: #000000;font-family: arial;">
+<div style="background-color:#d3d3d3; width: 100%; height:max-content;">
+<div style="width: 100%; height: 78px; background-color: #f8f9fa;font-family: arial;">
+<a href="https://sharetools.tk" target="_blank" style="text-decoration: none;line-height: 78px;">
+<img src='https://i.imgur.com/J5Rhl45.png' alt="icon" style="height: 58px;margin:10px 10px 10px 15px">
+<span style="font-size:2.2em;display: inline;color: #cc5500;vertical-align: text-bottom;">ToolShare</span>
+</a>
+</div>
+<div style="padding: 20px 10px 30px 10px; background-color: #ffffff;">
+In order to reset the password to your ToolShare account, please click the link below.<br>
+<span style="font-size: 0.8em;">If you did not request this password change, please log back in to confirm your account.</span>
+<div style="padding: 25px;">
+<span style="padding-left: 12px;">
+<a href="https://sharetools.tk/changepassword?email={email}&recoverytoken={recoverytoken}">Reset my password</a>.
+</span>
+</div>
+</div>
+<div style="padding: 8px; width: 100%;">
+<div style="font-size: 10px; color: #808080; text-align: center; width: 100%;">
+#dontbeafoolborrowatool<br>
+Copyright 2021 / ToolShare / All Rights Reserved
+</div>
+</div>
+</div>
+</body>
+</html>
+"""
+            message = message.replace('\n', ' ').replace('\r', '')
             send_mail(recipients, subject, message)
 
             # redirect back to confirmation
@@ -2630,7 +2640,7 @@ def send_email_auth(email, authcode):
     # Send welcome email
     # generic send_mail([recipients], subject, message)
     recipients = [email]
-    subject = "Welcome to ToolShare!"
+    subject = "ToolShare: authenticate your email address"
     print(authcode)
     message = f"""\
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
@@ -2682,40 +2692,45 @@ def send_email_welcome(email, firstname):
     recipients = [email]
     subject = "Welcome to ToolShare!"
     message = f"""\
-                <html style="font-family: arial; background-color: lightgray;">
-                  <head>
-                    <title>Tool Share - Welcome</title>
-                  </head>
-
-                  <body style="margin: 0; background-color: white; border: 7px solid lightgray; position: absolute; top: 0; left: 0;">
-                    <div style="width: 100%; background-color: #f8f9fa;">
-                      <a href="https://sharetools.tk"><img src="https://i.imgur.com/dzuJftm.png" alt=""></a>
-                    </div>
-                    <div style="padding: 20px 10px 30px 10px; background-color: white; ">
-                      <h4>{firstname}, welcome to Tool Share!</h4>
-                      <p>
-                        Your email address has been confirmed, and your account has been created. You can go ahead and add
-                        any tools that you like to your personal toolbox.<br>
-                        In order to find tools to borrow though, you must first join a neighborhood. It's also super easy to create
-                        a new neighborhood and share the link with your friends.
-                      </p>
-                      <p>
-                        We hope you enjoy this app and that it helps you save money, reduce
-                        consumption, and reduce waste.
-                      </p>
-
-                      Thanks, and welcome aboard!
-
-                      <div style="font-size: small; padding-top: 20px"><i>#dontbeafoolborrowatool</i></div>
-                    </div>
-                  </body>
-                  <div style="padding: 8px; position: fixed; bottom: 0; left: 0; width: 100%;">
-                    <div style="font-size: 10px; color: gray; text-align: center; width: 100%;">
-                      Copyright 2021 / Steven Small / All Rights Reserved
-                    </div>
-                  </div>
-                </html>
-                """
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<title style="font-family: arial;">Tool Share - Welcome</title>
+</head>
+<body style="margin: 0; background-color: #d3d3d3; border: 7px solid #d3d3d3;color: #000000;font-family: arial;">
+<div style="background-color:#d3d3d3; width: 100%; height:max-content;">
+<div style="width: 100%; height: 78px; background-color: #f8f9fa;font-family: arial;">
+<a href="https://sharetools.tk" target="_blank" style="text-decoration: none;line-height: 78px;">
+<img src='https://i.imgur.com/J5Rhl45.png' alt="icon" style="height: 58px;margin:10px 10px 10px 15px">
+<span style="font-size:2.2em;display: inline;color: #cc5500;vertical-align: text-bottom;">ToolShare</span>
+</a>
+</div>
+<div style="padding: 20px 10px 30px 10px; background-color: #ffffff;">
+<div style="font-weight: bold;font-size: 1.3em;margin-top: 5px;margin-bottom: 20px;">Welcome to Tool Share, {firstname}!</div>
+<p>
+Your email address has been confirmed, and your account has been created. You can go ahead and add
+any tools that you like to your personal toolbox.<br>
+In order to find tools to borrow though, you must first join a neighborhood. It's also super easy to create
+a new neighborhood and share the link with your friends.
+</p>
+<p>
+We hope you enjoy this app and that it helps you save money, reduce
+consumption, and reduce waste.
+</p>
+<br>
+Thanks, and welcome aboard!
+</div>
+<div style="padding: 8px; width: 100%;">
+<div style="font-size: 10px; color: #808080; text-align: center; width: 100%;">
+#dontbeafoolborrowatool<br>
+Copyright 2021 / ToolShare / All Rights Reserved
+</div>
+</div>
+</div>
+</body>
+</html>
+"""
+    message = message.replace('\n', ' ').replace('\r', '')
     # Send welcome email with the proper authorization code
     send_mail(recipients, subject, message)
 
@@ -2732,40 +2747,45 @@ def send_email_toolaction(toolid, othername, actionmsg):
     toolownername = toolowner['firstname']
     #send the email
     recipients = [toolowner['email']]
-    subject = "ToolShare: You have an action."
+    subject = "ToolShare: You have an action"
     message = f"""\
-                <html style="font-family: arial; background-color: lightgray;">
-                  <head>
-                    <title>Tool Share - New Action</title>
-                  </head>
-
-                  <body style="margin: 0; background-color: white; border: 7px solid lightgray; position: absolute; top: 0; left: 0;">
-                    <div style="width: 100%; background-color: #f8f9fa;">
-                      <a href="https://sharetools.tk" alt=""></a>
-                    </div>
-                    <div style="padding: 20px 10px 30px 10px; background-color: white; ">
-                      <h4>{toolownername}, you have a new action on Tool Share!</h4>
-                      <div style="">
-                        <img style="width: 180px; height: 180px; border-radius: 15px;" src='{photo}' alt="no photo"><br>
-                      </div>
-                      <p>
-                        Your tool, <strong>{toolname}</strong> has been {actionmsg} by {othername}.
-                      </p>
-                      <p>
-                        Have a look at the details or approve/reject <a href="https://sharetools.tk/actions">here</a>!<br>
-                        <span style="font-size: small;">You can also check out your <a href="https://sharetools.tk/history">history</a> too.</span>
-                      </p>
-
-                      <div style="font-size: small; padding-top: 20px"><i>#dontbeafoolborrowatool</i></div>
-                    </div>
-                    <div style="padding: 8px; position: fixed; bottom: 0; left: 0; width: 100%;">
-                      <div style="font-size: 10px; color: gray; text-align: center; width: 100%;">
-                        Copyright 2021 / Steven Small / All Rights Reserved
-                      </div>
-                    </div>
-                  </body>
-                </html>
-                """
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<title style="font-family: arial;">Tool Share - New Action</title>
+</head>
+<body style="margin: 0; background-color: #d3d3d3; border: 7px solid #d3d3d3;color: #000000;font-family: arial;">
+<div style="background-color:#d3d3d3; width: 100%; height:max-content;">
+<div style="width: 100%; height: 78px; background-color: #f8f9fa;font-family: arial;">
+<a href="https://sharetools.tk" target="_blank" style="text-decoration: none;line-height: 78px;">
+<img src='https://i.imgur.com/J5Rhl45.png' alt="icon" style="height: 58px;margin:10px 10px 10px 15px">
+<span style="font-size:2.2em;display: inline;color: #cc5500;vertical-align: text-bottom;">ToolShare</span>
+</a>
+</div>
+<div style="padding: 20px 10px 30px 10px; background-color: #ffffff;">
+<div style="font-weight: bold;font-size: 1.15em;margin-top: 5px;margin-bottom: 20px;">{toolownername}, you have a new action on Tool Share!</div>
+<div>
+<img style="width: 180px; height: 180px; border-radius: 15px;" src='{photo}' alt="no photo"><br>
+</div>
+<p>
+Your tool, <strong>{toolname}</strong> has been {actionmsg} by {othername}.
+</p>
+<p>
+Have a look at the details or approve/reject <a href="https://sharetools.tk/actions">here</a>!<br>
+<span style="font-size: small;">You can also check out your <a href="https://sharetools.tk/history">history</a> too.</span>
+</p>
+</div>
+<div style="padding: 8px; width: 100%;">
+<div style="font-size: 10px; color: #808080; text-align: center; width: 100%;">
+#dontbeafoolborrowatool<br>
+Copyright 2021 / ToolShare / All Rights Reserved
+</div>
+</div>
+</div>
+</body>
+</html>
+"""
+    message = message.replace('\n', ' ').replace('\r', '')
     # Send welcome email with the proper authorization code
     send_mail(recipients, subject, message)
 

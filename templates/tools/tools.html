@@ -88,7 +88,7 @@
             <br>
             <div style="width: 80%; margin: auto;">
               <p>You must first join a neighborhood to be able to browse and borrow tools from others.</p>
-              <p>Click the link below to start borrowing and sharing!</p>
+              <p>Click the button below to start borrowing and sharing!</p>
               <i class="fa fa-angle-double-down fa-lg"></i>
             </div>
             <div class="tab_actions text-center">
@@ -218,6 +218,18 @@
             Fastening: Þ
             Uncategorized: ‡
           -->
+
+          {% if mytools[0] == 'no-tools' %}
+            <div class="list_div">
+              <!-- Join a neighborhood to borrow tools from other people -->
+              <br>
+              <div style="width: 80%; margin: auto;">
+                <p>Go ahead and add a tool to your toolbox so that others can borrow it.</p>
+                <p>Click the button below to start building up your inventory!</p>
+                <i class="fa fa-angle-double-down fa-lg"></i>
+              </div>
+            </div>
+          {% else %}
           <div class="list_div">
             <ul class="list-group list-group-flush" id="myList2">
               {% for tool in mytools %}
@@ -294,6 +306,7 @@
             <div class="deadspace"></div>
             <div class="deadspace"></div>
           </div>
+          {% endif %}
         </div>
     </div>
   </div>
