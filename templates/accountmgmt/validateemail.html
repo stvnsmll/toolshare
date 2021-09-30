@@ -57,7 +57,7 @@
         };
 
         window.onload=function(){
-          authcode.addEventListener("keyup", function(){
+          authcode.addEventListener("change", function(){
             if (authcode.value.length > 5) {
                 confirmAccount.disabled = false;
             } else {
