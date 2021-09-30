@@ -57,17 +57,21 @@
         };
 
         window.onload=function(){
-          authcode.addEventListener("change", checkLength())
-          authcode.addEventListener("paste", checkLength())
-        }
-
-        function checkLength(){
-          if (authcode.value.length > 5) {
-              confirmAccount.disabled = false;
-          } else {
-              confirmAccount.disabled = true;
-          }
-        }
+          authcode.addEventListener("change", function(){
+            if (authcode.value.length > 5) {
+                confirmAccount.disabled = false;
+            } else {
+                confirmAccount.disabled = true;
+            };
+          });
+          authcode.addEventListener("paste", function(){
+            if (authcode.value.length > 5) {
+                confirmAccount.disabled = false;
+            } else {
+                confirmAccount.disabled = true;
+            };
+          });
+        };
 
     </script>
 {% endblock %}
