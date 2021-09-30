@@ -444,11 +444,11 @@ def tool_details():
             return redirect("/")
         else:
             tooldetails = db.execute("SELECT * FROM tools WHERE toolid = :toolid AND deleted = 0;", toolid=toolid)
-            #TODO, if tool is private, don't show any details.
-            #if the tool had been delteted, redirect to ("/")
             if len(tooldetails) == 0:
                 return apology("No tool")
             tooldetails = tooldetails[0]
+            if tooldetails["private"] == 1:
+                return apology("tool is private", "sorry")
             toolname = tooldetails["toolname"]
             if tooldetails["features"]:
                 description = tooldetails["features"].split('\n')
@@ -1304,9 +1304,7 @@ def deleteneighborhood():
             flash('Neighborhood deleted.')
             return redirect(url_for('neighborhoods') + '#mine')
         elif formAction == "cancel":
-            return render_template("swipepage.html")
-            #!!!! TODO fix to below!
-            #return redirect("/neighborhood_details?neighborhoodid=" + neighborhoodid)
+            return redirect("/neighborhood_details?neighborhoodid=" + neighborhoodid)
         else:
             return apology("Misc Error")
 
@@ -1398,10 +1396,10 @@ def login():
                           username=request.form.get("username").lower())
 
         # Ensure username exists and password is correct and the account isn't soft-deleted
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")) or rows[0]["deleted"] == 1:
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
             #logHistory("other", "failedlogin1", "", "", "", "")
             #db.execute("INSERT INTO history (type, action, useruuid, timestamp) VALUES (?, ?, ?, ?);", "other", "failedlogin1", "unknown", datetime.datetime.now())
-            return apology("invalid username and/or password. To recover your account contact the admin.", 403)
+            return apology("invalid username and/or password.", 403)
 
         # This is being taken care of in the catch-all above
         if rows[0]["deleted"] == 1:
@@ -1481,7 +1479,7 @@ def register():
         if len(rows1) != 0:
             return apology("This username already exists", "Sorry")
 
-        rows2 = db.execute("SELECT uuid FROM users WHERE email = ?;", email)
+        rows2 = db.execute("SELECT uuid FROM users WHERE email = ? AND deleted = 0;", email)
         if len(rows2) != 0:
             return apology("Try the forgot password option", "Email in use already")
 
@@ -2212,7 +2210,11 @@ def validatePWchange():
                 db.execute("UPDATE users SET validateemail = '' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
-                session["neighborhood_check"] = "0"
+                myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
+                if len(myneighborhoods) != 0:
+                    session["neighborhood_check"] = "1"
+                else:
+                    session["neighborhood_check"] = "0"
                 session["theme"] = new_user[0]["theme"]
                 logHistory("other", "email_validated", "", "", "", "")
                 # redirect back to the tools (root) page
@@ -2275,7 +2277,11 @@ def validatePWchange():
                 db.execute("UPDATE users SET validateemail = '' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
-                session["neighborhood_check"] = "0"
+                myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
+                if len(myneighborhoods) != 0:
+                    session["neighborhood_check"] = "1"
+                else:
+                    session["neighborhood_check"] = "0"
                 session["theme"] = new_user[0]["theme"]
                 logHistory("other", "email_validated", "", "", "", "")
                 # redirect back to the tools (root) page
@@ -2351,6 +2357,7 @@ def contact():
             demoRequested = True
         return render_template("general/contact.html", demoRequested=demoRequested)
     else: #post
+        #TODO - make the general contact form live
         return apology("not setup yet", "todo")
         formAction = request.form.get("returnedAction")
         if formAction == "cancel":
