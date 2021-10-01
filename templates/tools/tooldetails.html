@@ -28,16 +28,19 @@
         {% if yesowner %}
             {{ ownerfirstname }}
         {% else %}
-            <a href="#" role="button" data-toggle="popover" data-placement="top" title="" data-content="From {{ commonneighborhoods }}" data-original-title='{{ ownerusername }} <span class="contactbtn" href="sms:+18121231234"><i class="fa fa-comment fa-sm"></i></span>&nbsp;<span class="contactbtn" onclick="text()"><i class="fa fa-envelope fa-sm"></i></span>'>{{ ownerfirstname }}</a>
+            <a href="#" role="button" data-toggle="popover" data-placement="top" title="" data-content="From {{ commonneighborhoods }}" data-original-title='{{ ownerusername }}'>{{ ownerfirstname }}</a>
+            {% if isborrowed %}
+              &nbsp;
+              <a class="contactbtn" href="mailto:{{ owneremail }}"><i class='fa fa-envelope fa-sm'></i></a>
+              {% if yescall %}<a class="contactbtn" href="tel:{{ phonenumber }}"><i class='fa fa-phone fa-sm'></i></a>{% endif %}
+              {% if yessms %}<a class="contactbtn" href="sms:{{ phonenumber }}"><i class='fa fa-comment fa-sm'></i></a>{% endif %}
+            {% endif %}
         {% endif %}
-        &nbsp;
-        <a class="contactbtn" href="sms:+18121231234"><i class='fa fa-comment fa-sm'></i></a>
-        <a class="contactbtn" href="mailto:testemail@something.com"><i class='fa fa-envelope fa-sm'></i></a>
-        <a class="contactbtn" href="tel:+18121231234"><i class='fa fa-phone fa-sm'></i></a>
+
         <!--<span class="contactbtn" onclick="text()"><i class="fa fa-phone fa-sm"></i></span>-->
         <br>
         <!--
-        <a href="#" role="button" data-toggle="popover" data-placement="top" title="" data-content='test content' data-original-title='test title <span class="contactbtn" onclick="text()"><i class="fa fa-envelope fa-sm"></i></span>'>test link</a>
+        <a href="#" role="button" data-toggle="popover" data-placement="top" title="" data-content='test content<br><a class="contactbtn" href="sms:+18121231234"><i class="fa fa-envelope fa-sm"></i></a>' data-original-title='test title'>test link</a>
         -->
     </p>
     <p>Status: {{ state }}
@@ -288,11 +291,14 @@
 
         $(document).ready(function(){
             $('[data-toggle="popover"]').popover({
-                trigger: 'focus',
+                trigger: 'click',
                 html: true
             });
         });
 
+        function text() {
+          window.alert("banana");
+        };
 
     </script>
 {% endblock %}

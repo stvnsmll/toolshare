@@ -557,6 +557,24 @@ def tool_details():
         if tooldetails["photo"] != 'none':
             photo = get_image_s3(toolid + ".jpeg")
 
+        # additional communication preference settings
+        phonenumber = ownerdetails['phonenumber']
+        owneremail = ownerdetails['email']
+        phonepref = ownerdetails['phonepref']#none/call/sms/both
+        if phonepref == "both":
+            yescall = True
+            yessms = True
+        elif phonepref == "call":
+            yescall = True
+            yessms = False
+        elif phonepref == "sms":
+            yescall = False
+            yessms = True
+        else:#phonepref == "none" (or some other error, just pass nothing)
+            phonenumber = ""
+            yescall = False
+            yessms = False
+
         return render_template("tools/tooldetails.html",
                                 openActions=countActions(),
                                 firstname=firstname,
@@ -580,7 +598,11 @@ def tool_details():
                                 commonneighborhoods=commonneighborhoods,
                                 notes=notes,
                                 toolid=toolid,
-                                toolhistory=toolhistory)
+                                toolhistory=toolhistory,
+                                owneremail=owneremail,
+                                phonenumber=phonenumber,
+                                yescall=yescall,
+                                yessms=yessms)
     else:#Post
         userUUID = session.get("user_uuid")
         firstname = session.get("firstname")
