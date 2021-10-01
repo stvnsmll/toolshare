@@ -301,22 +301,9 @@ def actions():
             all_comments = firstname + ': "' + approveReject_comments + '"' + "\n" + prev_comments
             # database update to either approve or reject
             if approveOrReject == "approve":
-                # change the state of the actionid to show it is closed with closed date - add any comments
-                db.execute("UPDATE actions SET state = 'closed', timestamp_close = :timeclose, messages = :comments WHERE actionid = :returnedActionID;", timeclose=datetime.datetime.now(), comments=all_comments, returnedActionID=returnedActionID)
-                # change the state of the tool to borrowed
-                db.execute("UPDATE tools SET state = 'borrowed' WHERE toolid = :toolid;", toolid=toolid)
-                #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
-                logHistory("tool", "approve", "", toolid, "", approveReject_comments)
-                borroweruuid = db.execute("SELECT originuuid FROM actions WHERE actionid = :returnedActionID;", returnedActionID=returnedActionID)[0]['originuuid']
-                logHistory("tool", "borrow", borroweruuid, toolid, "", approveReject_comments)
+                requestApproved(returnedActionID, approveReject_comments)
             else: # the request was rejected
-                # change the state of the actionid to show it is closed with closed date - add any comments
-                db.execute("UPDATE actions SET state = 'closed', timestamp_close = :timeclose, messages = :comments WHERE actionid = :returnedActionID;", timeclose=datetime.datetime.now(), comments=all_comments, returnedActionID=returnedActionID)
-                # change the state of the tool to available
-                db.execute("UPDATE tools SET state = 'available', activeuseruuid = NULL WHERE toolid = :toolid;", toolid=toolid)
-                #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
-                borroweruuid = db.execute("SELECT originuuid FROM actions WHERE actionid = :returnedActionID;", returnedActionID=returnedActionID)[0]['originuuid']
-                logHistory("tool", "reject", borroweruuid, toolid, "", approveReject_comments)
+                requestDenied(returnedActionID, approveReject_comments)
         return ('', 204)
 
 
@@ -612,6 +599,7 @@ def tool_details():
             # notify the tool owner via email
             #send_email_toolaction(toolid, othername, actionmsg)
             #send_email_toolaction(toolid, firstname, "requested")
+            #TODO
             flash('Tool Requested')
             return redirect(url_for('tools') + '#borrowed')
         elif formAction == "markBorrowed":
@@ -626,16 +614,18 @@ def tool_details():
             if userUUID == toolownerUUID:
                 message = "self return"
                 state = "dismissed"
+                seconduuid = ""
             else:
+                # notify the tool owner via email
+                #send_email_toolaction(toolid, othername, actionmsg)
+                #send_email_toolaction(toolid, firstname, "returned")
+                #TODO
                 message = firstname + " returned the tool."
                 state = "closed"
+                seconduuid = toolownerUUID
             db.execute("INSERT INTO actions (type, state, originuuid, targetuuid, toolid, messages, timestamp_open, timestamp_close) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", "toolrequest", state, userUUID, userUUID, toolid, message, datetime.datetime.now(), datetime.datetime.now())
             db.execute("UPDATE tools SET state = 'available', activeuseruuid = NUlL WHERE toolid = :toolid;", toolid=toolid)
             #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
-            if message == "self return":
-                seconduuid = ""
-            else:
-                seconduuid = toolownerUUID
             logHistory("tool", "return", seconduuid, toolid, "", message)
             flash('Tool returned')
             return redirect(url_for('tools') + '#borrowed')
@@ -651,21 +641,13 @@ def tool_details():
         elif formAction == "approveRequest":
             actiondetails = db.execute("SELECT * FROM actions WHERE toolid = :toolid AND type = 'toolrequest' AND state = 'open' AND targetuuid = :userUUID;", toolid=toolid, userUUID=userUUID)[0]
             actionid = actiondetails['actionid']
-            requestor = actiondetails['originuuid']
-            db.execute("UPDATE actions SET state = 'closed', timestamp_close = :timeclose WHERE actionid = :actionid;", timeclose=datetime.datetime.now(), actionid=actionid)
-            db.execute("UPDATE tools SET state = 'borrowed', activeuseruuid = :requestor WHERE toolid = :toolid;", requestor=requestor, toolid=toolid)
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
-            logHistory("tool", "approve", requestor, toolid, "", "")#comment??
+            requestApproved(actionid, "")
             flash('Tool request approved')
             return redirect(url_for('tool_details') + '?toolid=' + toolid)
         elif formAction == "denyRequest":
             actiondetails = db.execute("SELECT * FROM actions WHERE toolid = :toolid AND type = 'toolrequest' AND state = 'open' AND targetuuid = :userUUID;", toolid=toolid, userUUID=userUUID)[0]
             actionid = actiondetails['actionid']
-            requestor = actiondetails['originuuid']
-            db.execute("UPDATE actions SET state = 'closed', timestamp_close = :timeclose WHERE actionid = :actionid;", timeclose=datetime.datetime.now(), actionid=actionid)
-            db.execute("UPDATE tools SET state = 'available', activeuseruuid = NULL WHERE toolid = :toolid;", toolid=toolid)
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
-            logHistory("tool", "reject", requestor, toolid, "", "")#comment??
+            requestDenied(actionid, "")
             flash('Tool request denied')
             return redirect(url_for('tool_details') + '?toolid=' + toolid)
         elif formAction == "requireReturn":
@@ -675,6 +657,7 @@ def tool_details():
             db.execute("INSERT INTO actions (type, originuuid, targetuuid, toolid, messages, timestamp_open) VALUES (?, ?, ?, ?, ?, ?);", "requirereturn", userUUID, activeuseruuid, toolid, "The tool owner has requested their tool back", datetime.datetime.now())
             # change state of the tool to 'overdue'
             db.execute("UPDATE tools SET state = 'overdue' WHERE toolid = :toolid;", toolid=toolid)
+            #email - TODO - require return
             #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("tool", "requirereturn", activeuseruuid, toolid, "", "")
             flash('Tool return requested')
@@ -2170,7 +2153,7 @@ Copyright 2021 / ToolShare / All Rights Reserved
 </body>
 </html>
 """
-            message = message.replace('\n', ' ').replace('\r', '')
+            message = message.replace('\n', ' ').replace('\r', ' ')
             send_mail(recipients, subject, message)
 
             # redirect back to confirmation
@@ -2502,6 +2485,35 @@ def errorhandler(e):
     return apology(e.name, e.code)
 
 
+def requestApproved(actionid, comments):
+    actiondetails = db.execute("SELECT * FROM actions WHERE actionid = :actionid;", actionid=actionid)[0]
+    requestor = actiondetails['originuuid']
+    targetuuid = actiondetails['targetuuid']
+    toolid = actiondetails['toolid']
+    # change the state of the actionid to show it is closed with closed date - add any comments
+    db.execute("UPDATE actions SET state = 'closed', timestamp_close = :timeclose, messages = :comments WHERE actionid = :actionid;", timeclose=datetime.datetime.now(), comments=comments, actionid=actionid)
+    # change the state of the tool to borrowed
+    db.execute("UPDATE tools SET state = 'borrowed', activeuseruuid = :requestor WHERE toolid = :toolid;", requestor=requestor, toolid=toolid)
+    #email - TODO - request approved
+    #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+    logHistory("tool", "approve", "", toolid, "", comments)
+    logHistory("tool", "borrow", requestor, toolid, "", comments)
+
+
+def requestDenied(actionid, comments):
+    actiondetails = db.execute("SELECT * FROM actions WHERE actionid = :actionid;", actionid=actionid)[0]
+    requestor = actiondetails['originuuid']
+    targetuuid = actiondetails['targetuuid']
+    toolid = actiondetails['toolid']
+    # change the state of the actionid to show it is closed with closed date - add any comments
+    db.execute("UPDATE actions SET state = 'closed', timestamp_close = :timeclose, messages = :comments WHERE actionid = :actionid;", timeclose=datetime.datetime.now(), comments=comments, actionid=actionid)
+    # change the state of the tool to borrowed
+    db.execute("UPDATE tools SET state = 'available', activeuseruuid = NULL WHERE toolid = :toolid;", toolid=toolid)
+    #email - TODO - request rejected
+    #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+    logHistory("tool", "reject", "", toolid, "", comments)
+
+
 #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
 def logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment):
     userUUID = session.get("user_uuid")
@@ -2681,7 +2693,7 @@ Copyright 2021 / ToolShare / All Rights Reserved
 </body>
 </html>
 """
-    message = message.replace('\n', ' ').replace('\r', '')
+    message = message.replace('\n', ' ').replace('\r', ' ')
     # Send welcome email with the proper authorization code
     send_mail(recipients, subject, message)
 
@@ -2730,7 +2742,7 @@ Copyright 2021 / ToolShare / All Rights Reserved
 </body>
 </html>
 """
-    message = message.replace('\n', ' ').replace('\r', '')
+    message = message.replace('\n', ' ').replace('\r', ' ')
     # Send welcome email with the proper authorization code
     send_mail(recipients, subject, message)
 
@@ -2785,7 +2797,7 @@ Copyright 2021 / ToolShare / All Rights Reserved
 </body>
 </html>
 """
-    message = message.replace('\n', ' ').replace('\r', '')
+    message = message.replace('\n', ' ').replace('\r', ' ')
     # Send welcome email with the proper authorization code
     send_mail(recipients, subject, message)
 
