@@ -1496,7 +1496,7 @@ def register():
         # generate uuid for email opt-out.
         optouttoken = uuid.uuid4().hex
         # Initiate the user with an unregistered_email:
-        db.execute("INSERT INTO users (uuid, firstname, username, email, hash, validateemail, email_optout) VALUES (?, ?, ?, ?, ?, ?, ?);", new_uuid, firstname, newUsername, email, generate_password_hash(password1), "unregistered_email", optouttoken)
+        db.execute("INSERT INTO users (uuid, firstname, username, email, hash, validateemail, theme, email_optout) VALUES (?, ?, ?, ?, ?, ?, ?);", new_uuid, firstname, newUsername, email, generate_password_hash(password1), "unregistered_email", "newuser", optouttoken)
         #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
         db.execute("INSERT INTO history (type, action, useruuid, comment, timestamp) VALUES (?, ?, ?, ?, ?);", "other", "signup", new_uuid, "NEW USER!!", datetime.datetime.now())
 
@@ -1546,12 +1546,26 @@ def validateemail():
                 db.execute("UPDATE users SET validateemail = '' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
-                session["neighborhood_check"] = "0"
+                # See if the user is a member of any neighborhoods
+                myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
+                if len(myneighborhoods) != 0:
+                    session["neighborhood_check"] = "1"
+                else:
+                    session["neighborhood_check"] = "0"
                 session["theme"] = new_user[0]["theme"]
                 logHistory("other", "email_validated", "", "", "", "")
+
+                if session["theme"] == "newuser":
+                    #send the welcome email
+                    session["theme"] = "light"
+                    db.execute("UPDATE users SET theme = :newTheme WHERE uuid = :userUUID;", userUUID=session["user_uuid"], newTheme="light")
+                    send_email_welcome(new_email, new_user[0]["firstname"])
+                else:
+                    flash(new_user[0]["firstname"] + ", your email has been validated.")
+
                 # redirect back to the tools (root) page
-                flash(new_user[0]["firstname"] + ", your email has been validated.")
                 return redirect("/tools")
+
             else:
                 error = "incorrect"
                 return redirect(f"/validateemail?email={new_email}&error={error}")
@@ -1605,13 +1619,26 @@ def validateemail():
                 return render_template("accountmgmt/validateemail.html", new_email=new_email, errormessage=errormessage)
             if input_authcode == valid_code:
                 # accound validated
-                send_email_welcome(new_email, new_user[0]["firstname"])
                 db.execute("UPDATE users SET validateemail = '' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
-                session["neighborhood_check"] = "0"
+                # See if the user is a member of any neighborhoods
+                myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
+                if len(myneighborhoods) != 0:
+                    session["neighborhood_check"] = "1"
+                else:
+                    session["neighborhood_check"] = "0"
                 session["theme"] = new_user[0]["theme"]
                 logHistory("other", "email_validated", "", "", "", "")
+
+                if session["theme"] == "newuser":
+                    #send the welcome email
+                    session["theme"] = "light"
+                    db.execute("UPDATE users SET theme = :newTheme WHERE uuid = :userUUID;", userUUID=session["user_uuid"], newTheme="light")
+                    send_email_welcome(new_email, new_user[0]["firstname"])
+                else:
+                    flash(new_user[0]["firstname"] + ", your email has been validated.")
+
                 # redirect back to the tools (root) page
                 flash(new_user[0]["firstname"] + ", your email has been validated.")
                 return redirect("/tools")
@@ -2288,7 +2315,6 @@ def validatePWchange():
                 return render_template("accountmgmt/validateemail.html", new_email=new_email, errormessage=errormessage)
             if input_authcode == valid_code:
                 # accound validated
-                send_email_welcome(new_email, new_user[0]["firstname"])
                 db.execute("UPDATE users SET validateemail = '' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
@@ -2298,9 +2324,18 @@ def validatePWchange():
                 else:
                     session["neighborhood_check"] = "0"
                 session["theme"] = new_user[0]["theme"]
+
+                if session["theme"] == "newuser":
+                    #send the welcome email
+                    session["theme"] = "light"
+                    db.execute("UPDATE users SET theme = :newTheme WHERE uuid = :userUUID;", userUUID=session["user_uuid"], newTheme="light")
+                    send_email_welcome(new_email, new_user[0]["firstname"])
+                else:
+                    flash(new_user[0]["firstname"] + ", your account has been recovered.")
+
                 logHistory("other", "email_validated", "", "", "", "")
                 # redirect back to the tools (root) page
-                flash(new_user[0]["firstname"] + ", your email has been validated.")
+                flash(new_user[0]["firstname"] + ", your account has been recovered.")
                 return redirect("/tools")
             else:
                 error = "incorrect"
