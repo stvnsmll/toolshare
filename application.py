@@ -127,6 +127,9 @@ app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
+# set to 1 to send emails when every action happens (approve or reject)
+# set to 0 to only send the required account management emails
+SEND_EMAIL_ACTIONS = 1
 
 @app.route('/manifest.json')
 def manifest():
@@ -596,10 +599,15 @@ def tool_details():
             db.execute("UPDATE tools SET state = 'requested', activeuseruuid = :userUUID WHERE toolid = :toolid;", toolid=toolid, userUUID=userUUID)
             #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("tool", "request", toolownerUUID, toolid, "", request.form.get("requestComment"))
-            # notify the tool owner via email
-            #send_email_toolaction(toolid, othername, actionmsg)
-            #send_email_toolaction(toolid, firstname, "requested")
-            #TODO
+            if SEND_EMAIL_ACTIONS == 1:
+                # notify the tool owner via email
+                recipientuuid = toolownerUUID
+                subject = "Tool Share - you have a tool request"
+                toolname = db.execute("SELECT * FROM tools WHERE toolid = :toolid AND deleted = 0;", toolid=toolid)[0]["toolname"]
+                actionmsg = f"{firstname} has requested to borrow your tool: <strong>{toolname}</strong>."
+                secondline = "<p>Have a look at the details and approve or reject <a href='https://sharetools.tk/actions'>here</a>!</p>"
+                send_email_toolaction(toolid, recipientuuid, subject, actionmsg, secondline)
+
             flash('Tool Requested')
             return redirect(url_for('tools') + '#borrowed')
         elif formAction == "markBorrowed":
@@ -616,10 +624,15 @@ def tool_details():
                 state = "dismissed"
                 seconduuid = ""
             else:
-                # notify the tool owner via email
-                #send_email_toolaction(toolid, othername, actionmsg)
-                #send_email_toolaction(toolid, firstname, "returned")
-                #TODO
+                if SEND_EMAIL_ACTIONS == 1:
+                    # notify the tool owner via email
+                    recipientuuid = toolownerUUID
+                    subject = "Tool Share - you have a tool returning"
+                    toolname = db.execute("SELECT * FROM tools WHERE toolid = :toolid AND deleted = 0;", toolid=toolid)[0]["toolname"]
+                    actionmsg = f"{firstname} has returned your tool: <strong>{toolname}</strong>."
+                    secondline = "<p>Make sure you connect with them to get the tool back.<br> Thanks for sharing!</p>"
+                    send_email_toolaction(toolid, recipientuuid, subject, actionmsg, secondline)
+
                 message = firstname + " returned the tool."
                 state = "closed"
                 seconduuid = toolownerUUID
@@ -657,7 +670,16 @@ def tool_details():
             db.execute("INSERT INTO actions (type, originuuid, targetuuid, toolid, messages, timestamp_open) VALUES (?, ?, ?, ?, ?, ?);", "requirereturn", userUUID, activeuseruuid, toolid, "The tool owner has requested their tool back", datetime.datetime.now())
             # change state of the tool to 'overdue'
             db.execute("UPDATE tools SET state = 'overdue' WHERE toolid = :toolid;", toolid=toolid)
-            #email - TODO - require return
+            if SEND_EMAIL_ACTIONS == 1:
+                # notify the tool owner via email
+                borrower = db.execute("SELECT * FROM tools WHERE toolid = :toolid AND deleted = 0;", toolid=toolid)[0]["activeuseruuid"]
+                recipientuuid = borrower
+                subject = "Tool Share - please return a tool"
+                toolname = db.execute("SELECT * FROM tools WHERE toolid = :toolid AND deleted = 0;", toolid=toolid)[0]["toolname"]
+                actionmsg = f"{firstname} has required that you return their tool: <strong>{toolname}</strong>."
+                secondline = "<p>Please get the tool back to them and remember to mark the tool as <a href='https://sharetools.tk/tool_details?toolid={toolid}'>returned</a>.</p>"
+                send_email_toolaction(toolid, recipientuuid, subject, actionmsg, secondline)
+
             #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("tool", "requirereturn", activeuseruuid, toolid, "", "")
             flash('Tool return requested')
@@ -2494,10 +2516,30 @@ def requestApproved(actionid, comments):
     db.execute("UPDATE actions SET state = 'closed', timestamp_close = :timeclose, messages = :comments WHERE actionid = :actionid;", timeclose=datetime.datetime.now(), comments=comments, actionid=actionid)
     # change the state of the tool to borrowed
     db.execute("UPDATE tools SET state = 'borrowed', activeuseruuid = :requestor WHERE toolid = :toolid;", requestor=requestor, toolid=toolid)
-    #email - TODO - request approved
     #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
     logHistory("tool", "approve", "", toolid, "", comments)
     logHistory("tool", "borrow", requestor, toolid, "", comments)
+    if SEND_EMAIL_ACTIONS == 1:
+        # get more info for the email content
+        tooldetails = db.execute("SELECT * FROM tools WHERE toolid = :toolid AND deleted = 0;", toolid=toolid)[0]
+        toolname = tooldetails["toolname"]
+        ownerdetails = db.execute("SELECT * FROM users WHERE uuid = :toolowner;", toolowner=tooldetails["owneruuid"])[0]
+        ownerfirstname = ownerdetails['firstname']
+        ownerUUID = ownerdetails['uuid']
+
+        recipientuuid = requestor
+        subject = "Tool Share - Tool request approved"
+        actionmsg = f"{ownerfirstname} has approved your request for the tool: {toolname}. It is now marked as borrowed by you."
+        secondline = f"<p>You can now see their email address and possible other communication methods to setup and coordinate sharing the <a href='https://sharetools.tk/tool_details?toolid={toolid}'>tool</a>.</p>"
+        send_email_toolaction(toolid, recipientuuid, subject, actionmsg, secondline)
+
+        recipientuuid = ownerUUID
+        subject = "Tool Share - Tool marked borrowed"
+        requesterdetails = db.execute("SELECT * FROM users WHERE uuid = :requestor;", requestor=requestor)[0]
+        recipientfirstname = requesterdetails['firstname']
+        actionmsg = f"{recipientfirstname} has borrowed your tool: {toolname}."
+        secondline = f"<p>You can go in and require them to return it at anytime <a href='https://sharetools.tk/tool_details?toolid={toolid}'>here</a>.</p>"
+        send_email_toolaction(toolid, recipientuuid, subject, actionmsg, secondline)
 
 
 def requestDenied(actionid, comments):
@@ -2509,9 +2551,22 @@ def requestDenied(actionid, comments):
     db.execute("UPDATE actions SET state = 'closed', timestamp_close = :timeclose, messages = :comments WHERE actionid = :actionid;", timeclose=datetime.datetime.now(), comments=comments, actionid=actionid)
     # change the state of the tool to borrowed
     db.execute("UPDATE tools SET state = 'available', activeuseruuid = NULL WHERE toolid = :toolid;", toolid=toolid)
-    #email - TODO - request rejected
     #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
     logHistory("tool", "reject", "", toolid, "", comments)
+
+    if SEND_EMAIL_ACTIONS == 1:
+        # get more info for the email content
+        tooldetails = db.execute("SELECT * FROM tools WHERE toolid = :toolid AND deleted = 0;", toolid=toolid)[0]
+        toolname = tooldetails["toolname"]
+        ownerdetails = db.execute("SELECT * FROM users WHERE uuid = :toolowner;", toolowner=tooldetails["owneruuid"])[0]
+        ownerfirstname = ownerdetails['firstname']
+        ownerUUID = ownerdetails['uuid']
+
+        recipientuuid = requestor
+        subject = "Tool Share - Tool request denied"
+        actionmsg = f"{ownerfirstname} has rejected your request for the tool: {toolname}."
+        secondline = "<p><a href='https://sharetools.tk/actions#requests'>Login</a> to see more about this action.</p>"
+        send_email_toolaction(toolid, recipientuuid, subject, actionmsg, secondline)
 
 
 #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
@@ -2685,6 +2740,7 @@ or click this <a href="https://sharetools.tk/validateemail?email={email}&authcod
 </div>
 <div style="padding: 8px; width: 100%;">
 <div style="font-size: 10px; color: #808080; text-align: center; width: 100%;">
+You can manage your communication preferences under your <a href="https://sharetools.tk/communication">account settings</a>.<br>
 #dontbeafoolborrowatool<br>
 Copyright 2021 / ToolShare / All Rights Reserved
 </div>
@@ -2734,6 +2790,7 @@ Thanks, and welcome aboard!
 </div>
 <div style="padding: 8px; width: 100%;">
 <div style="font-size: 10px; color: #808080; text-align: center; width: 100%;">
+You can manage your communication preferences under your <a href="https://sharetools.tk/communication">account settings</a>.<br>
 #dontbeafoolborrowatool<br>
 Copyright 2021 / ToolShare / All Rights Reserved
 </div>
@@ -2747,19 +2804,31 @@ Copyright 2021 / ToolShare / All Rights Reserved
     send_mail(recipients, subject, message)
 
 
-def send_email_toolaction(toolid, othername, actionmsg):
+def send_email_toolaction(toolid, recipientuuid, subject, actionmsg, secondline):
+    #actionmsg ideas:
+    #   {othername} has requested to borrow your tool: <strong>{toolname}</strong>.
+    #   You have requested to borrow {toolname}.
+    #   {toolowner} has approved/rejected your request for the tool: {toolname}.
+    #   {toolowner} requires that you return the tool: {toolname}.
+    #secondline examples:
+    #   <p>Have a look at the details or approve/reject <a href="https://sharetools.tk/actions">here</a>!</p>
+    #   <p>You can go in and cancel the request at anytime <a href="https://sharetools.tk/tool_details?toolid={toolid}">here</a>.</p>
+    #   "" <-leave it blank
+    #   <p>You can now see their email address and possible other communication methods to setup and coordinate sharing the <a href="https://sharetools.tk/tool_details?toolid={toolid}">tool</a>.</p>
+    #   <p>Please login and make sure you mark the tool as <a href="https://sharetools.tk/tool_details?toolid={toolid}">returned</a>.</p>
+
     #get the Info
     tooldeetz = db.execute("SELECT * FROM tools WHERE toolid = :toolid AND deleted = 0;", toolid=toolid)[0]
     toolowner = db.execute("SELECT * FROM users WHERE uuid = :uuid", uuid=tooldeetz['owneruuid'])[0]
     if tooldeetz['photo'] == "none":
         photo = "https://i.imgur.com/oXNuzWq.png"
     else:
-        photo = get_image_s3(str(tooldeetz['toolid']) + ".jpeg", 864000)
+        photo = get_image_s3(str(tooldeetz['toolid']) + ".jpeg", 604799)
     toolname = tooldeetz['toolname'].lower()
     toolownername = toolowner['firstname']
     #send the email
-    recipients = [toolowner['email']]
-    subject = "ToolShare: You have an action"
+    recipients = [db.execute("SELECT * FROM users WHERE uuid = :uuid", uuid=recipientuuid)[0]['email']]
+    subject = subject
     message = f"""\
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
@@ -2779,16 +2848,15 @@ def send_email_toolaction(toolid, othername, actionmsg):
 <div>
 <img style="width: 180px; height: 180px; border-radius: 15px;" src='{photo}' alt="no photo"><br>
 </div>
-<p>
-Your tool, <strong>{toolname}</strong> has been {actionmsg} by {othername}.
-</p>
-<p>
-Have a look at the details or approve/reject <a href="https://sharetools.tk/actions">here</a>!<br>
+<p>{actionmsg}</p>
+{secondline}
+<br>
 <span style="font-size: small;">You can also check out your <a href="https://sharetools.tk/history">history</a> too.</span>
-</p>
+<br>
 </div>
 <div style="padding: 8px; width: 100%;">
 <div style="font-size: 10px; color: #808080; text-align: center; width: 100%;">
+You can manage your communication preferences under your <a href="https://sharetools.tk/communication">account settings</a>.<br>
 #dontbeafoolborrowatool<br>
 Copyright 2021 / ToolShare / All Rights Reserved
 </div>
