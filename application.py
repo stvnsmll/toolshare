@@ -553,24 +553,9 @@ def tool_details():
                 commonneighborhoods = []
                 for i in commonneighborhoods_data:
                     commonneighborhoods.append(i['neighborhood'])
-            activeuseremail = activeuserdetails['email']
-            activeuserphonenumber = activeuserdetails['phonenumber']
-            activeuserphonepref = activeuserdetails['phonepref']
-            activeuseryescall = activeuserdetails['firstname']
-            activeuseryessms = activeuserdetails['firstname']
-            if activeuserphonepref == "both":
-                activeuseryescall = True
-                activeuseryessms = True
-            elif activeuserphonepref == "call":
-                activeuseryescall = True
-                activeuseryessms = False
-            elif activeuserphonepref == "sms":
-                activeuseryescall = False
-                activeuseryessms = True
-            else:#phonepref == "none" (or some other error, just pass nothing)
-                activeuserphonenumber = ""
-                activeuseryescall = False
-                activeuseryessms = False
+
+            # additional communication preference settings
+            [activeuseremail, activeuserphonenumber, activeuseryescall, activeuseryessms] = get_user_communications(activeuseruuid)
 
         if tooldetails["activeuseruuid"] == userUUID:
             userborrowed = True
@@ -582,22 +567,7 @@ def tool_details():
             photo = get_image_s3(toolid + ".jpeg")
 
         # additional communication preference settings
-        ownerphonenumber = ownerdetails['phonenumber']
-        owneremail = ownerdetails['email']
-        ownerphonepref = ownerdetails['phonepref']#none/call/sms/both
-        if ownerphonepref == "both":
-            owneryescall = True
-            owneryessms = True
-        elif ownerphonepref == "call":
-            owneryescall = True
-            owneryessms = False
-        elif ownerphonepref == "sms":
-            owneryescall = False
-            owneryessms = True
-        else:#phonepref == "none" (or some other error, just pass nothing)
-            ownerphonenumber = ""
-            owneryescall = False
-            owneryessms = False
+        [owneremail, ownerphonenumber, owneryescall, owneryessms] = get_user_communications(ownerdetails['uuid'])
 
         return render_template("tools/tooldetails.html",
                                 openActions=countActions(),
@@ -1889,7 +1859,6 @@ def changepassword():
                 return redirect("/tools")
             return render_template("accountmgmt/updatepwd.html", openActions=countActions(), verb=verb, firstname=firstname)
     else:
-        #todo add in the recovery key check and if valid, change password, login the user (set session), reset recoverykey, redirecto to "/tools"
         formAction = request.form.get("returnedAction")
         if formAction == "returnHome":
             return redirect("/manageaccount")
@@ -2238,7 +2207,7 @@ In order to reset the password to your ToolShare account, please click the link 
 <span style="font-size: 0.8em;">If you did not request this password change, please log back in to confirm your account.</span>
 <div style="padding: 25px;">
 <span style="padding-left: 12px;">
-<a href="https://sharetools.tk/changepassword?email={email}&recoverytoken={recoverytoken}">Reset my password</a>.
+<a href="https://sharetools.tk/changepassword?email={email}&recoverytoken={recoverykey}">Reset my password</a>.
 </span>
 </div>
 </div>
@@ -2573,6 +2542,31 @@ def format_tools(databasepull):
          Fastening: Þ
          Uncategorized: ‡    '''
     return formattedtools
+
+
+def get_user_communications(uuid):
+    userdetails = db.execute("SELECT * FROM users WHERE uuid = :user;", user=uuid)
+    if len(userdetails) == 0:
+        #user does not exist
+        return "error, no user"
+    userdetails = userdetails[0]
+    phonenumber = userdetails['phonenumber']
+    email = userdetails['email']
+    phonepref = userdetails['phonepref']#none/call/sms/both
+    if phonepref == "both":
+        yescall = True
+        yessms = True
+    elif phonepref == "call":
+        yescall = True
+        yessms = False
+    elif phonepref == "sms":
+        yescall = False
+        yessms = True
+    else:#phonepref == "none" (or some other error, just pass nothing)
+        phonenumber = ""
+        yescall = False
+        yessms = False
+    return [email, phonenumber, yescall, yessms]
 
 
 def countActions():
