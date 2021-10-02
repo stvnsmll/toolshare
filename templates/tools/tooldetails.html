@@ -32,8 +32,8 @@
             {% if isborrowed %}
               &nbsp;
               <a class="contactbtn" href="mailto:{{ owneremail }}"><i class='fa fa-envelope fa-sm'></i></a>
-              {% if yescall %}<a class="contactbtn" href="tel:{{ phonenumber }}"><i class='fa fa-phone fa-sm'></i></a>{% endif %}
-              {% if yessms %}<a class="contactbtn" href="sms:{{ phonenumber }}"><i class='fa fa-comment fa-sm'></i></a>{% endif %}
+              {% if owneryescall %}<a class="contactbtn" href="tel:{{ ownerphonenumber }}"><i class='fa fa-phone fa-sm'></i></a>{% endif %}
+              {% if owneryessms %}<a class="contactbtn" href="sms:{{ ownerphonenumber }}"><i class='fa fa-comment fa-sm'></i></a>{% endif %}
             {% endif %}
         {% endif %}
 
@@ -44,19 +44,18 @@
         -->
     </p>
     <p>Status: {{ state }}
-        {% if isborrowed or isrequested %}
+        {% if isborrowed or isrequested or isoverdue %}
             {% if yesowner %}
-                by <a href="#" data-toggle="popover" data-placement="top" title="{{ activeuserusername }}" data-content="From {{ commonneighborhoods }}">{{ activeuserfirstname }}</a>
+                by <a href="#" data-toggle="popover" data-placement="top" title="{{ activeuserusername }}" data-content="From {{ commonneighborhoods }}">{{ activeuserfirstname }}</a>{% if isoverdue %} must return){% endif %}
+                {% if isborrowed or isrequested %}
+                  &nbsp;
+                  <a class="contactbtn" href="mailto:{{ activeuseremail }}"><i class='fa fa-envelope fa-sm'></i></a>
+                  {% if activeuseryescall %}<a class="contactbtn" href="tel:{{ activeuserphonenumber }}"><i class='fa fa-phone fa-sm'></i></a>{% endif %}
+                  {% if activeuseryessms %}<a class="contactbtn" href="sms:{{ activeuserphonenumber }}"><i class='fa fa-comment fa-sm'></i></a>{% endif %}
+                {% endif %}
             {% else %}
-                by {{ activeuserfirstname }}
+                by {{ activeuserfirstname }}{% if isoverdue %} must return){% endif %}
             {% endif %}
-        {% elif isoverdue %}
-            {% if yesowner %}
-                (<a href="#" data-toggle="popover" data-placement="top" title="{{ activeuserusername }}" data-content="From {{ commonneighborhoods }}">{{ activeuserfirstname }}</a> must return)
-            {% else %}
-                ({{ activeuserfirstname }} must return)
-            {% endif %}
-        {% else %}
         {% endif %}
     <br>Category: {{ category }}
     <br>Health: {{ health }}</p>

@@ -536,10 +536,16 @@ def tool_details():
         else:# overdue
             isoverdue = True
 
+        activeuseremail = ""
+        activeuserphonenumber = ""
+        activeuseryescall = ""
+        activeuseryessms = ""
+
         if state != 'available':
-            activeuserfirstname = db.execute("SELECT firstname FROM users WHERE uuid = :activeuser;", activeuser=tooldetails["activeuseruuid"])[0]['firstname']
-            activeuserusername = db.execute("SELECT username FROM users WHERE uuid = :activeuser;", activeuser=tooldetails["activeuseruuid"])[0]['username']
-            activeuseruuid = db.execute("SELECT uuid FROM users WHERE uuid = :activeuser;", activeuser=tooldetails["activeuseruuid"])[0]['uuid']
+            activeuserdetails = db.execute("SELECT * FROM users WHERE uuid = :activeuser;", activeuser=tooldetails["activeuseruuid"])[0]
+            activeuserfirstname = activeuserdetails['firstname']
+            activeuserusername = activeuserdetails['username']
+            activeuseruuid = tooldetails["activeuseruuid"]
             if activeuseruuid == ownerUUID:
                 commonneighborhoods = "(hey, that's you!)"
             else:
@@ -547,6 +553,24 @@ def tool_details():
                 commonneighborhoods = []
                 for i in commonneighborhoods_data:
                     commonneighborhoods.append(i['neighborhood'])
+            activeuseremail = activeuserdetails['email']
+            activeuserphonenumber = activeuserdetails['phonenumber']
+            activeuserphonepref = activeuserdetails['phonepref']
+            activeuseryescall = activeuserdetails['firstname']
+            activeuseryessms = activeuserdetails['firstname']
+            if activeuserphonepref == "both":
+                activeuseryescall = True
+                activeuseryessms = True
+            elif activeuserphonepref == "call":
+                activeuseryescall = True
+                activeuseryessms = False
+            elif activeuserphonepref == "sms":
+                activeuseryescall = False
+                activeuseryessms = True
+            else:#phonepref == "none" (or some other error, just pass nothing)
+                activeuserphonenumber = ""
+                activeuseryescall = False
+                activeuseryessms = False
 
         if tooldetails["activeuseruuid"] == userUUID:
             userborrowed = True
@@ -558,22 +582,22 @@ def tool_details():
             photo = get_image_s3(toolid + ".jpeg")
 
         # additional communication preference settings
-        phonenumber = ownerdetails['phonenumber']
+        ownerphonenumber = ownerdetails['phonenumber']
         owneremail = ownerdetails['email']
-        phonepref = ownerdetails['phonepref']#none/call/sms/both
-        if phonepref == "both":
-            yescall = True
-            yessms = True
-        elif phonepref == "call":
-            yescall = True
-            yessms = False
-        elif phonepref == "sms":
-            yescall = False
-            yessms = True
+        ownerphonepref = ownerdetails['phonepref']#none/call/sms/both
+        if ownerphonepref == "both":
+            owneryescall = True
+            owneryessms = True
+        elif ownerphonepref == "call":
+            owneryescall = True
+            owneryessms = False
+        elif ownerphonepref == "sms":
+            owneryescall = False
+            owneryessms = True
         else:#phonepref == "none" (or some other error, just pass nothing)
-            phonenumber = ""
-            yescall = False
-            yessms = False
+            ownerphonenumber = ""
+            owneryescall = False
+            owneryessms = False
 
         return render_template("tools/tooldetails.html",
                                 openActions=countActions(),
@@ -600,9 +624,13 @@ def tool_details():
                                 toolid=toolid,
                                 toolhistory=toolhistory,
                                 owneremail=owneremail,
-                                phonenumber=phonenumber,
-                                yescall=yescall,
-                                yessms=yessms)
+                                ownerphonenumber=ownerphonenumber,
+                                owneryescall=owneryescall,
+                                owneryessms=owneryessms,
+                                activeuseremail=activeuseremail,
+                                activeuserphonenumber=activeuserphonenumber,
+                                activeuseryescall=activeuseryescall,
+                                activeuseryessms=activeuseryessms)
     else:#Post
         userUUID = session.get("user_uuid")
         firstname = session.get("firstname")
