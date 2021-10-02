@@ -46,15 +46,13 @@
     <p>Status: {{ state }}
         {% if isborrowed or isrequested or isoverdue %}
             {% if yesowner %}
-                by <a href="#" data-toggle="popover" data-placement="top" title="{{ activeuserusername }}" data-content="From {{ commonneighborhoods }}">{{ activeuserfirstname }}</a>{% if isoverdue %} must return){% endif %}
-                {% if isborrowed or isrequested %}
-                  &nbsp;
-                  <a class="contactbtn" href="mailto:{{ activeuseremail }}"><i class='fa fa-envelope fa-sm'></i></a>
-                  {% if activeuseryescall %}<a class="contactbtn" href="tel:{{ activeuserphonenumber }}"><i class='fa fa-phone fa-sm'></i></a>{% endif %}
-                  {% if activeuseryessms %}<a class="contactbtn" href="sms:{{ activeuserphonenumber }}"><i class='fa fa-comment fa-sm'></i></a>{% endif %}
-                {% endif %}
+              by <a href="#" data-toggle="popover" data-placement="top" title="{{ activeuserusername }}" data-content="From {{ commonneighborhoods }}">{{ activeuserfirstname }}</a>{% if isoverdue %} must return){% endif %}
+              &nbsp;
+              <a class="contactbtn" href="mailto:{{ activeuseremail }}"><i class='fa fa-envelope fa-sm'></i></a>
+              {% if activeuseryescall %}<a class="contactbtn" href="tel:{{ activeuserphonenumber }}"><i class='fa fa-phone fa-sm'></i></a>{% endif %}
+              {% if activeuseryessms %}<a class="contactbtn" href="sms:{{ activeuserphonenumber }}"><i class='fa fa-comment fa-sm'></i></a>{% endif %}
             {% else %}
-                by {{ activeuserfirstname }}{% if isoverdue %} must return){% endif %}
+              by {{ activeuserfirstname }}{% if isoverdue %} must return){% endif %}
             {% endif %}
         {% endif %}
     <br>Category: {{ category }}
