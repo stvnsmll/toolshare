@@ -1114,9 +1114,14 @@ def neighborhood_details():
         elif formAction == "edit":
             return redirect("/editneighborhood?neighborhoodid=" + neighborhoodid)
         elif formAction == "managemembers":
-            # # TODO:
             # ensure that the current user is an admin
-            return redirect("/managemembers?neighborhoodid=" + neighborhoodid)
+            admincheck = db.execute("SELECT * FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=userUUID, nbh=neighborhoodid)
+            if len(admincheck) != 0:#user is at least a member of this neighborhood
+                if admincheck[0]['admin'] == 1:#ther user is an admin
+                    #only allow an admin of the nbh to access this page
+                    return redirect("/managemembers?neighborhoodid=" + neighborhoodid)
+            #otherwise... return to their list of neighborhoods
+            return redirect(url_for('neighborhoods') + '#mine')
         elif formAction == "delete":
             #deleteneighborhood(neighborhoodid,neighborhoodid)
             return redirect("/deleteneighborhood?neighborhoodid=" + neighborhoodid)
@@ -1208,7 +1213,15 @@ def managemembers():
             neighborhooddeetz = neighborhooddeetz[0]
             neighborhoodid = neighborhooddeetz["neighborhoodid"]
             neighborhoodname = neighborhooddeetz["neighborhood"]
-            # todo: ensure the user is an admin of the neighborhood
+
+            # ensure that the current user is an admin
+            admincheck = db.execute("SELECT * FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=userUUID, nbh=neighborhoodid)
+            if len(admincheck) != 0:#user is at least a member of this neighborhood
+                if admincheck[0]['admin'] != 1:#ther user is NOT an admin
+                    return redirect(url_for('neighborhoods') + '#mine')
+            else:
+                return redirect(url_for('neighborhoods') + '#mine')
+
             memberlist_db = db.execute("SELECT DISTINCT useruuid FROM memberships WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)
             membercount = len(memberlist_db)
             allMembers = {}
@@ -1233,7 +1246,13 @@ def managemembers():
         formAction = request.form.get("returnedAction")
         if formAction == "sendMail":
             neighborhoodid = request.form.get("nbhid")
-            #todo: ensure user is an admin
+            # ensure that the current user is an admin
+            admincheck = db.execute("SELECT * FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=userUUID, nbh=neighborhoodid)
+            if len(admincheck) != 0:#user is at least a member of this neighborhood
+                if admincheck[0]['admin'] != 1:#ther user is NOT an admin
+                    return redirect(url_for('neighborhoods') + '#mine')
+            else:
+                return redirect(url_for('neighborhoods') + '#mine')
             return redirect(f"/sendmail?neighborhoodid={neighborhoodid}")
         elif formAction == "cancel":
             return redirect("/findtool")
@@ -1347,12 +1366,18 @@ def sendmail():
     if request.method == "GET":
         neighborhoodid = request.args.get("neighborhoodid")
         if neighborhoodid:
-            #todo: ensure user is an admin
             neighborhooddeetz = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)[0]
             neighborhoodName = neighborhooddeetz['neighborhood']
             userdeetz = db.execute("SELECT * FROM users WHERE uuid = :userUUID", userUUID=userUUID)[0]
             username = userdeetz['username']
             email = userdeetz['email']
+            # ensure that the current user is an admin
+            admincheck = db.execute("SELECT * FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=userUUID, nbh=neighborhoodid)
+            if len(admincheck) != 0:#user is at least a member of this neighborhood
+                if admincheck[0]['admin'] != 1:#ther user is NOT an admin
+                    return redirect(url_for('neighborhoods') + '#mine')
+            else:
+                return redirect(url_for('neighborhoods') + '#mine')
             return render_template("neighborhood/sendmail.html", openActions=countActions(), firstname=firstname, username=username, email=email, neighborhoodName=neighborhoodName, askall=False, neighborhood_send_list=neighborhoodid)
 
         mynbhlist = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID) AND deleted = 0;", userUUID=userUUID)
@@ -2207,7 +2232,7 @@ In order to reset the password to your ToolShare account, please click the link 
 <span style="font-size: 0.8em;">If you did not request this password change, please log back in to confirm your account.</span>
 <div style="padding: 25px;">
 <span style="padding-left: 12px;">
-<a href="https://sharetools.tk/changepassword?email={email}&recoverytoken={recoverykey}">Reset my password</a>.
+<a href="https://sharetools.tk/changepassword?email={email}&recoverytoken={recoverykey}">Reset my password</a>
 </span>
 </div>
 </div>
