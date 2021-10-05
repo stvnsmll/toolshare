@@ -933,7 +933,7 @@ def neighborhoods():
 
         # Create the neighborhood:
         new_neighborhood_uuid = uuid.uuid4().hex
-        db.execute("INSERT INTO neighborhoods (neighborhoodid, neighborhood, zip, description, private, pwd, adminuuid) VALUES (?, ?, ?, ?, ?, ?, ?);", new_neighborhood_uuid, neighborhoodname, zipcode, description, private, password, userUUID)
+        db.execute("INSERT INTO neighborhoods (neighborhoodid, neighborhood, zip, description, private, pwd) VALUES (?, ?, ?, ?, ?, ?, ?);", new_neighborhood_uuid, neighborhoodname, zipcode, description, private, password)
         # Add the user as a member to the memberships:
         #do not need: newneighborhoodid = db.execute("SELECT neighborhoodid FROM neighborhoods WHERE neighborhood IS (?);", neighborhoodname)[0]['neighborhoodid']
         db.execute("INSERT INTO memberships (useruuid, neighborhoodid, admin) VALUES (?, ?, ?);", userUUID, new_neighborhood_uuid, '1')
@@ -996,6 +996,7 @@ def neighborhood_details():
                 return render_template("neighborhood/neighborhoodwelcome.html", neighborhoodname=neighborhoodname, neighborhoodid=neighborhoodid, description=description, showtools=showtools, sometools=sometools)
 
         #else:
+        #user is already logged in
         """Show user neighborhood details page"""
         userUUID = session.get("user_uuid")
         firstname = session.get("firstname")
@@ -1029,7 +1030,7 @@ def neighborhood_details():
                 passwordYN = "No"
             else:
                 passwordYN = "Yes"
-            if userUUID == neighborhooddeetz["adminuuid"]:
+            if admin_check(userUUID, neighborhoodid):
                 yesadmin = True
             else:
                 yesadmin = False
@@ -1058,9 +1059,20 @@ def neighborhood_details():
                         'toolName': allmyToolsData[i]['toolname'],
                         'isVisible': visible}
                 myTools[allmyToolsData[i]['toolid']] = info
-
-            return render_template("neighborhood/neighborhooddetails.html", openActions=countActions(), firstname=firstname, neighborhoodname=neighborhoodname, zipcode=zipcode, description=description, membercount=membercount, privateYN=privateYN, passwordYN=passwordYN, yesadmin=yesadmin, notmember=notmember, neighborhoodid=neighborhoodid, myTools=myTools)
-    else:
+            return render_template("neighborhood/neighborhooddetails.html",
+                                    openActions=countActions(),
+                                    firstname=firstname,
+                                    neighborhoodname=neighborhoodname,
+                                    zipcode=zipcode,
+                                    description=description,
+                                    membercount=membercount,
+                                    privateYN=privateYN,
+                                    passwordYN=passwordYN,
+                                    yesadmin=yesadmin,
+                                    notmember=notmember,
+                                    neighborhoodid=neighborhoodid,
+                                    myTools=myTools)
+    else:#POST
         userUUID = session.get("user_uuid")
         firstname = session.get("firstname")
         formAction = request.form.get("returnedAction")
@@ -1115,13 +1127,10 @@ def neighborhood_details():
             return redirect("/editneighborhood?neighborhoodid=" + neighborhoodid)
         elif formAction == "managemembers":
             # ensure that the current user is an admin
-            admincheck = db.execute("SELECT * FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=userUUID, nbh=neighborhoodid)
-            if len(admincheck) != 0:#user is at least a member of this neighborhood
-                if admincheck[0]['admin'] == 1:#ther user is an admin
-                    #only allow an admin of the nbh to access this page
-                    return redirect("/managemembers?neighborhoodid=" + neighborhoodid)
-            #otherwise... return to their list of neighborhoods
-            return redirect(url_for('neighborhoods') + '#mine')
+            if admin_check(userUUID, neighborhoodid):
+                return redirect("/managemembers?neighborhoodid=" + neighborhoodid)
+            else:
+                return redirect(url_for('neighborhoods') + '#mine')
         elif formAction == "delete":
             #deleteneighborhood(neighborhoodid,neighborhoodid)
             return redirect("/deleteneighborhood?neighborhoodid=" + neighborhoodid)
@@ -1215,11 +1224,7 @@ def managemembers():
             neighborhoodname = neighborhooddeetz["neighborhood"]
 
             # ensure that the current user is an admin
-            admincheck = db.execute("SELECT * FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=userUUID, nbh=neighborhoodid)
-            if len(admincheck) != 0:#user is at least a member of this neighborhood
-                if admincheck[0]['admin'] != 1:#ther user is NOT an admin
-                    return redirect(url_for('neighborhoods') + '#mine')
-            else:
+            if not admin_check(userUUID, neighborhoodid):
                 return redirect(url_for('neighborhoods') + '#mine')
 
             memberlist_db = db.execute("SELECT DISTINCT useruuid FROM memberships WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)
@@ -1274,7 +1279,7 @@ def editneighborhood():
 
         neighborhooddeetz = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid = :neighborhoodid AND deleted = 0;", neighborhoodid=neighborhoodid)[0]
 
-        if userUUID != neighborhooddeetz["adminuuid"]:
+        if not admin_check(userUUID, neighborhoodid):
             # The active user is not the neighborhood admin
             flash("UNAUTHORIZED - cannot edit the neighborhood if not the admin.")
             return redirect(url_for('neighborhood_details') + '?neighborhoodid=' + neighborhoodid)
@@ -1317,7 +1322,7 @@ def deleteneighborhood():
         neighborhooddeetz = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid = :neighborhoodid AND deleted = 0;", neighborhoodid=neighborhoodid)[0]
         neighborhoodname = neighborhooddeetz['neighborhood']
         #confirm that the active user is an admin for the neighborhood, otherwise return unauthorized
-        if userUUID != neighborhooddeetz["adminuuid"]:
+        if not admin_check(userUUID, neighborhoodid):
             # The active user is not the neighborhood admin
             flash("UNAUTHORIZED - cannot delete the neighborhood if not the admin.")
             return redirect(url_for('neighborhood_details') + '?neighborhoodid=' + neighborhoodid)
@@ -1328,7 +1333,7 @@ def deleteneighborhood():
         neighborhoodid = request.form.get("neighborhoodid")
         if formAction == "deleteNeighborhood":
             neighborhooddeetz = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid = :neighborhoodid AND deleted = 0;", neighborhoodid=neighborhoodid)[0]
-            if userUUID != neighborhooddeetz["adminuuid"]:
+            if not admin_check(userUUID, neighborhoodid):
                 # The active user is not the neighborhood admin
                 flash("UNAUTHORIZED - cannot delete the neighborhood if not the admin.")
                 return redirect(url_for('neighborhood_details') + '?neighborhoodid=' + neighborhoodid)
@@ -2611,6 +2616,23 @@ def errorhandler(e):
     return apology(e.name, e.code)
 
 
+def member_check(userUUID, neighborhoodID):
+    # ensure that the provided user is a member of the provided neighborhood
+    membercheck = db.execute("SELECT * FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=userUUID, nbh=neighborhoodID)
+    if len(membercheck) == 0:
+        return False
+    return True
+
+
+def admin_check(userUUID, neighborhoodID):
+    # ensure that the provided user is an admin of the provided neighborhood
+    admincheck = db.execute("SELECT * FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=userUUID, nbh=neighborhoodID)
+    if len(admincheck) == 1:#confirm the user is at least a member
+        if admincheck[0]['admin'] == 1:#the user is an admin
+            return True
+    return False
+
+
 def requestApproved(actionid, comments):
     actiondetails = db.execute("SELECT * FROM actions WHERE actionid = :actionid;", actionid=actionid)[0]
     requestor = actiondetails['originuuid']
@@ -2759,6 +2781,7 @@ def delete_images_s3(image_uuid):
         )
     except Exception as e:
         print("Something Happened - ThumbnailDelete: ", e)
+
 
 def images_to_s3(image_uuid):
     # Upload image and thumbnail to AWS
