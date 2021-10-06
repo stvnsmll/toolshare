@@ -80,8 +80,8 @@
 
       {% if bannedUsers %}
       <div class="form-check" style="padding-left: 0;">
-        <button type="button" id="toolvisbutton" onclick=setVisibility() class='btn btn-warning'>Banned User List&nbsp;&nbsp;<i id="chevron1" class="fa fa-chevron-down spinme" style="color: #252525; font-size: 10px"></i></button>
-        <div id="toolselector" class="expandanimate" style="max-height: 0px">
+        <button type="button" id="toggleBannedbutton" onclick=toggleBanned() class='btn btn-warning'>Banned User List&nbsp;&nbsp;<i id="chevron1" class="fa fa-chevron-down spinme" style="font-size: 10px"></i></button>
+        <div id="bannedselector" class="expandanimate" style="max-height: 0px">
           <div class="btn-group btn-group-sm" style="margin-top: 5px">
             <button class="btn btn-success" onclick="updateinfobox('updatetoolvis')" type="submit">Un-Ban <i class="fa fa-check"></i></button>
             <button type="button" class="btn btn-warning" onclick="hideBanList();">Discard <i class="fa fa-times"></i></button>
@@ -207,13 +207,27 @@
             hiddenInfoBox.value = "sendMail";
         };
 
+        function toggleBanned() {
+          var toggleBannedbutton = document.getElementById("toolvisbutton");
+          var chevron1 = document.getElementById('chevron1');
+          var bannedselector = document.getElementById("bannedselector");
+
+            /*$("#toolselector").collapse('toggle');*/
+            if (bannedselector.style.maxHeight == '0px') {
+              chevron1.style.transform = "rotateX(180deg)";
+              bannedselector.style.maxHeight = '1042px';
+            } else {
+              chevron1.style.transform = "rotateX(0deg)";
+              bannedselector.style.maxHeight = '0px';
+            }
+        }
+
 
         function hideBanList() {
           var chevron1 = document.getElementById('chevron1');
-          var toolselector = document.getElementById("toolselector");
+          var bannedselector = document.getElementById("bannedselector");
           chevron1.style.transform = "rotateX(0deg)";
-          chevron1.style.color = "#252525";
-          toolselector.style.maxHeight = '0px';
+          bannedselector.style.maxHeight = '0px';
         }
 
 

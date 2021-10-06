@@ -1078,6 +1078,11 @@ def neighborhood_details():
         formAction = request.form.get("returnedAction")
         neighborhoodid = request.form.get("nbhid")
         if formAction == "join":
+            # check if the ths user is banned from this neighborhood
+            ban_check = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID AND neighborhoodid = :neighborhoodid AND banned = 1;", userUUID=userUUID, neighborhoodid=neighborhoodid)
+            if len(ban_check) != 0:
+                # the user is banned from this neighborhood
+                return apology("Contact an admin for more information.", "Sorry, you are banned from this neighborhood")
             already_member_ckeck = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID AND neighborhoodid = :neighborhoodid AND banned = 0;", userUUID=userUUID, neighborhoodid=neighborhoodid)
             if len(already_member_ckeck) != 0:
                 #already a member, cannot rejoin
@@ -1251,7 +1256,7 @@ def managemembers():
                 allMembers[memberlist_db[i]['useruuid']] = info
 
             #TODO TODO TODO TODO TODO IM HERE IMHERE
-            bannedlist_db = db.execute("SELECT DISTINCT useruuid FROM membershipbans WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)
+            bannedlist_db = db.execute("SELECT DISTINCT useruuid FROM memberships WHERE neighborhoodid = :neighborhoodid AND banned = 1;", neighborhoodid=neighborhoodid)
             bannedUsers = {}
             for i in range(len(bannedlist_db)):
                 banneduserinfo = db.execute("SELECT * FROM users WHERE uuid = :uuid;", uuid=bannedlist_db[i]['useruuid'])[0]
@@ -1260,7 +1265,14 @@ def managemembers():
                         "firstname": banneduserinfo['firstname']}
                 bannedUsers[bannedlist_db[i]['useruuid']] = info
 
-            return render_template("neighborhood/managemembers.html", openActions=countActions(), firstname=firstname, neighborhoodname=neighborhoodname, membercount=membercount, neighborhoodid=neighborhoodid, allMembers=allMembers, bannedUsers=bannedUsers)
+            return render_template("neighborhood/managemembers.html",
+                                    openActions=countActions(),
+                                    firstname=firstname,
+                                    neighborhoodname=neighborhoodname,
+                                    membercount=membercount,
+                                    neighborhoodid=neighborhoodid,
+                                    allMembers=allMembers,
+                                    bannedUsers=bannedUsers)
     else:
         formAction = request.form.get("returnedAction")
         if formAction == "sendMail":
