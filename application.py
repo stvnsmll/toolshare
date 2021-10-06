@@ -1114,9 +1114,10 @@ def neighborhood_details():
             session["neighborhood_check"] = "1"
             #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             nbhAdmin_db = db.execute("SELECT useruuid FROM memberships WHERE neighborhoodid = :neighborhoodid AND admin = 1;", neighborhoodid=neighborhoodid)
-            if len(nbhAdmin_db) != 1:
+            if len(nbhAdmin_db) == 0:
                 nbhAdmin = ""
             else:
+                #log it to the first admin if there are multiple
                 nbhAdmin = nbhAdmin_db[0]["useruuid"]
                 if nbhAdmin == userUUID:
                     nbhAdmin = ""
@@ -1124,7 +1125,11 @@ def neighborhood_details():
             flash('Joined the neighborhood!')
             return redirect(url_for('neighborhoods') + '#mine')
         elif formAction == "edit":
-            return redirect("/editneighborhood?neighborhoodid=" + neighborhoodid)
+            # ensure that the current user is an admin
+            if admin_check(userUUID, neighborhoodid):
+                return redirect("/editneighborhood?neighborhoodid=" + neighborhoodid)
+            else:
+                return redirect(url_for('neighborhoods') + '#mine')
         elif formAction == "managemembers":
             # ensure that the current user is an admin
             if admin_check(userUUID, neighborhoodid):
@@ -1132,9 +1137,17 @@ def neighborhood_details():
             else:
                 return redirect(url_for('neighborhoods') + '#mine')
         elif formAction == "delete":
-            #deleteneighborhood(neighborhoodid,neighborhoodid)
-            return redirect("/deleteneighborhood?neighborhoodid=" + neighborhoodid)
+            # ensure that the current user is an admin
+            if admin_check(userUUID, neighborhoodid):
+                return redirect("/deleteneighborhood?neighborhoodid=" + neighborhoodid)
+            else:
+                return redirect(url_for('neighborhoods') + '#mine')
         elif formAction == "leave":
+            # Refuse to let the only admin leave.
+            admin_count = db.execute("SELECT * FROM memberships WHERE neighborhoodid = :neighborhoodid AND admin = 1;", neighborhoodid=neighborhoodid)
+            if len(admin_count) == 1:
+                flash("You are the only admin. There must be at least one admin to keep the nbh.")
+                return redirect("/neighborhood_details?neighborhoodid=" + neighborhoodid)
             db.execute("DELETE FROM memberships WHERE useruuid = :userUUID AND neighborhoodid = :neighborhoodid;", userUUID=userUUID, neighborhoodid=neighborhoodid)
             # See if the user is a member of any neighborhoods anymore - if not, set to 0
             myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
@@ -1237,6 +1250,7 @@ def managemembers():
                         "firstname": memberinfo['firstname']}
                 allMembers[memberlist_db[i]['useruuid']] = info
 
+            #TODO TODO TODO TODO TODO IM HERE IMHERE
             bannedlist_db = db.execute("SELECT DISTINCT useruuid FROM membershipbans WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)
             bannedUsers = {}
             for i in range(len(bannedlist_db)):
@@ -1252,11 +1266,7 @@ def managemembers():
         if formAction == "sendMail":
             neighborhoodid = request.form.get("nbhid")
             # ensure that the current user is an admin
-            admincheck = db.execute("SELECT * FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=userUUID, nbh=neighborhoodid)
-            if len(admincheck) != 0:#user is at least a member of this neighborhood
-                if admincheck[0]['admin'] != 1:#ther user is NOT an admin
-                    return redirect(url_for('neighborhoods') + '#mine')
-            else:
+            if not admin_check(userUUID, neighborhoodid):
                 return redirect(url_for('neighborhoods') + '#mine')
             return redirect(f"/sendmail?neighborhoodid={neighborhoodid}")
         elif formAction == "cancel":
@@ -1377,12 +1387,10 @@ def sendmail():
             username = userdeetz['username']
             email = userdeetz['email']
             # ensure that the current user is an admin
-            admincheck = db.execute("SELECT * FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=userUUID, nbh=neighborhoodid)
-            if len(admincheck) != 0:#user is at least a member of this neighborhood
-                if admincheck[0]['admin'] != 1:#ther user is NOT an admin
-                    return redirect(url_for('neighborhoods') + '#mine')
-            else:
+            if not admin_check(userUUID, neighborhoodid):
+                flash("UNAUTHORIZED - cannot message the neighborhood if not the admin.")
                 return redirect(url_for('neighborhoods') + '#mine')
+
             return render_template("neighborhood/sendmail.html", openActions=countActions(), firstname=firstname, username=username, email=email, neighborhoodName=neighborhoodName, askall=False, neighborhood_send_list=neighborhoodid)
 
         mynbhlist = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID) AND deleted = 0;", userUUID=userUUID)
@@ -1405,10 +1413,15 @@ def sendmail():
                     flash("You must pick at least one neighborhood.")
                     return apology("one neighborhood", "you must pick at least one")
                 #send the email to the one preloaded into the form (admin mail)
-                #todo: ensure user is an admin
+                #ensure user is an admin
+                if not admin_check(userUUID, neighborhood_send_list):
+                    flash("UNAUTHORIZED - cannot message the neighborhood if not the admin.")
+                    return redirect(url_for('neighborhods') + '#mine')
+                #TODO send mail to nbh as admin
                 print("Admin email to: " + neighborhood_send_list)
             else:
                 ## TODO: for each NBH, ensure the user is a member
+                ## TODO: send mail to many people
                 print("Asking these neighborhoods: " + str(nbhChecks))
             if "email" in shareChecks:
                 print("YES: share the email address")
@@ -1416,6 +1429,17 @@ def sendmail():
                 print("NO: don't share the email address")
             return apology("todo")
         elif formAction == "cancel":
+            #return to the right place if coming from an admin message
+            nbhChecks = request.form.getlist("nbhChecks")
+            if len(nbhChecks) == 0:
+                neighborhood_send_list = request.form.get("neighborhood_send_list")
+                if neighborhood_send_list == "":
+                    return redirect("/findtool")
+                else:
+                    if admin_check(userUUID, neighborhood_send_list):
+                        return redirect("/managemembers?neighborhoodid=" + neighborhood_send_list)
+                    else:
+                        return redirect("/neighborhood_details?neighborhoodid=" + neighborhood_send_list)
             return redirect("/findtool")
         else:
             return apology("Misc Error")
