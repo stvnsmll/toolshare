@@ -226,7 +226,7 @@ def actions():
                 photo = ""
             else:
                 photo = get_image_s3(item["toolid"] + ".jpeg")
-            commonneighborhoods_data = db.execute("SELECT neighborhood FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :A INTERSECT SELECT neighborhoodid FROM memberships WHERE useruuid = :B);", A=userUUID, B=item['originuuid'])
+            commonneighborhoods_data = db.execute("SELECT neighborhood FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :A AND banned = 0 INTERSECT SELECT neighborhoodid FROM memberships WHERE useruuid = :B AND banned = 0);", A=userUUID, B=item['originuuid'])
             commonneighborhoods = []
             for i in commonneighborhoods_data:
                 commonneighborhoods.append(i['neighborhood'])
@@ -253,7 +253,7 @@ def actions():
                 photo = ""
             else:
                 photo = get_image_s3(item["toolid"] + ".jpeg")
-            commonneighborhoods_data = db.execute("SELECT neighborhood FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :A INTERSECT SELECT neighborhoodid FROM memberships WHERE useruuid = :B);", A=userUUID, B=tooldetails['owneruuid'])
+            commonneighborhoods_data = db.execute("SELECT neighborhood FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :A AND banned = 0 INTERSECT SELECT neighborhoodid FROM memberships WHERE useruuid = :B AND banned = 0);", A=userUUID, B=tooldetails['owneruuid'])
             commonneighborhoods = []
             for i in commonneighborhoods_data:
                 commonneighborhoods.append(i['neighborhood'])
@@ -320,7 +320,7 @@ def findtool():
     if request.method == "GET":
         # get all of the tools the user could borrow from their neighborhoods
         #alltoollist = db.execute("SELECT * FROM tools WHERE owneruuid IN (SELECT DISTINCT useruuid FROM memberships WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID)) AND private = 0 AND deleted = 0  ORDER BY toolname COLLATE NOCASE;", userUUID=userUUID)
-        alltoollist = db.execute("SELECT * FROM tools WHERE toolid IN (SELECT DISTINCT toolid FROM toolvisibility WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID)) ORDER BY toolname;", userUUID=userUUID)#removed ' COLLATE NOCASE' for postgreSQL
+        alltoollist = db.execute("SELECT * FROM tools WHERE toolid IN (SELECT DISTINCT toolid FROM toolvisibility WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID AND banned = 0)) ORDER BY toolname;", userUUID=userUUID)#removed ' COLLATE NOCASE' for postgreSQL
         #SELECT DISTINCT toolid FROM toolvisibility WHERE neighborhoodid IN (10, 13);
         alltools = format_tools(alltoollist)
 
@@ -339,7 +339,7 @@ def newtool():
     userUUID = session.get("user_uuid")
     firstname = session.get("firstname")
 
-    myNeighborhoodsData = db.execute("SELECT neighborhoodid, neighborhood FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID);", userUUID=userUUID)
+    myNeighborhoodsData = db.execute("SELECT neighborhoodid, neighborhood FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID AND banned = 0);", userUUID=userUUID)
     myNeighborhoods = {}
     for i in range(len(myNeighborhoodsData)):
         info = {'neighborhoodID': myNeighborhoodsData[i]['neighborhoodid'],
@@ -477,7 +477,7 @@ def tool_details():
         ownerfirstname = ownerdetails['firstname']
         ownerusername = ownerdetails['username']
         ownerUUID = ownerdetails['uuid']
-        sharedneighborhoods = db.execute("SELECT neighborhoodid FROM memberships WHERE useruuid = :ownerUUID INTERSECT SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID", ownerUUID=ownerUUID, userUUID=userUUID)
+        sharedneighborhoods = db.execute("SELECT neighborhoodid FROM memberships WHERE useruuid = :ownerUUID AND banned = 0 INTERSECT SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID AND banned = 0;", ownerUUID=ownerUUID, userUUID=userUUID)
         if len(sharedneighborhoods) == 0:
             # no shared neighborhoods, cannot view this tool
             return apology("UNAUTHORIZED")
@@ -517,7 +517,7 @@ def tool_details():
         else:
             yesowner = False
             notes = []
-            commonneighborhoods_data = db.execute("SELECT neighborhood FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :A INTERSECT SELECT neighborhoodid FROM memberships WHERE useruuid = :B);", A=userUUID, B=ownerUUID)
+            commonneighborhoods_data = db.execute("SELECT neighborhood FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :A AND banned = 0 INTERSECT SELECT neighborhoodid FROM memberships WHERE useruuid = :B AND banned = 0);", A=userUUID, B=ownerUUID)
             commonneighborhoods = []
             for i in commonneighborhoods_data:
                 commonneighborhoods.append(i['neighborhood'])
@@ -549,7 +549,7 @@ def tool_details():
             if activeuseruuid == ownerUUID:
                 commonneighborhoods = "(hey, that's you!)"
             else:
-                commonneighborhoods_data = db.execute("SELECT neighborhood FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :A INTERSECT SELECT neighborhoodid FROM memberships WHERE useruuid = :B);", A=activeuseruuid, B=ownerUUID)
+                commonneighborhoods_data = db.execute("SELECT neighborhood FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :A AND banned = 0 INTERSECT SELECT neighborhoodid FROM memberships WHERE useruuid = :B AND banned = 0);", A=activeuseruuid, B=ownerUUID)
                 commonneighborhoods = []
                 for i in commonneighborhoods_data:
                     commonneighborhoods.append(i['neighborhood'])
@@ -759,7 +759,7 @@ def edittool():
             photo = get_image_s3(toolid + ".jpeg")
 
 
-        myNeighborhoodsData = db.execute("SELECT neighborhoodid, neighborhood FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID);", userUUID=userUUID)
+        myNeighborhoodsData = db.execute("SELECT neighborhoodid, neighborhood FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID AND banned = 0);", userUUID=userUUID)
 
         toolvisDB = db.execute("SELECT * FROM toolvisibility WHERE toolid = :toolid;", toolid=toolid)
         toolvislist = []
@@ -799,7 +799,7 @@ def edittool():
         features = request.form.get("features")
         notes = request.form.get("notes")
 
-        myNeighborhoodsData = db.execute("SELECT neighborhoodid, neighborhood FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID);", userUUID=userUUID)
+        myNeighborhoodsData = db.execute("SELECT neighborhoodid, neighborhood FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID AND banned = 0);", userUUID=userUUID)
         myNeighborhoods = {}
         for i in range(len(myNeighborhoodsData)):
             info = {'neighborhoodID': myNeighborhoodsData[i]['neighborhoodid'],
@@ -906,13 +906,13 @@ def neighborhoods():
     userUUID = session.get("user_uuid")
     firstname = session.get("firstname")
     if request.method == "GET":
-        mynbhlist = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID) AND deleted = 0;", userUUID=userUUID)
+        mynbhlist = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID AND banned = 0) AND deleted = 0;", userUUID=userUUID)
         myneighborhoods = {}
         for row in mynbhlist:
             info = {'neighborhood': row["neighborhood"], 'neighborhoodid': row["neighborhoodid"], 'zipcode': row["zip"]}
             myneighborhoods[row["neighborhoodid"]] = info
 
-        allnbhlist = db.execute("SELECT * FROM neighborhoods WHERE private = '0' AND deleted = 0 AND neighborhoodid NOT IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID);", userUUID=userUUID)
+        allnbhlist = db.execute("SELECT * FROM neighborhoods WHERE private = '0' AND deleted = 0 AND neighborhoodid NOT IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID AND banned = 0);", userUUID=userUUID)
         allneighborhoods = {}
         for row in allnbhlist:
             info = {'neighborhood': row["neighborhood"], 'neighborhoodid': row["neighborhoodid"], 'zipcode': row["zip"]}
@@ -1034,9 +1034,9 @@ def neighborhood_details():
                 yesadmin = True
             else:
                 yesadmin = False
-            membercount_db = db.execute("SELECT DISTINCT useruuid FROM memberships WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)
+            membercount_db = db.execute("SELECT DISTINCT useruuid FROM memberships WHERE neighborhoodid = :neighborhoodid AND banned = 0;", neighborhoodid=neighborhoodid)
             membercount = len(membercount_db)
-            membercheck = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID AND neighborhoodid = :neighborhoodid;", userUUID=userUUID, neighborhoodid=neighborhoodid)
+            membercheck = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID AND neighborhoodid = :neighborhoodid AND banned = 0;", userUUID=userUUID, neighborhoodid=neighborhoodid)
             if len(membercheck) == 0:
                 notmember = True
             else:
@@ -1078,7 +1078,7 @@ def neighborhood_details():
         formAction = request.form.get("returnedAction")
         neighborhoodid = request.form.get("nbhid")
         if formAction == "join":
-            already_member_ckeck = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID AND neighborhoodid = :neighborhoodid;", userUUID=userUUID, neighborhoodid=neighborhoodid)
+            already_member_ckeck = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID AND neighborhoodid = :neighborhoodid AND banned = 0;", userUUID=userUUID, neighborhoodid=neighborhoodid)
             if len(already_member_ckeck) != 0:
                 #already a member, cannot rejoin
                 flash("Already a member of this neighborhood")
@@ -1108,7 +1108,7 @@ def neighborhood_details():
                     if len(exists) == 0:
                         db.execute("INSERT INTO toolvisibility (neighborhoodid, toolid) VALUES (?, ?);", neighborhoodid, tool)
 
-            exists = db.execute("SELECT * FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=userUUID, nbh=neighborhoodid)
+            exists = db.execute("SELECT * FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh AND banned = 0;", uuid=userUUID, nbh=neighborhoodid)
             if len(exists) == 0:
                 db.execute("INSERT INTO memberships (useruuid, neighborhoodid) VALUES (?, ?);", userUUID, neighborhoodid)
             session["neighborhood_check"] = "1"
@@ -1150,7 +1150,7 @@ def neighborhood_details():
                 return redirect("/neighborhood_details?neighborhoodid=" + neighborhoodid)
             db.execute("DELETE FROM memberships WHERE useruuid = :userUUID AND neighborhoodid = :neighborhoodid;", userUUID=userUUID, neighborhoodid=neighborhoodid)
             # See if the user is a member of any neighborhoods anymore - if not, set to 0
-            myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
+            myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID AND banned = 0;", userUUID = session.get("user_uuid"))
             if len(myneighborhoods) != 0:
                 session["neighborhood_check"] = "1"
             else:
@@ -1240,7 +1240,7 @@ def managemembers():
             if not admin_check(userUUID, neighborhoodid):
                 return redirect(url_for('neighborhoods') + '#mine')
 
-            memberlist_db = db.execute("SELECT DISTINCT useruuid FROM memberships WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)
+            memberlist_db = db.execute("SELECT DISTINCT useruuid FROM memberships WHERE neighborhoodid = :neighborhoodid AND banned = 0;", neighborhoodid=neighborhoodid)
             membercount = len(memberlist_db)
             allMembers = {}
             for i in range(len(memberlist_db)):
@@ -1361,6 +1361,9 @@ def deleteneighborhood():
             db.execute("UPDATE neighborhoods SET deleted = 1 WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)
             # remove all members (this is a permanent delete)
             db.execute("DELETE FROM memberships WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)
+            # remove all tool visibility relationships to the deleted neighborhood
+            #  actiually commented out so that if the "deleted" neighborhood is ever restored, the tool relationship will still be there
+            #db.execute("DELETE FROM toolvisibility WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)
             #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("neighborhood", "deleteneighborhood", "", "", neighborhoodid, "")
             flash('Neighborhood deleted.')
@@ -1393,7 +1396,7 @@ def sendmail():
 
             return render_template("neighborhood/sendmail.html", openActions=countActions(), firstname=firstname, username=username, email=email, neighborhoodName=neighborhoodName, askall=False, neighborhood_send_list=neighborhoodid)
 
-        mynbhlist = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID) AND deleted = 0;", userUUID=userUUID)
+        mynbhlist = db.execute("SELECT * FROM neighborhoods WHERE neighborhoodid IN (SELECT neighborhoodid FROM memberships WHERE useruuid = :userUUID AND banned = 0) AND deleted = 0;", userUUID=userUUID)
         myneighborhoods = {}
         for row in mynbhlist:
             info = {'neighborhood': row["neighborhood"], 'neighborhoodid': row["neighborhoodid"]}
@@ -1502,7 +1505,7 @@ def login():
         session["theme"] = rows[0]["theme"]
 
         # See if the user is a member of any neighborhoods
-        myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
+        myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID AND banned = 0;", userUUID = session.get("user_uuid"))
         if len(myneighborhoods) != 0:
             session["neighborhood_check"] = "1"
         else:
@@ -1621,7 +1624,7 @@ def validateemail():
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
                 # See if the user is a member of any neighborhoods
-                myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
+                myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID AND banned = 0;", userUUID = session.get("user_uuid"))
                 if len(myneighborhoods) != 0:
                     session["neighborhood_check"] = "1"
                 else:
@@ -1697,7 +1700,7 @@ def validateemail():
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
                 # See if the user is a member of any neighborhoods
-                myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
+                myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID AND banned = 0;", userUUID = session.get("user_uuid"))
                 if len(myneighborhoods) != 0:
                     session["neighborhood_check"] = "1"
                 else:
@@ -1944,7 +1947,7 @@ def changepassword():
                 session["firstname"] = userdeetz[0]["firstname"]
                 session["theme"] = userdeetz[0]["theme"]
                 # See if the user is a member of any neighborhoods
-                myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
+                myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID AND banned = 0;", userUUID = session.get("user_uuid"))
                 if len(myneighborhoods) != 0:
                     session["neighborhood_check"] = "1"
                 else:
@@ -2190,7 +2193,7 @@ def sharelink():
 
         if requesttype == "nbh":
             #ensure the active user is a member of the neighborhood
-            accesscheck = db.execute("SELECT * from MEMBERSHIPS where useruuid = :userUUID AND neighborhoodid = :itemID;", userUUID=userUUID, itemID=itemID)
+            accesscheck = db.execute("SELECT * from MEMBERSHIPS where useruuid = :userUUID AND neighborhoodid = :itemID AND banned = 0;", userUUID=userUUID, itemID=itemID)
             nbh_exists = db.execute("SELECT * from NEIGHBORHOODS where neighborhoodid = :itemID AND deleted = 0", itemID=itemID)
             if len(nbh_exists) == 0:
                 accesscheck = []#make it an empty list to cancel the action
@@ -2325,7 +2328,7 @@ def validatePWchange():
                 db.execute("UPDATE users SET validateemail = '' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
-                myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
+                myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID AND banned = 0;", userUUID = session.get("user_uuid"))
                 if len(myneighborhoods) != 0:
                     session["neighborhood_check"] = "1"
                 else:
@@ -2391,7 +2394,7 @@ def validatePWchange():
                 db.execute("UPDATE users SET validateemail = '' WHERE uuid = :uuid", uuid=new_user[0]['uuid'])
                 session["user_uuid"] = new_user[0]["uuid"]
                 session["firstname"] = new_user[0]["firstname"]
-                myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID;", userUUID = session.get("user_uuid"))
+                myneighborhoods = db.execute("SELECT * FROM memberships WHERE useruuid = :userUUID AND banned = 0;", userUUID = session.get("user_uuid"))
                 if len(myneighborhoods) != 0:
                     session["neighborhood_check"] = "1"
                 else:
@@ -2642,16 +2645,16 @@ def errorhandler(e):
 
 def member_check(userUUID, neighborhoodID):
     # ensure that the provided user is a member of the provided neighborhood
-    membercheck = db.execute("SELECT * FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=userUUID, nbh=neighborhoodID)
+    membercheck = db.execute("SELECT * FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh AND banned = 0;", uuid=userUUID, nbh=neighborhoodID)
     if len(membercheck) == 0:
         return False
     return True
 
 
 def admin_check(userUUID, neighborhoodID):
-    # ensure that the provided user is an admin of the provided neighborhood
+    # ensure that the provided user is an admin of the provided neighborhood                           |-- and admin = 1?
     admincheck = db.execute("SELECT * FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=userUUID, nbh=neighborhoodID)
-    if len(admincheck) == 1:#confirm the user is at least a member
+    if len(admincheck) != 0:#confirm the user is at least a member
         if admincheck[0]['admin'] == 1:#the user is an admin
             return True
     return False
