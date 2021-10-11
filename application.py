@@ -290,7 +290,7 @@ def actions():
                     db.execute("UPDATE tools SET state = 'borrowed' WHERE toolid = :toolid;", toolid=toolid)
                 # set the action in the actions table to dismissed (and close the timestamp)
                 db.execute("UPDATE actions SET state = 'dismissed', timestamp_close = :closetime WHERE actionid = :returnedActionID;", closetime=datetime.datetime.now(), returnedActionID=returnedActionID)
-                #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+                # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
                 logHistory("tool", "cancel", tooldetails['owneruuid'], toolid, "", "")
         else: # returned action came from the "My Approvals" tab
             returnedActionID = request.form.get("returnedActionID")
@@ -419,7 +419,7 @@ def newtool():
             else:
                 print("no tool image file found....")
 
-        #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+        # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
         logHistory("tool", "createtool", "", new_tool_uuid, "", "")
 
         flash("Successfully added the tool")
@@ -617,7 +617,7 @@ def tool_details():
             toolownerUUID = db.execute("SELECT * FROM tools WHERE toolid = :toolid AND deleted = 0;", toolid=toolid)[0]["owneruuid"]
             db.execute("INSERT INTO actions (type, originuuid, targetuuid, toolid, messages, timestamp_open) VALUES (?, ?, ?, ?, ?, ?);", "toolrequest", userUUID, toolownerUUID, toolid, requestComment, datetime.datetime.now())
             db.execute("UPDATE tools SET state = 'requested', activeuseruuid = :userUUID WHERE toolid = :toolid;", toolid=toolid, userUUID=userUUID)
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("tool", "request", toolownerUUID, toolid, "", request.form.get("requestComment"))
             if SEND_EMAIL_ACTIONS == 1:
                 # notify the tool owner via email
@@ -633,7 +633,7 @@ def tool_details():
         elif formAction == "markBorrowed":
             db.execute("INSERT INTO actions (type, state, originuuid, targetuuid, toolid, messages, timestamp_open, timestamp_close) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", "toolrequest", "dismissed", userUUID, userUUID, toolid, "self borrow", datetime.datetime.now(), datetime.datetime.now())
             db.execute("UPDATE tools SET state = 'borrowed', activeuseruuid = :userUUID WHERE toolid = :toolid;", toolid=toolid, userUUID=userUUID)
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("tool", "borrow", "", toolid, "", "self-borrowed")
             flash('Tool marked as Borrowed')
             return redirect(url_for('tools') + '#borrowed')
@@ -658,7 +658,7 @@ def tool_details():
                 seconduuid = toolownerUUID
             db.execute("INSERT INTO actions (type, state, originuuid, targetuuid, toolid, messages, timestamp_open, timestamp_close) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", "toolrequest", state, userUUID, userUUID, toolid, message, datetime.datetime.now(), datetime.datetime.now())
             db.execute("UPDATE tools SET state = 'available', activeuseruuid = NUlL WHERE toolid = :toolid;", toolid=toolid)
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("tool", "return", seconduuid, toolid, "", message)
             flash('Tool returned')
             return redirect(url_for('tools') + '#borrowed')
@@ -666,7 +666,7 @@ def tool_details():
             actionid = db.execute("SELECT actionid FROM actions WHERE toolid = :toolid AND state = 'open' AND originuuid = :userUUID;", toolid=toolid, userUUID=userUUID)[0]['actionid']
             db.execute("UPDATE actions SET state = 'dismissed', timestamp_close = :timeclose WHERE actionid = :actionid;", timeclose=datetime.datetime.now(), actionid=actionid)
             db.execute("UPDATE tools SET state = 'available', activeuseruuid = NUlL WHERE toolid = :toolid;", toolid=toolid)
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             toolownerUUID = db.execute("SELECT * FROM tools WHERE toolid = :toolid AND deleted = 0;", toolid=toolid)[0]["owneruuid"]
             logHistory("tool", "cancel", toolownerUUID, toolid, "", "")
             flash('Cancelled the tool request')
@@ -700,7 +700,7 @@ def tool_details():
                 secondline = "<p>Please get the tool back to them and remember to mark the tool as <a href='https://sharetools.tk/tool_details?toolid={toolid}'>returned</a>.</p>"
                 send_email_toolaction(toolid, recipientuuid, subject, actionmsg, secondline)
 
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("tool", "requirereturn", activeuseruuid, toolid, "", "")
             flash('Tool return requested')
             return redirect(url_for('tool_details') + '?toolid=' + toolid)
@@ -708,20 +708,20 @@ def tool_details():
             return redirect(url_for('edittool') + '?toolid=' + toolid)
         elif formAction == "makePublic":
             db.execute("UPDATE tools SET private = '0' WHERE toolid = :toolid;", toolid=toolid)
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("tool", "edittool", "", toolid, "", "Tool marked public.")
             flash('Tool marked as public')
             return redirect(url_for('tool_details') + '?toolid=' + toolid)
         elif formAction == "makePrivate":
             db.execute("UPDATE tools SET private = '1' WHERE toolid = :toolid;", toolid=toolid)
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("tool", "edittool", "", toolid, "", "Tool marked private.")
             flash('Tool marked as private')
             return redirect(url_for('tool_details') + '?toolid=' + toolid)
         elif formAction == "deleteTool":
             db.execute("UPDATE tools SET deleted = '1', photo = 'none' WHERE toolid = :toolid;", toolid=toolid)
             db.execute("DELETE FROM toolvisibility WHERE toolid = :toolid;", toolid=toolid)
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("tool", "deletetool", "", toolid, "", "")
             flash('Tool deleted')
             return redirect(url_for('tools') + '#myTools')
@@ -885,7 +885,7 @@ def edittool():
         # update the database details for the given toolid
         #db.execute("UPDATE tools SET toolname = ?, private = ?, category = ?, photo = ?, health = ?, features = ?, notes = ? WHERE toolid = ?;", toolname, private, category, toolimage, health, features, notes, toolid)
 
-        #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+        # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
         logHistory("tool", "edittool", "", toolid, "", "full edit")
         flash("Successfully updated the tool")
         return redirect(url_for('tool_details') + '?toolid=' + toolid)
@@ -961,7 +961,7 @@ def neighborhoods():
 
         session["neighborhood_check"] = "1"
 
-        #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+        # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
         logHistory("neighborhood", "createneighborhood", "", "", new_neighborhood_uuid, "")
 
         flash("Successfully created the neighborhood.")
@@ -1117,12 +1117,12 @@ def neighborhood_details():
             if len(exists) == 0:
                 db.execute("INSERT INTO memberships (useruuid, neighborhoodid) VALUES (?, ?);", userUUID, neighborhoodid)
             session["neighborhood_check"] = "1"
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             nbhAdmin_db = db.execute("SELECT useruuid FROM memberships WHERE neighborhoodid = :neighborhoodid AND admin = 1;", neighborhoodid=neighborhoodid)
             if len(nbhAdmin_db) == 0:
                 nbhAdmin = ""
             else:
-                #log it to the first admin if there are multiple
+                # log it to the first admin if there are multiple
                 nbhAdmin = nbhAdmin_db[0]["useruuid"]
                 if nbhAdmin == userUUID:
                     nbhAdmin = ""
@@ -1171,6 +1171,7 @@ def neighborhood_details():
                     comment = "admin left"
                 else:
                     comment = ""
+            removeAllUserToolsFromNBH(userUUID, neighborhoodid)
             logHistory("neighborhood", "left", nbhAdmin, "", neighborhoodid, comment)
             flash('Left the neighborhood.')
             return redirect(url_for('neighborhoods') + '#mine')
@@ -1204,7 +1205,7 @@ def neighborhood_details():
                         db.execute("INSERT INTO toolvisibility (neighborhoodid, toolid) VALUES (?, ?);", neighborhoodid, tool)
                 else:
                     db.execute("DELETE FROM toolvisibility WHERE neighborhoodid = :neighborhoodid AND toolid = :toolid;", neighborhoodid=neighborhoodid, toolid=tool)
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("neighborhood", "edittool", "", "", neighborhoodid, "updated tool visibilities")
             flash('Updated tool visibilities.')
             return redirect("/neighborhood_details?neighborhoodid=" + neighborhoodid)
@@ -1250,12 +1251,17 @@ def managemembers():
             allMembers = {}
             for i in range(len(memberlist_db)):
                 memberinfo = db.execute("SELECT * FROM users WHERE uuid = :uuid;", uuid=memberlist_db[i]['useruuid'])[0]
-                info = {"uuid": memberlist_db[i]['useruuid'],
-                        "username": memberinfo['username'],
-                        "firstname": memberinfo['firstname']}
-                allMembers[memberlist_db[i]['useruuid']] = info
+                # skip the active user in the list
+                if userUUID == memberlist_db[i]['useruuid']:
+                    continue
+                else:
+                    isAdmin = admin_check(memberlist_db[i]['useruuid'], neighborhoodid)
+                    info = {"uuid": memberlist_db[i]['useruuid'],
+                            "username": memberinfo['username'],
+                            "firstname": memberinfo['firstname'],
+                            "isAdmin": isAdmin}
+                    allMembers[memberlist_db[i]['useruuid']] = info
 
-            #TODO TODO TODO TODO TODO IM HERE IMHERE
             bannedlist_db = db.execute("SELECT DISTINCT useruuid FROM memberships WHERE neighborhoodid = :neighborhoodid AND banned = 1;", neighborhoodid=neighborhoodid)
             bannedUsers = {}
             for i in range(len(bannedlist_db)):
@@ -1275,6 +1281,7 @@ def managemembers():
                                     bannedUsers=bannedUsers)
     else:
         formAction = request.form.get("returnedAction")
+        print(formAction)
         if formAction == "sendMail":
             neighborhoodid = request.form.get("nbhid")
             # ensure that the current user is an admin
@@ -1283,6 +1290,76 @@ def managemembers():
             return redirect(f"/sendmail?neighborhoodid={neighborhoodid}")
         elif formAction == "cancel":
             return redirect("/findtool")
+        elif formAction == "addUser":
+            actionDetails = request.form.get("actionDetails")
+            neighborhoodid = request.form.get("nbhid")
+            new_member = request.form.get("new_member")
+
+            if new_member == "":
+                flash("ERROR! Must provide a username or email")
+                return redirect("/managemembers?neighborhoodid=" + neighborhoodid)
+
+            #TODO TODO TODO!!!
+            # look to see if a user exists with that username or email
+            # if not, send an apology email or flash
+            # if so, generate a joinNBH token,
+            #   store that token in the database SOMEWHERE???
+            #   send an email with a direct link with that token
+            #   create an alert for the targetuuid
+            return apology("TODO")
+        elif formAction == "actionConfirmed":
+            actionDetails = request.form.get("actionDetails")
+            neighborhoodid = request.form.get("nbhid")
+
+            if not admin_check(userUUID, neighborhoodid):
+                # The active user is not the neighborhood admin
+                flash("UNAUTHORIZED - must be an admin.")
+                return redirect(url_for('neighborhood_details') + '?neighborhoodid=' + neighborhoodid)
+
+            [action, affectedusername] = actionDetails.split(";")
+            affecteduserdeetz = db.execute("SELECT * FROM users WHERE username = :username;", username=affectedusername)[0]
+            affectedUUID = affecteduserdeetz['uuid']
+            #TODO Log all history events for these activities TODOTODOTODO
+            #TODO flash events for all of these too.
+            if action == "remove":
+                # remove the user from the neighborhood
+                db.execute("DELETE FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=affectedUUID, nbh=neighborhoodid)
+                # delete all of their tool associations
+                removeAllUserToolsFromNBH(affectedUUID, neighborhoodid)
+                return redirect("/managemembers?neighborhoodid=" + neighborhoodid)
+            elif action == "banned":
+                # ban the user from the NBH (delete any past associations with the NBH)
+                db.execute("DELETE FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=affectedUUID, nbh=neighborhoodid)
+                db.execute("INSERT INTO memberships (useruuid, neighborhoodid, banned) VALUES (?, ?, 1);", affectedUUID, neighborhoodid)
+                # delete all of their tool associations
+                removeAllUserToolsFromNBH(affectedUUID, neighborhoodid)
+                # log the event in history
+                return redirect("/managemembers?neighborhoodid=" + neighborhoodid)
+            elif action == "noAdmin":
+                # revoke admin access to the NBH
+                db.execute("UPDATE memberships SET admin = 0 WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=affectedUUID, nbh=neighborhoodid)
+                return redirect("/managemembers?neighborhoodid=" + neighborhoodid)
+            elif action == "yesAdmin":
+                # appoint admin access to the NBH
+                db.execute("UPDATE memberships SET admin = 1 WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=affectedUUID, nbh=neighborhoodid)
+                return redirect("/managemembers?neighborhoodid=" + neighborhoodid)
+            else:
+                return apology("34994823", "Misc Error")
+        elif formAction == "unban":
+            actionDetails = request.form.get("actionDetails")
+            neighborhoodid = request.form.get("nbhid")
+            affectedusers = actionDetails.split(";")
+            if len(affectedusers) == 0:
+                return ('', 204)
+
+            if not admin_check(userUUID, neighborhoodid):
+                # The active user is not the neighborhood admin
+                flash("UNAUTHORIZED - must be an admin.")
+                return redirect(url_for('neighborhood_details') + '?neighborhoodid=' + neighborhoodid)
+
+            for affectedUUID in affectedusers:
+                db.execute("DELETE FROM memberships WHERE useruuid = :uuid AND neighborhoodid = :nbh;", uuid=affectedUUID, nbh=neighborhoodid)
+            return redirect("/managemembers?neighborhoodid=" + neighborhoodid)
         else:
             return apology("Misc Error")
 
@@ -1326,7 +1403,7 @@ def editneighborhood():
 
         # update the database details for the given neighborhoodid
         db.execute("UPDATE neighborhoods SET neighborhood = ?, private = ?, zip = ?, description = ?, pwd = ? WHERE neighborhoodid = ?;", neighborhood, private, zipcode, description, password, neighborhoodid)
-        #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+        # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
         logHistory("neighborhood", "editneighborhood", "", "", neighborhoodid, "Neighborhood edited")
         flash("Successfully updated the neighborhood")
         return redirect(url_for('neighborhoods') + '#mine')
@@ -1376,7 +1453,7 @@ def deleteneighborhood():
             # remove all tool visibility relationships to the deleted neighborhood
             #  actiually commented out so that if the "deleted" neighborhood is ever restored, the tool relationship will still be there
             #db.execute("DELETE FROM toolvisibility WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("neighborhood", "deleteneighborhood", "", "", neighborhoodid, "")
             flash('Neighborhood deleted.')
             return redirect(url_for('neighborhoods') + '#mine')
@@ -1427,8 +1504,8 @@ def sendmail():
                 if neighborhood_send_list == "":
                     flash("You must pick at least one neighborhood.")
                     return apology("one neighborhood", "you must pick at least one")
-                #send the email to the one preloaded into the form (admin mail)
-                #ensure user is an admin
+                # send the email to the one preloaded into the form (admin mail)
+                # ensure user is an admin
                 if not admin_check(userUUID, neighborhood_send_list):
                     flash("UNAUTHORIZED - cannot message the neighborhood if not the admin.")
                     return redirect(url_for('neighborhods') + '#mine')
@@ -1444,7 +1521,7 @@ def sendmail():
                 print("NO: don't share the email address")
             return apology("todo")
         elif formAction == "cancel":
-            #return to the right place if coming from an admin message
+            # return to the right place if coming from an admin message
             nbhChecks = request.form.getlist("nbhChecks")
             if len(nbhChecks) == 0:
                 neighborhood_send_list = request.form.get("neighborhood_send_list")
@@ -1494,13 +1571,13 @@ def login():
 
         # Ensure username exists and password is correct and the account isn't soft-deleted
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            #logHistory("other", "failedlogin1", "", "", "", "")
+            # logHistory("other", "failedlogin1", "", "", "", "")
             #db.execute("INSERT INTO history (type, action, useruuid, timestamp) VALUES (?, ?, ?, ?);", "other", "failedlogin1", "unknown", datetime.datetime.now())
             return apology("invalid username and/or password.", 403)
 
         # This is being taken care of in the catch-all above
         if rows[0]["deleted"] == 1:
-            #logHistory("other", "failedlogin2", "", "", "", "")
+            # logHistory("other", "failedlogin2", "", "", "", "")
             #db.execute("INSERT INTO history (type, action, useruuid, timestamp) VALUES (?, ?, ?, ?);", "other", "failedlogin2", "unknown", datetime.datetime.now())
             return apology("This accound has been shutdown. Contact admin to reactivate.", 423)
 
@@ -1523,7 +1600,7 @@ def login():
         else:
             session["neighborhood_check"] = "0"
 
-        #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+        # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
         logHistory("other", "login", "", "", "", "")
 
         # Redirect user to home page
@@ -1534,7 +1611,7 @@ def login():
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
-        #logHistory("other", "pagevisit", "", "", "", "")
+        # logHistory("other", "pagevisit", "", "", "", "")
         #db.execute("INSERT INTO history (type, action, useruuid, timestamp) VALUES (?, ?, ?, ?);", "other", "pagevisit", "unknown", datetime.datetime.now())
         return render_template("general/login.html")
 
@@ -1542,7 +1619,7 @@ def login():
 @app.route("/logout")
 def logout():
     """Log user out"""
-    #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+    # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
     logHistory("other", "logout", "", "", "", "")
     # Forget any user_uuid
     session.clear()
@@ -1586,7 +1663,7 @@ def register():
         optouttoken = uuid.uuid4().hex
         # Initiate the user with an unregistered_email:
         db.execute("INSERT INTO users (uuid, firstname, username, email, hash, validateemail, theme, email_optout) VALUES (?, ?, ?, ?, ?, ?, ?);", new_uuid, firstname, newUsername, email, generate_password_hash(password1), "unregistered_email", "newuser", optouttoken)
-        #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+        # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
         db.execute("INSERT INTO history (type, action, useruuid, comment, timestamp) VALUES (?, ?, ?, ?, ?);", "other", "signup", new_uuid, "NEW USER!!", datetime.datetime.now())
 
         authcode = generate_new_authcode(email)
@@ -1613,7 +1690,7 @@ def validateemail():
         elif new_user[0]['validateemail'] == "":
             flash("Email already validated")
             return redirect("/tools")
-        #get the user's autorization code:
+        # get the user's autorization code:
         fullcodedetails = new_user[0]['validateemail'].split(";")
         valid_code = fullcodedetails[1]
         start_timestamp = datetime.datetime.strptime(fullcodedetails[2], '%Y-%m-%d %H:%M:%S.%f')
@@ -1645,7 +1722,7 @@ def validateemail():
                 logHistory("other", "email_validated", "", "", "", "")
 
                 if session["theme"] == "newuser":
-                    #send the welcome email
+                    # send the welcome email
                     session["theme"] = "light"
                     db.execute("UPDATE users SET theme = :newTheme WHERE uuid = :userUUID;", userUUID=session["user_uuid"], newTheme="light")
                     send_email_welcome(new_email, new_user[0]["firstname"])
@@ -1890,7 +1967,7 @@ def communication():
                 #set the user's phone preference to 'none'
                 db.execute("UPDATE users SET phonepref = 'none' WHERE uuid = :userUUID;", userUUID=userUUID)
             flash("Your communication preferences have been saved.")
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("other", "editcommprefs", "", "", "", "")
             return redirect("/manageaccount")
         else:
@@ -1967,7 +2044,7 @@ def changepassword():
                 # Update the user's password
                 db.execute("UPDATE users SET hash = :newPW WHERE uuid = :userUUID;",
                            newPW=generate_password_hash(newPassword1), userUUID=session["user_uuid"])
-                #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+                # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
                 logHistory("other", "recoveredpassword", "", "", "", "")
                 flash('Your password was reset.')
                 return redirect("/tools")
@@ -1992,7 +2069,7 @@ def changepassword():
             # Update the user's password
             db.execute("UPDATE users SET hash = :newPW WHERE uuid = :userUUID;",
                        newPW=generate_password_hash(newPassword1), userUUID=userUUID)
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("other", "editpassword", "", "", "", "")
             # show confirmation to user
             flash('Password successfully updated.')
@@ -2026,7 +2103,7 @@ def changename():
             # Update the user's name
             db.execute("UPDATE users SET firstname = :newName WHERE uuid = :userUUID;", newName=newName, userUUID=userUUID)
             session["firstname"] = newName
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("other", "editusername", "", "", "", "")
             # show confirmation to user
             flash('Name changed successfully.')
@@ -2065,7 +2142,7 @@ def updateemail():
             #require the user validate the new email address:
             authcode = generate_new_authcode(newEmail)
 
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("other", "editemail", "", "", "", "")
             # show confirmation to user
             session.clear()
@@ -2098,7 +2175,7 @@ def deleteaccount():
 
             # execute the following to "delete" the user.  The delete is just a soft delete.
             db.execute("UPDATE users SET deleted = 1 WHERE uuid = :userUUID;", userUUID=userUUID)
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("other", "deleteuser", "", "", "", "")
             session.clear()
             flash('Your account was deleted.')
@@ -2475,7 +2552,7 @@ def contactus():
             full_message = "\n" + firstname + " has submitted a 'contact us' email from " + email + "\n" + "Username: " + username + "\n" + " ----- message follows ----- \n\n" + message + "\n\n ----- end message -----"
             #print(full_message)
             send_mail([app.config['MAIL_USERNAME']], "ContactUs_Submission", full_message)
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("other", "feedback_email", "", "", "", "")
             flash("Your message has been sent, thank you!")
             return redirect("/manageaccount")
@@ -2524,7 +2601,7 @@ def contact():
             full_message = "\n" + firstname + " has submitted a 'contact us' email from " + email + "\n" + "Username: " + username + "\n" + " ----- message follows ----- \n\n" + message + "\n\n ----- end message -----"
             #print(full_message)
             send_mail([app.config['MAIL_USERNAME']], "ContactUs_Submission", full_message)
-            #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+            # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
             logHistory("other", "feedback_email", "", "", "", "")
             flash("Your message has been sent, thank you!")
             return redirect("/manageaccount")
@@ -2672,6 +2749,14 @@ def admin_check(userUUID, neighborhoodID):
     return False
 
 
+def removeAllUserToolsFromNBH(userUUID, neighborhoodid):
+    # get all of the user's tools by toolID
+    allmyToolsData = db.execute("SELECT toolid FROM tools WHERE owneruuid = :userUUID;", userUUID=userUUID)
+    # for each tool, DB update to remove any associations with that neighborhood.
+    for i in range(len(allmyToolsData)):
+        db.execute("DELETE FROM toolvisibility WHERE neighborhoodid = :neighborhoodid AND toolid = :tool", neighborhoodid=neighborhoodid, tool=allmyToolsData[i]['toolid'])
+    return 1
+
 def requestApproved(actionid, comments):
     actiondetails = db.execute("SELECT * FROM actions WHERE actionid = :actionid;", actionid=actionid)[0]
     requestor = actiondetails['originuuid']
@@ -2681,7 +2766,7 @@ def requestApproved(actionid, comments):
     db.execute("UPDATE actions SET state = 'closed', timestamp_close = :timeclose, messages = :comments WHERE actionid = :actionid;", timeclose=datetime.datetime.now(), comments=comments, actionid=actionid)
     # change the state of the tool to borrowed
     db.execute("UPDATE tools SET state = 'borrowed', activeuseruuid = :requestor WHERE toolid = :toolid;", requestor=requestor, toolid=toolid)
-    #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+    # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
     logHistory("tool", "approve", "", toolid, "", comments)
     logHistory("tool", "borrow", requestor, toolid, "", comments)
     if SEND_EMAIL_ACTIONS == 1:
@@ -2716,7 +2801,7 @@ def requestDenied(actionid, comments):
     db.execute("UPDATE actions SET state = 'closed', timestamp_close = :timeclose, messages = :comments WHERE actionid = :actionid;", timeclose=datetime.datetime.now(), comments=comments, actionid=actionid)
     # change the state of the tool to borrowed
     db.execute("UPDATE tools SET state = 'available', activeuseruuid = NULL WHERE toolid = :toolid;", toolid=toolid)
-    #log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+    # log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
     logHistory("tool", "reject", "", toolid, "", comments)
 
     if SEND_EMAIL_ACTIONS == 1:
@@ -2734,7 +2819,7 @@ def requestDenied(actionid, comments):
         send_email_toolaction(toolid, recipientuuid, subject, actionmsg, secondline)
 
 
-#log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
+# log an event in the history DB table: >>logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment)<<
 def logHistory(historyType, action, seconduuid, toolid, neighborhoodid, comment):
     userUUID = session.get("user_uuid")
     db.execute("INSERT INTO history (type, action, useruuid, seconduuid, toolid, neighborhoodid, comment, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", historyType, action, userUUID, seconduuid, toolid, neighborhoodid, comment, datetime.datetime.now())

@@ -59,17 +59,21 @@
           {% for member in allMembers %}
           <div class="flex-container memberlist {% if session.theme == 'dark' %}dark{% endif %}">
             <div style="flex-grow: 8; text-align: left; padding-left: 15px;" title="{{ allMembers[member]['username'] }}">{{ allMembers[member]['firstname'] }}</div>
-            <div class="memberaction" title="remove user" onclick="confirmationModal('removed from', '{{ allMembers[member]['username'] }}', '{{ allMembers[member]['firstname'] }}');"><i class="fa fa-minus"></i></div>
-            <div class="memberaction" title="ban user" onclick="confirmationModal('banned from', '{{ allMembers[member]['username'] }}', '{{ allMembers[member]['firstname'] }}');"><i class="fa fa-ban"></i></div>
-            <div class="memberaction" title="make user an admin" onclick="confirmationModal('granded admin privilages to', '{{ allMembers[member]['username'] }}', '{{ allMembers[member]['firstname'] }}');"><i class="fa fa-id-badge"></i></div>
+            <div class="memberaction" title="remove user" onclick="confirmationModal('remove', '{{ allMembers[member]['username'] }}', '{{ allMembers[member]['firstname'] }}');"><i class="fa fa-minus"></i></div>
+            <div class="memberaction" title="ban user" onclick="confirmationModal('banned', '{{ allMembers[member]['username'] }}', '{{ allMembers[member]['firstname'] }}');"><i class="fa fa-ban"></i></div>
+            {% if allMembers[member]['isAdmin'] %}
+              <div class="memberaction" title="remove admin privelages" style="color: #cc5500" onclick="confirmationModal('noAdmin', '{{ allMembers[member]['username'] }}', '{{ allMembers[member]['firstname'] }}');"><i class="fa fa-id-badge"></i></div>
+            {% else %}
+              <div class="memberaction" title="make user an admin" onclick="confirmationModal('yesAdmin', '{{ allMembers[member]['username'] }}', '{{ allMembers[member]['firstname'] }}');"><i class="fa fa-id-badge"></i></div>
+            {% endif %}
           </div>
           {% endfor %}
           <div id="new_member_field" class="flex-container memberlist {% if session.theme == 'dark' %}dark{% endif %}" style="background-color: #ffc772d9; display: none;">
-            <div style="flex-grow: 1; text-align: left;" title="add ther new name here">
+            <div style="flex-grow: 1; text-align: left;" title="add their new name here">
               <input id="new_member" type="text" class="form-control {% if session.theme == 'dark' %}dark{% endif %}" name="new_member" placeholder="username or email" maxlength="70" value="" autocomplete="off">
             </div>
             <div class="memberaction" title="info" style="color: #a5a5a5; font-size: 1.2em;" data-toggle="modal" data-target="#addMemberModal"><i class="fa fa-info-circle"></i></div>
-            <div class="memberaction" title="save" style="color: green; font-size: 1.2em;"><i class="fa fa-check"></i></div>
+            <button class="memberaction" title="save" type="submit" id="addUser" style="color: green; font-size: 1.2em;"><i class="fa fa-check"></i></button>
             <div class="memberaction" title="cancel" onclick="hide_new_member_field()" style="color: red; font-size: 1.2em;"><i class="fa fa-times"></i></div>
           </div>
         </div>
@@ -83,7 +87,7 @@
         <button type="button" id="toggleBannedbutton" onclick=toggleBanned() class='btn btn-warning'>Banned User List&nbsp;&nbsp;<i id="chevron1" class="fa fa-chevron-down spinme" style="font-size: 10px"></i></button>
         <div id="bannedselector" class="expandanimate" style="max-height: 0px">
           <div class="btn-group btn-group-sm" style="margin-top: 5px">
-            <button class="btn btn-success" onclick="updateinfobox('updatetoolvis')" type="submit">Un-Ban <i class="fa fa-check"></i></button>
+            <button class="btn btn-success" id="unbanButton" onclick="unBan();" type="submit">Un-Ban <i class="fa fa-check"></i></button>
             <button type="button" class="btn btn-warning" onclick="hideBanList();">Discard <i class="fa fa-times"></i></button>
           </div>
           <div style="font-size: 0.8em; color: grey;">Check a user to un-ban them</div>
@@ -121,7 +125,41 @@
       <a class="btn btn-secondary" onclick="window.history.go(-1); return false;" style="width: 190px; color: white;">Cancel</a>
       <br><input id="hiddenInfoBox" style="display: none;" name="returnedAction" value=""></input>
       <br><input id="hiddenInfoBox2" style="display: none;" name="nbhid" value="{{ neighborhoodid }}"></input>
+      <br><input id="hiddenInfoBox3" style="display: none;" name="actionDetails" value=""></input>
       <br><br>
+
+      <!-- The Modal -->
+      <div class="modal fade" id="actionModal">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content {% if session.theme == 'dark' %}nav_dark{% endif %}">
+
+            <!-- Modal Header -->
+            <div class="modal-header {% if session.theme == 'dark' %}nav_dark{% endif %}">
+              <h4 class="modal-title">Confirm Action</h4>
+              <button type="button" class="close {% if session.theme == 'dark' %}dark{% endif %}" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body text-left {% if session.theme == 'dark' %}dark{% endif %}">
+              Are you sure you would like <span id="thefirstname">userfirstname</span> (<span id="theusername">userusername</span>) to <span id="theaction">defaultaction</span> this neighborhood?
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer {% if session.theme == 'dark' %}nav_dark{% endif %}">
+              <button type="submit" id="actionConfirmed" class="btn btn-success" data-toggle="modal" data-target="#spinnerModal">Yes</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+              <span style="margin-left: 23px">
+                <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Cancel</button>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+
+
     </form>
     <div class="deadspace"></div>
 </div>
@@ -154,58 +192,125 @@
     </div>
   </div>
 
-  <!-- The Modal -->
-  <div class="modal fade" id="actionModal">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content {% if session.theme == 'dark' %}nav_dark{% endif %}">
 
-        <!-- Modal Header -->
-        <div class="modal-header {% if session.theme == 'dark' %}nav_dark{% endif %}">
-          <h4 class="modal-title">Confirm Action</h4>
-          <button type="button" class="close {% if session.theme == 'dark' %}dark{% endif %}" data-dismiss="modal">&times;</button>
-        </div>
-
-        <!-- Modal body -->
-        <div class="modal-body text-left {% if session.theme == 'dark' %}dark{% endif %}">
-          Are you sure you would like <span id="thefirstname">userfirstname</span> (<span id="theusername">userusername</span>) to be <span id="theaction">defaultaction</span> this neighborhood?
-        </div>
-
-        <!-- Modal footer -->
-        <div class="modal-footer {% if session.theme == 'dark' %}nav_dark{% endif %}">
-          <button type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-          <span style="margin-left: 23px">
-            <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Cancel</button>
-          </span>
-        </div>
-
-      </div>
-    </div>
-  </div>
 
   <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 
   <script>
+      var sendEmail = document.getElementById("sendEmail");
+      var addUser = document.getElementById("addUser");
+      var unbanButton = document.getElementById("unbanButton");
+      var actionConfirmed = document.getElementById("actionConfirmed");
+      var hiddenInfoBox = document.getElementById("hiddenInfoBox");
+      var hiddenInfoBox3 = document.getElementById("hiddenInfoBox3");
+
+
       var showInfoModal;
+
       $().ready(function(){
         //jQuery function
         confirmationModal = function(theaction, theusername, thefirstname)
         {
           jQuery.noConflict();
           var myInfoModal = $('#actionModal');
-          myInfoModal.find('#theaction').text(theaction);
+          var thefullaction;
+          if (theaction == "remove") {
+            thefullaction = "be removed from";
+          } else if (theaction == "banned") {
+            thefullaction = "be banned from";
+          } else if (theaction == "noAdmin") {
+            thefullaction = "have admin privilages revoked for";
+          } else if (theaction == "yesAdmin") {
+            thefullaction = "have admin privelages granted to";
+          } else {
+            thefullaction = "ERROR!!!";
+          };
+          myInfoModal.find('#theaction').text(thefullaction);
           myInfoModal.find('#theusername').text(theusername);
           myInfoModal.find('#thefirstname').text(thefirstname);
+          myInfoModal.find('#thefirstname').text(thefirstname);
+          hiddenInfoBox3.value = theaction + ";" + theusername;
           myInfoModal.modal('show');
+
         };
       });
 
-        var sendEmail = document.getElementById("sendEmail");
-        var hiddenInfoBox = document.getElementById("hiddenInfoBox");
 
         sendEmail.onclick = function(){
             hiddenInfoBox.value = "sendMail";
         };
+
+        actionConfirmed.onclick = function(){
+            hiddenInfoBox.value = "actionConfirmed";
+        };
+
+        addUser.onclick = function(){
+            hiddenInfoBox.value = "addUser";
+        }
+
+        function unBan(){
+          //Get a list of the users to unban from the check boxes.
+            hiddenInfoBox.value = "unban";
+            setUserList();
+        };
+
+
+        function setUserList() {
+              // get reference to element containing toppings checkboxes
+              var el = document.getElementById('bannedselector');
+
+              // get reference to input elements in toppings container element
+              var users = el.getElementsByTagName('input');
+
+              var finalList;
+              var finalList2;
+              finalList = "";
+
+              // assign function to onclick property of each checkbox
+              for (var i=0, len=users.length; i<len; i++) {
+                  if ( users[i].type === 'checkbox' ) {
+                      if (users[i].checked) {
+                        //window.alert(tools[i].id + ' is checked');
+                        finalList += (users[i].id + ';');
+                      } //else {
+                      //  window.alert(tools[i].id + ' is not checked');
+                      //}
+                  }
+              }
+
+              if (finalList != "") {
+                finalList2 = finalList.slice(0, -1);
+              } else {
+                finalList2 = finalList;
+              }
+
+              hiddenInfoBox3.value = finalList2;
+
+            }
+
+            function clearUserList() {
+                  // get reference to element containing toppings checkboxes
+                  var el = document.getElementById('bannedselector');
+
+                  // get reference to input elements in toppings container element
+                  var users = el.getElementsByTagName('input');
+
+                  // assign function to onclick property of each checkbox
+                  for (var i=0, len=users.length; i<len; i++) {
+                      if ( users[i].type === 'checkbox' ) {
+                          if (users[i].checked) {
+                            //window.alert(tools[i].id + ' is checked');
+                            users[i].checked = false;
+                          }
+                      }
+                  }
+                }
+
+
+
+
+
+
 
         function toggleBanned() {
           var toggleBannedbutton = document.getElementById("toolvisbutton");
@@ -228,6 +333,7 @@
           var bannedselector = document.getElementById("bannedselector");
           chevron1.style.transform = "rotateX(0deg)";
           bannedselector.style.maxHeight = '0px';
+          clearUserList();
         }
 
 
