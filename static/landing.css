@@ -201,7 +201,8 @@ a:hover {
 
 
 .slider .track {
-    -fx-background-color: linear-gradient(to right, red 0%, red 50%, -fx-base 50%, -fx-base 100%);
+  background-color: linear-gradient(to right, red 0%, red 50%, -fx-base 50%, -fx-base 100%);
+  -fx-background-color: linear-gradient(to right, red 0%, red 50%, -fx-base 50%, -fx-base 100%);
 }
 
 .custom-range::-webkit-slider-thumb {

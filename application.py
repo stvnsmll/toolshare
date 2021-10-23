@@ -788,7 +788,7 @@ def edittool():
             toolVis = 'custom'
 
         return render_template("tools/edittool.html", openActions=countActions(), firstname=firstname, toolname=toolname, publicCheck=publicCheck, description=description, category=category, health=health, photo=photo, toolid=toolid, notes=notes, myNeighborhoods=myNeighborhoods, toolVis=toolVis)
-    else:
+    else:#post
         toolid = request.form.get("toolid")
         toolname = request.form.get("toolname")
         if toolname == "":
