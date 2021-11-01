@@ -1,0 +1,3 @@
+
+def printHappy():
+    print("Happy")

@@ -52,7 +52,10 @@ from PIL import Image
 #for sending emails
 from flask_mail import Mail, Message
 
-from helpers import apology, login_required, neighborhood_required
+#helpers.py
+from sub_modules import apology, login_required, neighborhood_required
+#test.py
+from sub_modules import printHappy
 
 
 
@@ -2234,7 +2237,12 @@ def history():
             timestamp = d.strftime('%H:%M:%S - %b %d, %Y (UTC)')
             action = event["action"]
             neighborhoodid = event["neighborhoodid"]
-            neighborhoodname = db.execute("SELECT neighborhood FROM neighborhoods WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)[0]['neighborhood']
+            neighborhoodnameDB = db.execute("SELECT neighborhood FROM neighborhoods WHERE neighborhoodid = :neighborhoodid;", neighborhoodid=neighborhoodid)
+            if len(neighborhoodnameDB) != 1:
+                neighborhoodname = "[deleted]"
+            else:
+                neighborhoodname = neighborhoodnameDB[0]['neighborhood']
+            
             comment = event["comment"]
             firstuuid = event["useruuid"]
             firstuser = ""
@@ -2722,7 +2730,7 @@ def countActions():
     myActionCount  = len(myActionCount_db)
     if myActionCount == 0:
         myActionCount = ""
-    return myActionCount
+    return myActionCount 
 
 
 def errorhandler(e):
