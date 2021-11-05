@@ -1,0 +1,28 @@
+
+Temporary todo file, as my home server is down...
+
+
+Bugs:
+    - Tools (specifially ID24: drill press) always shows up as "custom" even when private or public
+    - Redirect looks funny after "edit tool" submission
+
+
+TODO Items:
+    - /views/neighborhoods.py
+        - managemembers(), POST
+            * Add user by username or email-- work to enable this feature is still incomplete
+            * Log history events for all actions and add flashes 
+        - sendmail(), POST
+            * Need to actually send admin mail
+            * Need to actually send neighborhood mail
+    - /views/users.py
+        - contact(), POST
+            * General contact form is not live
+
+
+
+
+
+
+
+

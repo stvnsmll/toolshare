@@ -1,3 +1,7 @@
+
+#this code taken from Harvard's CS50 support library
+# to help with sanitizing database executions
+
 '''
 def _enable_logging(f):
     """Enable logging of SQL statements when Flask is in use."""
