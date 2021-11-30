@@ -1,5 +1,5 @@
 
-Temporary todo file, as my home server is down...
+Temporary todo file...
 
 
 Bugs:
@@ -20,6 +20,9 @@ TODO Items:
             * General contact form is not live
 
 
+Other Pending Wishlist Items:
+    - password strength requirements
+    
 
 
 
