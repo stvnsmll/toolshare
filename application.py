@@ -252,7 +252,12 @@ def found_luggage():
         email_address = os.environ.get('BAG_EMAIL')
         phone_number = os.environ.get('BAG_PHONE')
         address = os.environ.get('BAG_ADDRESS')
-        visiting_IP = request.environ['REMOTE_ADDR']
+        if request.headers.getlist("X-Forwarded-For"):
+            print("yellow")
+            print(request.headers.getlist("X-Forwarded-For"))
+            visiting_IP = request.headers.getlist("X-Forwarded-For")[0]
+        else:
+            visiting_IP = request.remote_addr
 
         #send the email!
         return render_template("foundluggage.html", owner=luggage_owner, 
