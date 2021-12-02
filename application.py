@@ -252,7 +252,7 @@ def found_luggage():
         email_address = os.environ.get('BAG_EMAIL')
         phone_number = os.environ.get('BAG_PHONE')
         address = os.environ.get('BAG_ADDRESS')
-        visiting_IP = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+        visiting_IP = request.environ['REMOTE_ADDR']
 
         #send the email!
         return render_template("foundluggage.html", owner=luggage_owner, 
