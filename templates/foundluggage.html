@@ -23,28 +23,64 @@
             <div class="card-heading h3 text-center">You found my bag!</div>
             <hr>
             <div class="card-contents">
-                This bag belogs to: {{ owner }}<br>
-                Phone number: {{ phone }} <a href="tel:{{ phone }}"><i class='fas fa-phone'></i></a><br>
-                Email address: <a href="mailto:{{ email }}">{{ email }} &nbsp;<i class='far fa-envelope'></i></a><br>
-                Home address: {{ address }}<br>
+                <div class="pt-3">This bag belongs to:</div> 
+                <div class="mx-auto h6" style="width: 100%; text-align: center;">
+                    {{ owner }}
+                </div>
+                <div class="pt-3">Phone number:</div> 
+                <div class="mx-auto h6" style="width: 100%; text-align: center;">
+                    {{ phone }} <a href="tel:{{ phone }}"><i class='fas fa-phone'></i></a>
+                </div>
+                <div class="pt-3">Email address:</div> 
+                <div class="mx-auto h6" style="width: 100%; text-align: center;">
+                    <a href="mailto:{{ email }}">{{ email }} &nbsp;<i class='far fa-envelope'></i></a>
+                </div>
+                <div class="pt-3">Home address:</div> 
+                <div class="mx-auto h6" style="width: 100%; text-align: center;">
+                    {{ address }}
+                </div>
                 <div class="smallspace"></div>
-                <div class='mx-auto' style="width: 100%;">
-                    <button type="button" class="btn btn-secondary m-2">Log the current location of this bag</button>
+                <div style="width: 100%; display: grid;">
+                    <button type="button" class="btn btn-secondary m-2" onclick="getLocation()">Log the current location of this bag</button>
                     <button type="button" class="btn btn-success m-2">Tell {{ firstname }} that you have it!</button>
                 </div>
                 Bag ID: {{ bagID }}<br>
                 IP Address: {{ ipaddress }}<br>
+                <br>
+                <div id="location"></div>
+                <a id="maplink" href="https://www.google.com" target="_blank" style="display: none">show on map</a>
             </div>
         </div>
-    </body>
-    <footer class="text-center fixed-bottom" style="height: 28px;">
-        <div class="small copyright">
-            &copy 2020 -
-            <script type="text/JavaScript">
-                document.write(new Date().getFullYear());
+        <footer class="text-center fixed-bottom" style="height: 28px;">
+            <div class="small copyright">
+                &copy 2020 -
+                <script type="text/JavaScript">
+                    document.write(new Date().getFullYear());
+                </script>
+                / Steven Small / All Rights Reserved
+            </div>
+        </footer>
+        <script>
+            var x = document.getElementById("location");
+            var maplinkID = document.getElementById("maplink");
+            
+            function getLocation() {
+              if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+              } else { 
+                x.innerHTML = "Geolocation is not supported by this browser.";
+              }
+            }
+            
+            function showPosition(position) {
+                var latitude = position.coords.latitude
+                var longitude = position.coords.longitude
+                x.innerHTML = "Latitude: " + latitude + 
+                "<br>Longitude: " + longitude;
+                var maplink = "https://www.latlong.net/c/?lat=" + latitude + "&long=" + longitude
+                maplinkID.href = maplink
+                maplinkID.style.display = "block"
+            }
             </script>
-            / Steven Small / All Rights Reserved
-        </div>
-      </footer>
-
-
+    </body>
+</html>

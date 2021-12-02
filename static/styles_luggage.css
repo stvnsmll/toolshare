@@ -1,16 +1,16 @@
 body {
-    position: fixed;
+    /*position: fixed;
+    overflow-y: hidden;
+    overflow-x: hidden;*/
     width: 100%;
     top: 0;
-    overflow-y: hidden;
-    overflow-x: hidden;
     background-color: #d6d6d6;
 }
 
 .card-container {
     width: 80%;
     margin: auto;
-    margin-top: 60px;
+    margin-top: 20px;
     border-radius: 15px;
 }
 
