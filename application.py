@@ -238,6 +238,30 @@ app.register_blueprint(neighborhoods_bp)
 app.register_blueprint(users_bp)
 
 
+#tmp. for the lugger tracker
+@app.route("/found_luggage", methods=["GET", "POST"])
+def found_luggage():
+    '''Log user out'''
+    if request.method == "POST":
+        return redirect("/found_luggage")
+    else:#GET
+        bagID = request.args.get("bagID")
+        #personal details stored in environment variables
+        luggage_owner = os.environ.get('BAG_OWNER')
+        luggage_firstname = luggage_owner.split(" ")[0]
+        email_address = os.environ.get('BAG_EMAIL')
+        phone_number = os.environ.get('BAG_PHONE')
+        address = os.environ.get('BAG_ADDRESS')
+        visiting_IP = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+
+        #send the email!
+        return render_template("foundluggage.html", owner=luggage_owner, 
+                                                    firstname=luggage_firstname, 
+                                                    email=email_address, 
+                                                    phone=phone_number, 
+                                                    address=address, 
+                                                    bagID=bagID,
+                                                    ipaddress = visiting_IP)
 
 
 

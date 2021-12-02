@@ -1,0 +1,24 @@
+body {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    background-color: #d6d6d6;
+}
+
+.card-container {
+    width: 80%;
+    margin: auto;
+    margin-top: 60px;
+    border-radius: 15px;
+}
+
+footer {
+    color: #b2b2b2;
+}
+
+.smallspace {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
