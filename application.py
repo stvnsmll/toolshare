@@ -243,7 +243,15 @@ app.register_blueprint(users_bp)
 def found_luggage():
     '''Log user out'''
     if request.method == "POST":
-        return redirect("/found_luggage")
+        parameters = request.form
+        recaptcha_passed = False
+        recaptcha_response = parameters.get('g-recaptcha-response')
+        try:
+            recaptcha_secret = os.environ.get('RECAPTCHA_SECRET')
+            response = request.post(f'https://www.google.com/recaptcha/api/siteverify?secret={recaptcha_secret}&response={recaptcha_response}').json()
+            recaptcha_passed = response.get('success')
+        except Exception as e:
+            print(f"failed to get reCaptcha: {e}")
     else:#GET
         bagID = request.args.get("bagID")
         #personal details stored in environment variables

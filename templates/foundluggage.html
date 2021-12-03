@@ -15,6 +15,17 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
         <link href="/static/styles_luggage.css" rel="stylesheet">
         <title>Found Luggage</title>
+
+        <script src="https://www.google.com/recaptcha/api.js?render=6LeIy3MdAAAAAFVLir2JqWgA15O_yNbf-ccygeay"></script>
+
+        <script>
+            grecaptcha.ready(function () {
+                grecaptcha.execute('6LeIy3MdAAAAAFVLir2JqWgA15O_yNbf-ccygeay', {action: 'validate_captcha'}).then(function (token) {
+                    console.info("got token: " + token);
+                    document.getElementById('g-recaptcha-response').value = token;
+                });
+            });
+        </script>
      
     </head>
 
@@ -40,10 +51,14 @@
                     {{ address }}
                 </div>
                 <div class="smallspace"></div>
-                <div style="width: 100%; display: grid;">
-                    <button type="button" class="btn btn-secondary m-2" onclick="getLocation()">Log the current location of this bag</button>
-                    <button type="button" class="btn btn-success m-2">Tell {{ firstname }} that you have it!</button>
-                </div>
+                <form action="/found_luggage" method="post">
+                    <div style="width: 100%; display: grid;">
+                        <button type="button" class="btn btn-secondary m-2" onclick="getLocation()">Log the current location of this bag</button>
+                        <button type="button" class="btn btn-success m-2">Tell {{ firstname }} that you have it!</button>
+                        <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
+                        <input type="hidden" name="action" value="validate_captcha">
+                    </div>
+                </form>
                 Bag ID: {{ bagID }}<br>
                 IP Address: {{ ipaddress }}<br>
                 <br>
@@ -51,6 +66,7 @@
                 <a id="maplink" href="https://www.google.com" target="_blank" style="display: none">show on map</a>
             </div>
         </div>
+
         <footer class="text-center fixed-bottom" style="height: 28px;">
             <div class="small copyright">
                 &copy 2020 -
