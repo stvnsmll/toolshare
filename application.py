@@ -73,6 +73,12 @@ application.py (main) Structure:
 ################################################################
 
 import os
+
+#for QR code
+import io
+import base64
+#for QR
+
 import boto3, botocore
 
 from flask import Flask, send_from_directory, make_response
@@ -253,7 +259,37 @@ def found_luggage():
         except Exception as e:
             print(f"failed to get reCaptcha: {e}")
     else:#GET
+
+        list_of_actual_bags = {
+            "10d8520f7f2246c4b246437d6e5985e7": "green_carryon",
+            "12345": "sjs_black_checkunder",
+            "23456": "hcs_grey_checkunder",
+            "34567": "kids_checkunder"
+        }
+
+        s3 = app.config["s3_object"]
+        image_uuid_with_ext = "10d8520f7f2246c4b246437d6e5985e7.jpeg"
+        expire_in=3600
+        imageURL = ""
+        #get the bag image
+        # just send the full asw filepath for now
+        #return "{}{}".format(app.config["S3_LOCATION"], image_uuid_with_ext)  <--- delete this...
+        # returns the presigned url for the full-sized image
+        try:
+            imageURL = s3.generate_presigned_url('get_object',
+                                                        Params={'Bucket': app.config["S3_BUCKET"],
+                                                                'Key': image_uuid_with_ext},
+                                                        ExpiresIn=expire_in)#seconds
+        except:# ClientError as e:
+            #logging.error(e)
+            e = "get_image_s3, misc error"
+            print("Something Happened - ImageFetchFail: ", e)
+
         bagID = request.args.get("bagID")
+        if bagID in list_of_actual_bags:
+            print("valid bag")
+        else:
+            return apology("not an actual bag...", 403)
         #personal details stored in environment variables
         luggage_owner = os.environ.get('BAG_OWNER')
         luggage_firstname = luggage_owner.split(" ")[0]
@@ -267,6 +303,7 @@ def found_luggage():
         else:
             visiting_IP = request.remote_addr
 
+
         #send the email!
         return render_template("foundluggage.html", owner=luggage_owner, 
                                                     firstname=luggage_firstname, 
@@ -274,8 +311,25 @@ def found_luggage():
                                                     phone=phone_number, 
                                                     address=address, 
                                                     bagID=bagID,
-                                                    ipaddress = visiting_IP)
+                                                    ipaddress = visiting_IP,
+                                                    imageURL = imageURL)
 
+#tmp. for the lugger tracker
+@app.route("/make_QR", methods=["GET", "POST"])
+def make_QR_Code():
+    if request.method == "POST":
+        return apology("No POST allowed", 403)
+    else:#GET
+        bagID = request.args.get("bagID")
+        img = qrcode.make(f"https://www.sharetools.tk/found_luggage?bagID={bagID}")
+        data = io.BytesIO()
+        img.save(data, "PNG")
+        encoded_qr_image = base64.b64encode(data.getvalue())
+
+        #pass to template:
+        qrcode_data=encoded_qr_image.decode('utf-8')
+
+        return render_template("simpleqrcode_page.html", qrcode_data = qrcode_data)
 
 
 

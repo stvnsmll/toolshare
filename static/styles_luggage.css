@@ -12,6 +12,7 @@ body {
     margin: auto;
     margin-top: 20px;
     border-radius: 15px;
+    text-align: center;
 }
 
 footer {
@@ -21,4 +22,13 @@ footer {
 .smallspace {
     padding-top: 8px;
     padding-bottom: 8px;
+}
+
+.qrcode {
+    width: 100%;
+}
+
+.makeround {
+    border-radius: 50%;
+
 }
