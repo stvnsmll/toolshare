@@ -31,41 +31,68 @@
 
     <body>
         <div class="card-container shadow-lg p-3 mb-5 bg-white">
-            <div class="card-heading h3 text-center">You found my bag!</div>
+            {% if owner %}
+            <div class="container">
+                <div class="row">
+                  <div class="col-sm-6 page_title">
+                    <div class="card-heading h3 text-center">You found my bag!</div>
+                  </div>
+                  <div class="col-sm-6 p-3">
+                    <img src="{{ imageURL }}" alt="image lookup error" class="makeround shadow">
+                  </div>
+                </div>
+              </div>
+            
             <hr>
-            <img src="{{ imageURL }}" alt="image lookup error" class="makeround shadow"><br>
-            <div class="card-contents">
-                <div class="pt-3">This bag belongs to:</div> 
-                <div class="mx-auto h6" style="width: 100%; text-align: center;">
-                    {{ owner }}
-                </div>
-                <div class="pt-3">Phone number:</div> 
-                <div class="mx-auto h6" style="width: 100%; text-align: center;">
-                    {{ phone }} <a href="tel:{{ phone }}"><i class='fas fa-phone'></i></a>
-                </div>
-                <div class="pt-3">Email address:</div> 
-                <div class="mx-auto h6" style="width: 100%; text-align: center;">
-                    <a href="mailto:{{ email }}">{{ email }} &nbsp;<i class='far fa-envelope'></i></a>
-                </div>
-                <div class="pt-3">Home address:</div> 
-                <div class="mx-auto h6" style="width: 100%; text-align: center;">
-                    {{ address }}
-                </div>
-                <div class="smallspace"></div>
-                <form action="/found_luggage" method="post">
-                    <div style="width: 100%; display: grid;">
-                        <button type="button" class="btn btn-secondary m-2" onclick="getLocation()">Log the current location of this bag</button>
-                        <button type="button" class="btn btn-success m-2">Tell {{ firstname }} that you have it!</button>
-                        <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
-                        <input type="hidden" name="action" value="validate_captcha">
+            
+            <div class="container card-contents">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="pt-1">This bag belongs to:</div> 
+                        <div class="mx-auto h6 data_field">
+                            {{ owner }}
+                        </div>
+
+                        <div class="pt-1">Email address:</div> 
+                        <div class="mx-auto h6 data_field">
+                            <a href="mailto:{{ email }}">{{ email }} &nbsp;<i class='far fa-envelope'></i></a>
+                        </div>
+
+                        <div class="pt-1">Phone number:</div> 
+                        <div class="mx-auto h6 data_field">
+                            {{ phone }} <a href="tel:{{ phone }}"><i class='fas fa-phone'></i></a>
+                        </div>
+                        
+                        <div class="pt-1">Home address:</div> 
+                        <div class="pb-3 mx-auto h6 data_field">
+                            {{ address }}
+                        </div>
                     </div>
-                </form>
-                Bag ID: {{ bagID }}<br>
-                IP Address: {{ ipaddress }}<br>
-                <br>
-                <div id="location"></div>
-                <a id="maplink" href="https://www.google.com" target="_blank" style="display: none">show on map</a>
+                    <div class="col-sm-6 page_title">
+                        <form action="/found_luggage" method="post">
+                            <div style="width: 100%; display: grid;">
+                                <button type="button" class="btn btn-secondary m-2" onclick="getLocation()">Log the current location of this bag</button>
+                                <button type="button" class="btn btn-success m-2">Send {{ firstname }} a message!</button>
+                                <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
+                                <input type="hidden" name="action" value="validate_captcha">
+                            </div>
+                        </form>
+                        <div class="hidethisstuff" style="display: none;">
+                            Bag Name: {{ bag_name }}<br>
+                            Bag ID: {{ bagID }}<br>
+                            IP Address: {{ ipaddress }}<br>
+                            <br>
+                            <div id="location"></div>
+                            <a id="maplink" href="https://www.google.com" target="_blank" style="display: none">show on map</a>
+                        </div>
+                    </div>
+                </div>
             </div>
+            {% else %}
+            <div class="card-heading h3 text-center">error</div>
+            <p>bag not found</p>
+            <img alt="bag error" style="width:100%; max-width: 600px;margin-bottom: -2%;" src="http://memegen.link/custom/ / .jpg?alt=https://i.imgur.com/c1BoXUL.png" title="bag error">
+            {% endif %}
         </div>
 
         <footer class="text-center fixed-bottom" style="height: 28px;">

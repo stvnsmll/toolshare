@@ -262,13 +262,23 @@ def found_luggage():
 
         list_of_actual_bags = {
             "10d8520f7f2246c4b246437d6e5985e7": "green_carryon",
-            "12345": "sjs_black_checkunder",
-            "23456": "hcs_grey_checkunder",
-            "34567": "kids_checkunder"
+            "6851b0e7efd640b3853ea2eda21c9863": "sjs_black_checkunder",
+            "093bd25584754feab29938fcbd85193e": "hcs_grey_checkunder",
+            "0198f1b8385a4c61b116b80cb7f3eca1": "big_carryon_backpack",
+            "6ce2b15894c4414f88627f9cf673d273": "small_roller_carryon_black",
+            "8e7d5a80643843d6bc84c8eb73678d1c": "green_duffel_bag",
+            "25a98613f623400aa14336a47a5bae20": "sjs_volleyball_6_bag",
         }
 
+        bagID = request.args.get("bagID")
+        if bagID in list_of_actual_bags:
+            print("valid bag")
+        else:
+            return render_template("foundluggage.html")
+        bag_name = list_of_actual_bags[bagID]
+
         s3 = app.config["s3_object"]
-        image_uuid_with_ext = "10d8520f7f2246c4b246437d6e5985e7.jpeg"
+        image_uuid_with_ext = bagID + ".jpeg"
         expire_in=3600
         imageURL = ""
         #get the bag image
@@ -285,11 +295,6 @@ def found_luggage():
             e = "get_image_s3, misc error"
             print("Something Happened - ImageFetchFail: ", e)
 
-        bagID = request.args.get("bagID")
-        if bagID in list_of_actual_bags:
-            print("valid bag")
-        else:
-            return apology("not an actual bag...", 403)
         #personal details stored in environment variables
         luggage_owner = os.environ.get('BAG_OWNER')
         luggage_firstname = luggage_owner.split(" ")[0]
@@ -302,7 +307,7 @@ def found_luggage():
             visiting_IP = request.headers.getlist("X-Forwarded-For")[0]
         else:
             visiting_IP = request.remote_addr
-
+        
 
         #send the email!
         return render_template("foundluggage.html", owner=luggage_owner, 
@@ -311,6 +316,7 @@ def found_luggage():
                                                     phone=phone_number, 
                                                     address=address, 
                                                     bagID=bagID,
+                                                    bag_name=bag_name,
                                                     ipaddress = visiting_IP,
                                                     imageURL = imageURL)
 
