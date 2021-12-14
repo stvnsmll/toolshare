@@ -303,7 +303,12 @@ def found_luggage():
             if location_shared == 1:
                 extra_url2 = "&locshared=1"
             print(extra_url2)
-            return redirect(url_for('found_luggage') + f'?bagID={bagID}' + extra_url + extra_url2)
+            if DATABASE__TYPE == 1:
+                return redirect(url_for('found_luggage') + f'?bagID={bagID}' + extra_url + extra_url2)
+            else:
+                fullURL = f"https://sharetools.tk/found_luggage?bagID={bagID}{extra_url}{extra_url2}"
+                print(fullURL)
+                return redirect(fullURL)
         else:#reCaptcha failed...
             return apology("reCaptcha fail...")
 
