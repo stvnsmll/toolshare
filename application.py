@@ -79,6 +79,7 @@ import io
 import base64
 import sub_modules
 import datetime
+import requests
 #for baggage
 
 import boto3, botocore
@@ -293,11 +294,13 @@ def found_luggage():
         recaptcha_response = parameters.get('g-recaptcha-response')
         try:
             recaptcha_secret = os.environ.get('RECAPTCHA_SECRET')
-            response = request.post(f'https://www.google.com/recaptcha/api/siteverify?secret={recaptcha_secret}&response={recaptcha_response}').json()
+            response = requests.post(f'https://www.google.com/recaptcha/api/siteverify?secret={recaptcha_secret}&response={recaptcha_response}').json()
             recaptcha_passed = response.get('success')
         except Exception as e:
             print(f"failed to get reCaptcha: {e}")
+            return apology("reCaptcha fail...")
         print(f"reCaptcha Status: {recaptcha_passed}")
+
         
 
     else:#GET
