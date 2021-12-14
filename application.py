@@ -285,8 +285,10 @@ def found_luggage():
                 extra_url2 = "&locshared=1"
             print(extra_url2)
             return redirect(url_for('found_luggage') + f'?bagID={bagID}' + extra_url + extra_url2)
+        print("POST from the bag website")
         parameters = request.form
         recaptcha_passed = False
+        print("testing recaptcha")
         recaptcha_response = parameters.get('g-recaptcha-response')
         try:
             recaptcha_secret = os.environ.get('RECAPTCHA_SECRET')
@@ -294,7 +296,8 @@ def found_luggage():
             recaptcha_passed = response.get('success')
         except Exception as e:
             print(f"failed to get reCaptcha: {e}")
-        print(recaptcha_passed)
+        print(f"reCaptcha Status: {recaptcha_passed}")
+        
 
     else:#GET
 
