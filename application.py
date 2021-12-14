@@ -74,10 +74,12 @@ application.py (main) Structure:
 
 import os
 
-#for QR code
+#for baggage
 import io
 import base64
-#for QR
+import sub_modules
+import datetime
+#for baggage
 
 import boto3, botocore
 
@@ -249,6 +251,40 @@ app.register_blueprint(users_bp)
 def found_luggage():
     '''Log user out'''
     if request.method == "POST":
+        if DATABASE__TYPE == 1:#no captcha needed
+            returnAction = request.form.get("returnAction")
+            longitude = request.form.get("longit")
+            latitude = request.form.get("latit")
+            bag_name = request.form.get("bag_name")
+            bagID = request.form.get("bagID")
+            ipaddress = request.form.get("ipaddress")
+            print(f"IP Address: {ipaddress}")
+            email_address = os.environ.get('BAG_EMAIL')
+            print(returnAction)
+            noEmail = request.form.get("noEmail")
+            location_shared = 0
+            if returnAction == "location":
+                maplink = "https://www.latlong.net/c/?lat=" + latitude + "&long=" + longitude
+                print(f"Bag location = Lo:{longitude}, La:{latitude}")
+                print(maplink)
+                location_shared = 1
+                #send email
+                print("send the location email!")
+                now = datetime.datetime.now()
+                message = f"Bag: {bag_name} scanned at {now}\n\nIP Addr: {ipaddress}\n\nLatLong={latitude}:{longitude}\n{maplink}"
+                if noEmail != "1":#don't send if in development mode...
+                    #sub_modules.emails.send_mail([email_address],"bag log - LOCATION!",message)
+                    pass
+                print("location mail sent")
+            extra_url = ""
+            extra_url2 = ""
+            print(noEmail)
+            if noEmail == "1":
+                extra_url = "&noEmail=1"
+            if location_shared == 1:
+                extra_url2 = "&locshared=1"
+            print(extra_url2)
+            return redirect(url_for('found_luggage') + f'?bagID={bagID}' + extra_url + extra_url2)
         parameters = request.form
         recaptcha_passed = False
         recaptcha_response = parameters.get('g-recaptcha-response')
@@ -258,6 +294,8 @@ def found_luggage():
             recaptcha_passed = response.get('success')
         except Exception as e:
             print(f"failed to get reCaptcha: {e}")
+        print(recaptcha_passed)
+
     else:#GET
 
         list_of_actual_bags = {
@@ -310,6 +348,25 @@ def found_luggage():
         
 
         #send the email!
+        noEmail = request.args.get("noEmail")
+        if noEmail == "1":
+            print("Don't send the email")
+        else:
+            noEmail = "0"
+            print("send the email!")
+            now = datetime.datetime.now()
+            message = f"Bag: {bag_name} scanned at {now}\n\nIP Addr: {visiting_IP}"
+            sub_modules.emails.send_mail([email_address],"bag log - scan",message)
+            print(".mail sent.")
+        #user selected to share their location
+        locshared = request.args.get("locshared")
+        if locshared == "1":
+            #thank the user
+            locshared = True
+            pass
+        else:
+            locshared = False
+    
         return render_template("foundluggage.html", owner=luggage_owner, 
                                                     firstname=luggage_firstname, 
                                                     email=email_address, 
@@ -318,7 +375,9 @@ def found_luggage():
                                                     bagID=bagID,
                                                     bag_name=bag_name,
                                                     ipaddress = visiting_IP,
-                                                    imageURL = imageURL)
+                                                    imageURL = imageURL,
+                                                    noEmail = noEmail,
+                                                    locshared = locshared)
 
 #tmp. for the lugger tracker
 @app.route("/make_QR", methods=["GET", "POST"])

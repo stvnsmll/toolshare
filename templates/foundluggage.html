@@ -10,7 +10,7 @@
         <!-- documentation at http://getbootstrap.com/docs/4.1/, alternative themes at https://bootswatch.com/ -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
         
-
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
         <link href="/static/styles_luggage.css" rel="stylesheet">
@@ -69,22 +69,30 @@
                         </div>
                     </div>
                     <div class="col-sm-6 page_title">
-                        <form action="/found_luggage" method="post">
+                        <form id="foundlug_form" action="/found_luggage" method="post">
                             <div style="width: 100%; display: grid;">
-                                <button type="button" class="btn btn-secondary m-2" onclick="getLocation()">Log the current location of this bag</button>
+                                <button type="button" onclick="getLocation()" class="btn btn-secondary m-2" id="PosBtn" {% if locshared %} disabled {% endif %}>Log the current location of this bag</button>
+                                {% if locshared %}THANK YOU!<br><br>{% endif %}
                                 <button type="button" class="btn btn-success m-2">Send {{ firstname }} a message!</button>
                                 <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
                                 <input type="hidden" name="action" value="validate_captcha">
                             </div>
+                            <div class="hidethisstuff" style="display: none;">
+                                <input id="returnAction" name="returnAction" value="">
+                                Bag Name: {{ bag_name }}<br>
+                                <input type="hidden" name="bag_name" value="{{ bag_name }}">
+                                Bag ID: {{ bagID }}<br>
+                                <input type="hidden" name="bagID" value="{{ bagID }}">
+                                IP Address: {{ ipaddress }}<br>
+                                <input type="hidden" name="ipaddress" value="{{ ipaddress }}">
+                                <input type="hidden" name="noEmail" value="{{ noEmail }}">
+                                <br>
+                                <div id="location"></div>
+                                <input id="longit" type="hidden" name="longit" value="">
+                                <input id="latit" type="hidden" name="latit" value="" onChange="test123()">
+                                <a id="maplink" href="" target="_blank" style="display: none">show on map</a>
+                            </div>
                         </form>
-                        <div class="hidethisstuff" style="display: none;">
-                            Bag Name: {{ bag_name }}<br>
-                            Bag ID: {{ bagID }}<br>
-                            IP Address: {{ ipaddress }}<br>
-                            <br>
-                            <div id="location"></div>
-                            <a id="maplink" href="https://www.google.com" target="_blank" style="display: none">show on map</a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -107,8 +115,13 @@
         <script>
             var x = document.getElementById("location");
             var maplinkID = document.getElementById("maplink");
+            var PosBtn = document.getElementById("PosBtn");
+            var returnAction = document.getElementById("returnAction");
+            var latitudeExecute = document.getElementById("latit");
             
             function getLocation() {
+              PosBtn.disabled = true;
+              returnAction.value = "location";
               if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition);
               } else { 
@@ -117,14 +130,53 @@
             }
             
             function showPosition(position) {
-                var latitude = position.coords.latitude
-                var longitude = position.coords.longitude
-                x.innerHTML = "Latitude: " + latitude + 
-                "<br>Longitude: " + longitude;
-                var maplink = "https://www.latlong.net/c/?lat=" + latitude + "&long=" + longitude
-                maplinkID.href = maplink
-                maplinkID.style.display = "block"
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+                x.innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
+                var maplink = "https://www.latlong.net/c/?lat=" + latitude + "&long=" + longitude;
+                maplinkID.href = maplink;
+                maplinkID.style.display = "block";
+                document.getElementById("longit").value = longitude;
+                document.getElementById("latit").value = latitude;
+                const e = new Event("change");
+                const element = document.querySelector('#latit')
+                element.dispatchEvent(e);
+                
             }
+
+            function submitLocation() {
+                //alert("sending form")
+
+                var form = document.getElementById("foundlug_form");
+                var fd = new FormData(form);
+
+                var request = new XMLHttpRequest();
+                request.onreadystatechange = function() {
+                    if (request.readyState == XMLHttpRequest.DONE) {
+                        // alert(request.responseText);
+                        document.open();
+                        document.write(request.responseText);
+                        document.close();
+                    }
+                }
+
+                request.open("POST", "/found_luggage");
+                request.send(fd);
+                request.addEventListener('load', reqListener);
+            }
+
+            function reqListener() {
+                console.log('this.responseText:', this.responseText);
+                console.log('this.status:', this.status);
+            }
+
+            window.onload = function() { 
+                latitudeExecute.addEventListener('change', function() {
+                    submitLocation();
+                });
+            };
+
+
             </script>
     </body>
 </html>
