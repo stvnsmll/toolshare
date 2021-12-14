@@ -252,7 +252,25 @@ app.register_blueprint(users_bp)
 def found_luggage():
     '''Log user out'''
     if request.method == "POST":
+        #confirm reCaptcha
         if DATABASE__TYPE == 1:#no captcha needed
+            recaptcha_passed = True
+        else:
+            print("POST from the production bag website")
+            parameters = request.form
+            print(parameters)
+            recaptcha_passed = False
+            print("testing recaptcha")
+            recaptcha_response = parameters.get('g-recaptcha-response')
+            try:
+                recaptcha_secret = os.environ.get('RECAPTCHA_SECRET')
+                response = requests.post(f'https://www.google.com/recaptcha/api/siteverify?secret={recaptcha_secret}&response={recaptcha_response}').json()
+                recaptcha_passed = response.get('success')
+            except Exception as e:
+                print(f"failed to get reCaptcha: {e}")
+                return apology("reCaptcha fail...")
+            print(f"reCaptcha Status: {recaptcha_passed}")
+        if recaptcha_passed:
             returnAction = request.form.get("returnAction")
             longitude = request.form.get("longit")
             latitude = request.form.get("latit")
@@ -286,22 +304,8 @@ def found_luggage():
                 extra_url2 = "&locshared=1"
             print(extra_url2)
             return redirect(url_for('found_luggage') + f'?bagID={bagID}' + extra_url + extra_url2)
-        print("POST from the bag website")
-        parameters = request.form
-        print(parameters)
-        recaptcha_passed = False
-        print("testing recaptcha")
-        recaptcha_response = parameters.get('g-recaptcha-response')
-        try:
-            recaptcha_secret = os.environ.get('RECAPTCHA_SECRET')
-            response = requests.post(f'https://www.google.com/recaptcha/api/siteverify?secret={recaptcha_secret}&response={recaptcha_response}').json()
-            recaptcha_passed = response.get('success')
-        except Exception as e:
-            print(f"failed to get reCaptcha: {e}")
+        else:#reCaptcha failed...
             return apology("reCaptcha fail...")
-        print(f"reCaptcha Status: {recaptcha_passed}")
-
-        
 
     else:#GET
 
