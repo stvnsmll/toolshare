@@ -73,7 +73,7 @@
                             <div style="width: 100%; display: grid;">
                                 <button type="button" onclick="getLocation()" class="btn btn-secondary m-2" id="PosBtn" {% if locshared %} disabled {% endif %}>Log the current location of this bag</button>
                                 {% if locshared %}THANK YOU!<br><br>{% endif %}
-                                <button type="button" class="btn btn-success m-2">Send {{ firstname }} a message!</button>
+                                <button type="button" class="btn btn-success m-2" onclick="showmessage()">Send {{ firstname }} a message! &nbsp;<i id="chevron1" class='fa fa-chevron-down spinme'></i></button>
                                 <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
                                 <input type="hidden" name="action" value="validate_captcha">
                             </div>
@@ -92,9 +92,20 @@
                                 <input id="latit" type="hidden" name="latit" value="">
                                 <a id="maplink" href="" target="_blank" style="display: none">show on map</a>
                             </div>
+                            <div id="messagearea" class="row spinme" style="display: block; max-height: 1px; overflow: hidden">
+                                <hr>
+                                <div class="form-group mx-auto">
+                                    <div class="d-flex justify-content-start">
+                                        <label class="text-left" for="features">Message:</label><br>
+                                    </div>
+                                    <textarea class="form-control" rows="5" id="usermessage" name="usermessage" placeholder="luggage location / questions / ask for details / share how to communicate / etc..."></textarea>
+                                    <button id="sendMail" type="submit" class="btn btn-success m-2">Send &nbsp;<i id="chevron1" class='fa fa-paper-plane spinme'></i></button>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
+                
             </div>
             {% else %}
             <div class="card-heading h3 text-center">error</div>
@@ -118,6 +129,11 @@
             var PosBtn = document.getElementById("PosBtn");
             var returnAction = document.getElementById("returnAction");
             var latitudeExecute = document.getElementById("latit");
+            var sendMailBtn = document.getElementById("sendMail");
+
+            sendMailBtn.onclick = function() {
+                returnAction.value = "sendMessage";
+            }
             
             function getLocation() {
               PosBtn.disabled = true;
@@ -135,7 +151,7 @@
                 x.innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
                 var maplink = "https://www.latlong.net/c/?lat=" + latitude + "&long=" + longitude;
                 maplinkID.href = maplink;
-                maplinkID.style.display = "block";
+                //maplinkID.style.display = "block";
                 document.getElementById("longit").value = longitude;
                 document.getElementById("latit").value = latitude;
                 const e = new Event("change");
@@ -171,9 +187,9 @@
             function reqListener() {
                 console.log('this.responseText:', this.responseText);
                 console.log('this.status:', this.status);
-                if (this.status == "200") {
-                    alert("Thank You!");
-                }
+                //if (this.status == "200") {
+                //    alert("Thank You!");
+                //}
             }
 
             window.onload = function() { 
@@ -181,6 +197,19 @@
                     submitLocation();
                 });
             };
+
+            function showmessage() {
+                var message_area = document.getElementById("messagearea");
+                var chevron1 = document.getElementById("chevron1");
+                if (message_area.style.maxHeight == "1px") {
+                    message_area.style.maxHeight = "450px";
+                    chevron1.style.transform = "rotateX(180deg)";
+
+                } else {
+                    message_area.style.maxHeight = "1px";
+                    chevron1.style.transform = "rotateX(0deg)";
+                }
+            }
 
 
             </script>

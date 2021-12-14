@@ -277,6 +277,8 @@ def found_luggage():
             bag_name = request.form.get("bag_name")
             bagID = request.form.get("bagID")
             ipaddress = request.form.get("ipaddress")
+            usermessage = request.form.get("usermessage")
+            print(f"The included message was: {usermessage}")
             print(f"IP Address: {ipaddress}")
             email_address = os.environ.get('BAG_EMAIL')
             print(returnAction)
@@ -290,11 +292,17 @@ def found_luggage():
                 #send email
                 print("send the location email!")
                 now = datetime.datetime.now()
-                message = f"Bag: {bag_name} scanned at {now}\n\nIP Addr: {ipaddress}\n\nLatLong={latitude}:{longitude}\n{maplink}"
+                message = f"Bag: {bag_name} scanned at {now}\n\nIP Addr: {ipaddress}\n\nLatLong={latitude}:{longitude}\n{maplink}\n\nMessage: {usermessage}"
                 if noEmail != "1":#don't send if in development mode...
                     #sub_modules.emails.send_mail([email_address],"bag log - LOCATION!",message)
                     pass
                 print("location mail sent")
+            if returnAction == "sendMessage":
+                print("send the message email!")
+                now = datetime.datetime.now()
+                message = f"Bag: {bag_name} scanned at {now}\n\nIP Addr: {ipaddress}\n\nMessage: {usermessage}"
+                sub_modules.emails.send_mail([email_address],"bag log - message!",message)
+                print(".mail sent.")
             extra_url = ""
             extra_url2 = ""
             print(noEmail)
@@ -322,6 +330,7 @@ def found_luggage():
             "6ce2b15894c4414f88627f9cf673d273": "small_roller_carryon_black",
             "8e7d5a80643843d6bc84c8eb73678d1c": "green_duffel_bag",
             "25a98613f623400aa14336a47a5bae20": "sjs_volleyball_6_bag",
+            "80aaa20845dc403cbe17704e8c1e5776": "purple_big_checkunder"
         }
 
         bagID = request.args.get("bagID")
