@@ -89,7 +89,7 @@
                                 <br>
                                 <div id="location"></div>
                                 <input id="longit" type="hidden" name="longit" value="">
-                                <input id="latit" type="hidden" name="latit" value="" onChange="test123()">
+                                <input id="latit" type="hidden" name="latit" value="">
                                 <a id="maplink" href="" target="_blank" style="display: none">show on map</a>
                             </div>
                         </form>
@@ -146,6 +146,8 @@
 
             function submitLocation() {
                 //alert("sending form")
+                var startingPage = window.location.href;
+                //alert(startingPage)
 
                 var form = document.getElementById("foundlug_form");
                 var fd = new FormData(form);
@@ -163,11 +165,15 @@
                 request.open("POST", "/found_luggage");
                 request.send(fd);
                 request.addEventListener('load', reqListener);
+                //window.location.replace(startingPage);
             }
 
             function reqListener() {
                 console.log('this.responseText:', this.responseText);
                 console.log('this.status:', this.status);
+                if (this.status == "200") {
+                    alert("Thank You!");
+                }
             }
 
             window.onload = function() { 
