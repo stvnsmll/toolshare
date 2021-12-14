@@ -287,6 +287,7 @@ def found_luggage():
             return redirect(url_for('found_luggage') + f'?bagID={bagID}' + extra_url + extra_url2)
         print("POST from the bag website")
         parameters = request.form
+        print(parameters)
         recaptcha_passed = False
         print("testing recaptcha")
         recaptcha_response = parameters.get('g-recaptcha-response')
@@ -343,7 +344,6 @@ def found_luggage():
         phone_number = os.environ.get('BAG_PHONE')
         address = os.environ.get('BAG_ADDRESS')
         if request.headers.getlist("X-Forwarded-For"):
-            print("yellow")
             print(request.headers.getlist("X-Forwarded-For"))
             visiting_IP = request.headers.getlist("X-Forwarded-For")[0]
         else:
