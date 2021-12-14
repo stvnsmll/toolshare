@@ -292,7 +292,7 @@ def found_luggage():
                 #send email
                 print("send the location email!")
                 now = datetime.datetime.now()
-                message = f"Bag: {bag_name} scanned at {now}\n\nIP Addr: {ipaddress}\n\nLatLong={latitude}:{longitude}\n{maplink}\n\nMessage: {usermessage}"
+                message = f"Bag: {bag_name} scanned at {now}\n\nIP Addr: {ipaddress}\n\nLatLong={latitude}:{longitude}\n{maplink}\n\nMessage:\n{usermessage}"
                 if noEmail != "1":#don't send if in development mode...
                     #sub_modules.emails.send_mail([email_address],"bag log - LOCATION!",message)
                     pass
@@ -300,7 +300,7 @@ def found_luggage():
             if returnAction == "sendMessage":
                 print("send the message email!")
                 now = datetime.datetime.now()
-                message = f"Bag: {bag_name} scanned at {now}\n\nIP Addr: {ipaddress}\n\nMessage: {usermessage}"
+                message = f"Bag: {bag_name} scanned at {now}\n\nIP Addr: {ipaddress}\n\nMessage:\n{usermessage}"
                 sub_modules.emails.send_mail([email_address],"bag log - message!",message)
                 print(".mail sent.")
             extra_url = ""

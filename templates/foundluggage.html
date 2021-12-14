@@ -98,8 +98,8 @@
                                     <div class="d-flex justify-content-start">
                                         <label class="text-left" for="features">Message:</label><br>
                                     </div>
-                                    <textarea class="form-control" rows="5" id="usermessage" name="usermessage" placeholder="luggage location / questions / ask for details / share how to communicate / etc..."></textarea>
-                                    <button id="sendMail" type="submit" class="btn btn-success m-2">Send &nbsp;<i id="chevron1" class='fa fa-paper-plane spinme'></i></button>
+                                    <textarea class="form-control" rows="5" id="usermessage" name="usermessage" style="width: 95%; margin: auto" placeholder="luggage location / questions / ask for details / share how to communicate / etc..."></textarea>
+                                    <button id="sendMail" type="submit" class="btn btn-success m-2" style="float: right;">Send &nbsp;<i id="chevron1" class='fa fa-paper-plane spinme'></i></button>
                                 </div>
                             </div>
                         </form>
@@ -133,6 +133,7 @@
 
             sendMailBtn.onclick = function() {
                 returnAction.value = "sendMessage";
+                alert("Thank you!")
             }
             
             function getLocation() {
@@ -202,7 +203,7 @@
                 var message_area = document.getElementById("messagearea");
                 var chevron1 = document.getElementById("chevron1");
                 if (message_area.style.maxHeight == "1px") {
-                    message_area.style.maxHeight = "450px";
+                    message_area.style.maxHeight = "600px";
                     chevron1.style.transform = "rotateX(180deg)";
 
                 } else {
