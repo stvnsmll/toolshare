@@ -72,6 +72,7 @@
                         <form id="foundlug_form" action="/found_luggage" method="post">
                             <div style="width: 100%; display: grid;">
                                 <button type="button" onclick="getLocation()" class="btn btn-secondary m-2" id="PosBtn" {% if locshared %} disabled {% endif %}>Log the current location of this bag</button>
+                                <button type="submit" style="display: none;" class="btn btn-outline-info m-2" id="PosSend">Send Location!</button>
                                 {% if locshared %}THANK YOU!<br><br>{% endif %}
                                 <button type="button" class="btn btn-success m-2" onclick="showmessage()">Send {{ firstname }} a message! &nbsp;<i id="chevron1" class='fa fa-chevron-down spinme'></i></button>
                                 <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
@@ -139,6 +140,7 @@
             function getLocation() {
               PosBtn.disabled = true;
               returnAction.value = "location";
+              //alert("Thank you!")
               if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition);
               } else { 
@@ -152,50 +154,16 @@
                 x.innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
                 var maplink = "https://www.latlong.net/c/?lat=" + latitude + "&long=" + longitude;
                 maplinkID.href = maplink;
-                //maplinkID.style.display = "block";
                 document.getElementById("longit").value = longitude;
                 document.getElementById("latit").value = latitude;
                 const e = new Event("change");
                 const element = document.querySelector('#latit')
                 element.dispatchEvent(e);
-                
-            }
-
-            function submitLocation() {
-                //alert("sending form")
-                var startingPage = window.location.href;
-                //alert(startingPage)
-
-                var form = document.getElementById("foundlug_form");
-                var fd = new FormData(form);
-
-                var request = new XMLHttpRequest();
-                request.onreadystatechange = function() {
-                    if (request.readyState == XMLHttpRequest.DONE) {
-                        // alert(request.responseText);
-                        document.open();
-                        document.write(request.responseText);
-                        document.close();
-                    }
-                }
-
-                request.open("POST", "/found_luggage");
-                request.send(fd);
-                request.addEventListener('load', reqListener);
-                //window.location.replace(startingPage);
-            }
-
-            function reqListener() {
-                console.log('this.responseText:', this.responseText);
-                console.log('this.status:', this.status);
-                //if (this.status == "200") {
-                //    alert("Thank You!");
-                //}
             }
 
             window.onload = function() { 
                 latitudeExecute.addEventListener('change', function() {
-                    submitLocation();
+                    document.getElementById('PosSend').click();
                 });
             };
 

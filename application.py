@@ -294,8 +294,8 @@ def found_luggage():
                 now = datetime.datetime.now()
                 message = f"Bag: {bag_name} scanned at {now}\n\nIP Addr: {ipaddress}\n\nLatLong={latitude}:{longitude}\n{maplink}\n\nMessage:\n{usermessage}"
                 if noEmail != "1":#don't send if in development mode...
-                    #sub_modules.emails.send_mail([email_address],"bag log - LOCATION!",message)
-                    pass
+                    sub_modules.emails.send_mail([email_address],"bag log - LOCATION!",message)
+                    #pass
                 print("location mail sent")
             if returnAction == "sendMessage":
                 print("send the message email!")
@@ -311,12 +311,12 @@ def found_luggage():
             if location_shared == 1:
                 extra_url2 = "&locshared=1"
             print(extra_url2)
-            if DATABASE__TYPE == 1:
-                return redirect(url_for('found_luggage') + f'?bagID={bagID}' + extra_url + extra_url2)
-            else:
-                fullURL = f"https://sharetools.tk/found_luggage?bagID={bagID}{extra_url}{extra_url2}"
-                print(fullURL)
-                return redirect(fullURL)
+            #if DATABASE__TYPE == 1:
+            return redirect(url_for('found_luggage') + f'?bagID={bagID}' + extra_url + extra_url2)
+            #else:
+            #    fullURL = f"https://sharetools.tk/found_luggage?bagID={bagID}{extra_url}{extra_url2}"
+            #    print(fullURL)
+            #    return redirect(fullURL)
         else:#reCaptcha failed...
             return apology("reCaptcha fail...")
 
