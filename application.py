@@ -410,7 +410,11 @@ def make_QR_Code():
         return apology("No POST allowed", 403)
     else:#GET
         bagID = request.args.get("bagID")
-        img = qrcode.make(f"https://www.sharetools.tk/found_luggage?bagID={bagID}")
+        noEmail = request.args.get("noEmail")
+        extra_url = ""
+        if noEmail == "1":
+                extra_url = "&noEmail=1"
+        img = qrcode.make(f"https://www.sharetools.tk/found_luggage?bagID={bagID}{extra_url}")
         data = io.BytesIO()
         img.save(data, "PNG")
         encoded_qr_image = base64.b64encode(data.getvalue())
